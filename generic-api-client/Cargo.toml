@@ -1,0 +1,22 @@
+[package]
+name = "generic-api-client"
+version = "0.1.0"
+authors = ["negi_grass"]
+edition = "2021"
+description = "A client for HTTP/HTTPS/WebSocket APIs."
+license = "MIT"
+readme = "README.md"
+keywords = ["client", "websocket", "asynchronous"]
+categories = ["api-bindings", "asynchronous"]
+
+
+[dependencies]
+tokio = { version = "1.23.0", features = ["time", "sync", "net", "macros"] }
+tokio-tungstenite = { version = "0.18.0", features = ["native-tls"] }
+reqwest = "0.11.13"
+futures-util = "0.3.25"
+serde = "1.0.150"
+parking_lot = "0.12.1"
+bytes = "1.3.0"
+log = "0.4.17"
+thiserror = "1.0.37"

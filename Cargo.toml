@@ -1,0 +1,32 @@
+[workspace]
+members = ["generic-api-client", "crypto-botters-binance", "crypto-botters-bitflyer"]
+default-members = ["generic-api-client", "crypto-botters-binance", "crypto-botters-bitflyer"]
+
+[package]
+name = "crypto-botters"
+version = "0.1.0"
+authors = ["negi_grass"]
+edition = "2021"
+license = "MIT"
+readme = "README.md"
+keywords = ["cryptocurrency", "finance", "trading", "client", "websocket"]
+categories = ["api-bindings", "asynchronous", "cryptography::cryptocurrencies", "authentication"]
+
+[features]
+full = ["binance", "bitflyer"]
+binance = ["dep:crypto-botters-binance"]
+bitflyer = ["dep:crypto-botters-bitflyer"]
+
+[dependencies]
+generic-api-client = { version = "0.1", path = "generic-api-client" }
+crypto-botters-binance = { version = "0.1", path = "crypto-botters-binance", optional = true }
+crypto-botters-bitflyer = { version = "0.1", path = "crypto-botters-bitflyer", optional = true }
+
+[dev-dependencies]
+crypto-botters = { path = ".", features = ["full"] }
+tokio = { version = "1.23.0", features = ["rt-multi-thread", "macros"] }
+serde = { version = "1.0.151", features = ["derive"] }
+serde_json = "1.0.90"
+rust_decimal = { version = "1.27.0", features = ["serde-with-str", "serde-with-float"] }
+env_logger = "0.10.0"
+log = "0.4.17"
