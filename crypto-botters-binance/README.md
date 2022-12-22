@@ -1,4 +1,4 @@
 # crypto-botters-binance
 
 Part of the crypto-botters project.
-See examples/ directory.
+[Examples](https://github.com/negi-grass/crypto-botters/tree/main/examples)

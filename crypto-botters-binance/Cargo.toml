@@ -3,8 +3,12 @@ name = "crypto-botters-binance"
 version = "0.1.0"
 authors = ["negi_grass"]
 edition = "2021"
+description = "A crate for interacting with the Binance API."
 license = "MIT"
 readme = "README.md"
+homepage = "https://github.com/negi-grass/crypto-botters"
+documentation = "https://docs.rs/crypto-botters-binance"
+repository = "https://github.com/negi-grass/crypto-botters"
 keywords = ["cryptocurrency", "binance", "trading", "client", "websocket"]
 categories = ["api-bindings", "asynchronous", "cryptography::cryptocurrencies", "authentication"]
 
