@@ -16,7 +16,7 @@ async fn main() {
         "/ws/btcusdt@trade",
         binance.websocket(|message| {
             println!("{}", message);
-        }, BinanceWebSocketUrl::Stream443)
+        }, BinanceWebSocketUrl::Spot443)
     ).await.expect("failed to connect websocket");
     // receive messages
     tokio::time::sleep(Duration::from_secs(2)).await;

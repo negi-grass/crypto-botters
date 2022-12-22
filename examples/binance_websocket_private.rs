@@ -30,7 +30,7 @@ async fn main() {
         &format!("/ws/{}", key["listenKey"].as_str().unwrap()),
         binance.websocket(|message| {
             println!("{}", message);
-        }, BinanceWebSocketUrl::Stream9443)
+        }, BinanceWebSocketUrl::Spot9443)
     ).await.expect("failed to connect websocket");
 
     // receive messages

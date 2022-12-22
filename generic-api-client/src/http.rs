@@ -1,5 +1,6 @@
 use std::time::Duration;
 use serde::Serialize;
+use thiserror::Error;
 pub use reqwest::{Request, RequestBuilder, StatusCode, Method, header::{self, HeaderMap}};
 pub use bytes::Bytes;
 
@@ -233,6 +234,7 @@ pub trait RequestHandler<B> {
 ///
 /// Should be returned by [RequestHandler::request_config()].
 #[derive(Debug, Clone)]
+#[non_exhaustive]
 pub struct RequestConfig {
     /// [Client] will retry sending a request if it failed to send. `max_try` can be used limit the number of attempts.
     ///
@@ -276,9 +278,6 @@ impl Default for RequestConfig {
         }
     }
 }
-
-use std::fmt::{Debug};
-use thiserror::Error;
 
 /// An `enum` that represents errors that could be returned by [Client::request()]
 ///

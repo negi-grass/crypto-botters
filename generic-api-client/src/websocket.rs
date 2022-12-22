@@ -380,6 +380,7 @@ pub trait WebSocketHandler: Send + 'static {
 ///
 /// Should be returned by [WebSocketHandler::websocket_config()].
 #[derive(Debug, Clone)]
+#[non_exhaustive]
 pub struct WebSocketConfig {
     /// Duration that should elapse between each attempt to start a new connection.
     ///

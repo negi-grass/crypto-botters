@@ -6,6 +6,9 @@ edition = "2021"
 description = "A client for HTTP/HTTPS/WebSocket APIs."
 license = "MIT"
 readme = "README.md"
+homepage = "https://github.com/negi-grass/crypto-botters"
+documentation = "https://docs.rs/generic-api-client"
+repository = "https://github.com/negi-grass/crypto-botters"
 keywords = ["client", "websocket", "asynchronous"]
 categories = ["api-bindings", "asynchronous"]
 

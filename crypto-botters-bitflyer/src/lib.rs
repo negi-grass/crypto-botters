@@ -21,8 +21,12 @@ pub type RequestResult<T> = Result<T, RequestError<&'static str, BitFlyerHandler
 pub struct BitFlyer {
     api_key: Option<String>,
     api_secret: Option<String>,
-    websocket_allow_duplicate: bool,
-    websocket_refresh_duration: Duration,
+    /// Whether the websocket handler should receive duplicate message. Defaults to false.
+    /// See also: field `ignore_duplicate_during_reconnection` of [WebSocketConfig].
+    pub websocket_allow_duplicate_message: bool,
+    /// The interval of auto reconnection. Defaults to disabled.
+    /// See also: field `refresh_after` of [WebSocketConfig]
+    pub websocket_refresh_interval: Duration,
 }
 
 #[derive(Debug, Eq, PartialEq, Copy, Clone)]
@@ -67,21 +71,9 @@ impl BitFlyer {
         Self {
             api_key,
             api_secret,
-            websocket_allow_duplicate: false,
-            websocket_refresh_duration: Duration::ZERO, // disable
+            websocket_allow_duplicate_message: false,
+            websocket_refresh_interval: Duration::ZERO, // disable
         }
-    }
-
-    /// Whether the websocket handler should receive duplicate message. Defaults to false.
-    /// See also: field `ignore_duplicate_during_reconnection` of [WebSocketConfig].
-    pub fn websocket_allow_duplicate_message(&mut self, allow: bool) {
-        self.websocket_allow_duplicate = allow;
-    }
-
-    /// Sets the interval of auto reconnection. Defaults to disabled.
-    /// See also: field `refresh_after` of [WebSocketConfig]
-    pub fn websocket_auto_reconnect_interval(&mut self, duration: Duration) {
-        self.websocket_refresh_duration = duration;
     }
 
     /// Returns a `impl` [RequestHandler] to be passed to [Client::request()].
@@ -107,8 +99,8 @@ impl BitFlyer {
             channels,
             auth,
             auth_id: None,
-            allow_duplicate: self.websocket_allow_duplicate,
-            refresh: self.websocket_refresh_duration,
+            allow_duplicate: self.websocket_allow_duplicate_message,
+            refresh: self.websocket_refresh_interval,
         }
     }
 }
@@ -222,7 +214,7 @@ impl<H> WebSocketHandler for BitFlyerWebSocketHandler<H> where H: FnMut(BitFlyer
                     hmac.update(format!("{}{}", timestamp, nonce).as_bytes());
                     let signature = hex::encode(hmac.finalize().into_bytes());
 
-                    let id = format!("_auth{}", timestamp);
+                    let id = format!("_auth{}", time.as_nanos());
                     self.auth_id = Some(id.clone());
 
                     return vec![WebSocketMessage::Text(json!({

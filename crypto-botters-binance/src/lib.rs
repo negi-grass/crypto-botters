@@ -19,12 +19,17 @@ pub type RequestResult<T> = Result<T, RequestError<&'static str, BinanceHandlerE
 pub struct Binance {
     api_key: Option<String>,
     api_secret: Option<String>,
-    websocket_allow_duplicate: bool,
-    websocket_refresh_duration: Duration,
+    /// Whether the websocket handler should receive duplicate message. Defaults to disabled.
+    /// See also: field `ignore_duplicate_during_reconnection` of [WebSocketConfig].
+    pub websocket_allow_duplicate_message: bool,
+    /// The interval of auto reconnection. Defaults to 12 hours.
+    /// See also: field `refresh_after` of [WebSocketConfig]
+    pub websocket_refresh_interval: Duration,
 }
 
 /// A `enum` that represents the base url of the Binance REST API.
 #[derive(Debug, Eq, PartialEq, Copy, Clone)]
+#[non_exhaustive]
 pub enum BinanceHttpUrl {
     /// https://api.binance.com
     Spot,
@@ -34,10 +39,14 @@ pub enum BinanceHttpUrl {
     Spot2,
     /// https://api3.binance.com
     Spot3,
+    /// https://testnet.binance.vision
+    SpotTest,
     /// https://data.binance.com
-    Data,
+    SpotData,
     /// https://fapi.binance.com
-    Futures,
+    FuturesUsdM,
+    /// https://dapi.binance.com
+    FuturesCoinM,
     /// https://testnet.binancefuture.com
     FuturesTest,
     /// The url will not be modified by [BinanceRequestHandler]
@@ -46,19 +55,30 @@ pub enum BinanceHttpUrl {
 
 /// A `enum` that represents the base url of the Binance WebSocket API
 #[derive(Debug, Eq, PartialEq, Copy, Clone)]
+#[non_exhaustive]
 pub enum BinanceWebSocketUrl {
     /// wss://stream.binance.com:9443
-    Stream9443,
+    Spot9443,
     /// wss://stream.binance.com:443
-    Stream443,
+    Spot443,
+    /// wss://testnet.binance.vision
+    SpotTest,
     /// wss://data-stream.binance.com
-    DataStream,
+    SpotData,
+    /// wss://ws-api.binance.com:443
+    WebSocket443,
+    /// wss://ws-api.binance.com:9443
+    WebSocket9443,
     /// wss://fstream.binance.com
-    FuturesStream,
+    FuturesUsdM,
     /// wss://fstream-auth.binance.com
-    FuturesStreamAuth,
+    FuturesUsdMAuth,
+    /// wss://dstream.binance.com
+    FuturesCoinM,
     /// wss://stream.binancefuture.com
-    FuturesStreamTest,
+    FuturesUsdMTest,
+    /// wss://dstream.binancefuture.com
+    FuturesCoinMTest,
     /// The url will not be modified by [BinanceRequestHandler]
     None,
 }
@@ -104,21 +124,9 @@ impl Binance {
         Self {
             api_key,
             api_secret,
-            websocket_allow_duplicate: false,
-            websocket_refresh_duration: Duration::from_secs(60 * 60 * 12), // 12 hours
+            websocket_allow_duplicate_message: false,
+            websocket_refresh_interval: Duration::from_secs(60 * 60 * 12), // 12 hours
         }
-    }
-
-    /// Whether the websocket handler should receive duplicate message. Defaults to disabled.
-    /// See also: field `ignore_duplicate_during_reconnection` of [WebSocketConfig].
-    pub fn websocket_allow_duplicate_message(&mut self, allow: bool) {
-        self.websocket_allow_duplicate = allow;
-    }
-
-    /// Sets the interval of auto reconnection. Defaults to 12 hours.
-    /// See also: field `refresh_after` of [WebSocketConfig]
-    pub fn websocket_auto_reconnect_interval(&mut self, duration: Duration) {
-        self.websocket_refresh_duration = duration;
     }
 
     /// Returns a `impl` [RequestHandler] to be passed to [Client::request()].
@@ -148,8 +156,8 @@ impl Binance {
         BinanceWebSocketHandler {
             message_handler,
             base_url,
-            allow_duplicate: self.websocket_allow_duplicate,
-            refresh: self.websocket_refresh_duration,
+            allow_duplicate: self.websocket_allow_duplicate_message,
+            refresh: self.websocket_refresh_interval,
         }
     }
 
@@ -292,8 +300,10 @@ impl BinanceHttpUrl {
             BinanceHttpUrl::Spot1 => "https://api1.binance.com",
             BinanceHttpUrl::Spot2 => "https://api2.binance.com",
             BinanceHttpUrl::Spot3 => "https://api3.binance.com",
-            BinanceHttpUrl::Data => "https://data.binance.com",
-            BinanceHttpUrl::Futures => "https://fapi.binance.com",
+            BinanceHttpUrl::SpotTest => "https://testnet.binance.vision",
+            BinanceHttpUrl::SpotData => "https://data.binance.com",
+            BinanceHttpUrl::FuturesUsdM => "https://fapi.binance.com",
+            BinanceHttpUrl::FuturesCoinM => "https://dapi.binance.com",
             BinanceHttpUrl::FuturesTest => "https://testnet.binancefuture.com",
             BinanceHttpUrl::None => "",
         }
@@ -303,12 +313,17 @@ impl BinanceHttpUrl {
 impl BinanceWebSocketUrl {
     pub fn to_str(&self) -> &'static str {
         match self {
-            BinanceWebSocketUrl::Stream9443 => "wss://stream.binance.com:9443",
-            BinanceWebSocketUrl::Stream443 => "wss://stream.binance.com:443",
-            BinanceWebSocketUrl::DataStream => "wss://data-stream.binance.com",
-            BinanceWebSocketUrl::FuturesStream => "wss://fstream.binance.com",
-            BinanceWebSocketUrl::FuturesStreamAuth => "wss://fstream-auth.binance.com",
-            BinanceWebSocketUrl::FuturesStreamTest => "wss://stream.binancefuture.com",
+            BinanceWebSocketUrl::Spot9443 => "wss://stream.binance.com:9443",
+            BinanceWebSocketUrl::Spot443 => "wss://stream.binance.com:443",
+            BinanceWebSocketUrl::SpotTest => "wss://testnet.binance.vision",
+            BinanceWebSocketUrl::SpotData => "wss://data-stream.binance.com",
+            BinanceWebSocketUrl::WebSocket443 => "wss://ws-api.binance.com:443",
+            BinanceWebSocketUrl::WebSocket9443 => "wss://ws-api.binance.com:9443",
+            BinanceWebSocketUrl::FuturesUsdM => "wss://fstream.binance.com",
+            BinanceWebSocketUrl::FuturesUsdMAuth => "wss://fstream-auth.binance.com",
+            BinanceWebSocketUrl::FuturesCoinM => "wss://dstream.binance.com",
+            BinanceWebSocketUrl::FuturesUsdMTest => "wss://stream.binancefuture.com",
+            BinanceWebSocketUrl::FuturesCoinMTest => "wss://dstream.binancefuture.com",
             BinanceWebSocketUrl::None => "",
         }
     }
