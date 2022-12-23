@@ -178,7 +178,7 @@ dependencies = [
 
 [[package]]
 name = "crypto-botters"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "crypto-botters",
  "crypto-botters-binance",
@@ -194,7 +194,7 @@ dependencies = [
 
 [[package]]
 name = "crypto-botters-binance"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "generic-api-client",
  "hex",
@@ -208,7 +208,7 @@ dependencies = [
 
 [[package]]
 name = "crypto-botters-bitflyer"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "generic-api-client",
  "hex",
@@ -378,7 +378,7 @@ dependencies = [
 
 [[package]]
 name = "generic-api-client"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "bytes",
  "futures-util",

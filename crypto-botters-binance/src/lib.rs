@@ -19,6 +19,9 @@ pub type RequestResult<T> = Result<T, RequestError<&'static str, BinanceHandlerE
 pub struct Binance {
     api_key: Option<String>,
     api_secret: Option<String>,
+    /// How many times should the request be sent if it keeps failing. Defaults to 1.
+    /// See also: field `max_try` of [RequestConfig]
+    pub request_max_try: u8,
     /// Whether the websocket handler should receive duplicate message. Defaults to disabled.
     /// See also: field `ignore_duplicate_during_reconnection` of [WebSocketConfig].
     pub websocket_allow_duplicate_message: bool,
@@ -103,6 +106,7 @@ pub struct BinanceRequestHandler<'a, R: DeserializeOwned> {
     api_secret: Option<&'a str>,
     security: BinanceSecurity,
     base_url: BinanceHttpUrl,
+    max_try: u8,
     _phantom: PhantomData<*const R>,
 }
 
@@ -124,6 +128,7 @@ impl Binance {
         Self {
             api_key,
             api_secret,
+            request_max_try: 1,
             websocket_allow_duplicate_message: false,
             websocket_refresh_interval: Duration::from_secs(60 * 60 * 12), // 12 hours
         }
@@ -136,6 +141,7 @@ impl Binance {
             api_secret: self.api_secret.as_deref(),
             security,
             base_url,
+            max_try: self.request_max_try,
             _phantom: PhantomData::default(),
         }
     }
@@ -186,6 +192,7 @@ where
     fn request_config(&self) -> RequestConfig {
         let mut config = RequestConfig::new();
         config.url_prefix = self.base_url.to_string();
+        config.max_try = self.max_try;
         config
     }
 

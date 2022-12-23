@@ -4,7 +4,7 @@ default-members = ["generic-api-client", "crypto-botters-binance", "crypto-botte
 
 [package]
 name = "crypto-botters"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["negi_grass"]
 edition = "2021"
 description = "A crate for interacting with various cryptocurrency exchanges."
@@ -15,6 +15,9 @@ documentation = "https://docs.rs/crypto-botters"
 repository = "https://github.com/negi-grass/crypto-botters"
 keywords = ["cryptocurrency", "finance", "trading", "client", "websocket"]
 categories = ["api-bindings", "asynchronous", "cryptography::cryptocurrencies", "authentication"]
+
+[package.metadata.docs.rs]
+all-features = true
 
 [features]
 full = ["binance", "bitflyer"]

@@ -19,13 +19,13 @@ async fn main() {
         }, BinanceWebSocketUrl::Spot443)
     ).await.expect("failed to connect websocket");
     // receive messages
-    tokio::time::sleep(Duration::from_secs(2)).await;
+    tokio::time::sleep(Duration::from_secs(1)).await;
 
     // manually reconnect
     connection.reconnect_state().request_reconnect();
 
     // receive messages. we should see no missing message during reconnection
-    tokio::time::sleep(Duration::from_secs(2)).await;
+    tokio::time::sleep(Duration::from_secs(3)).await;
 
     // close the connection
     drop(connection);

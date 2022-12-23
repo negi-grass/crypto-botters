@@ -238,7 +238,7 @@ pub trait RequestHandler<B> {
 pub struct RequestConfig {
     /// [Client] will retry sending a request if it failed to send. `max_try` can be used limit the number of attempts.
     ///
-    /// Do not set this to `0` or [Client::request()] will **panic**. The first attempt is counted [Default]s to `1` (which means no retry).
+    /// Do not set this to `0` or [Client::request()] will **panic**. [Default]s to `1` (which means no retry).
     pub max_try: u8,
     /// Duration that should elapse after retrying sending a request.
     ///

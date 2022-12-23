@@ -25,7 +25,7 @@ async fn main() {
     }
 
     #[allow(dead_code)]
-    #[derive(Deserialize, Debug)]
+    #[derive(Deserialize)]
     #[serde(rename_all = "camelCase")]
     struct OldTrade {
         id: i64,
@@ -45,7 +45,7 @@ async fn main() {
         Some(&TradesLookupParams { symbol: "BTCUSDT", limit: 3 }),
         &binance.request(BinanceSecurity::Key, BinanceHttpUrl::Spot),
     ).await.expect("failed to get trades");
-    println!("Trade data:\n{:?}", trades);
+    println!("Trade price:\n{:?}", trades[0].price);
 
     // not typed
     let dusts: serde_json::Value = client.post_no_body(

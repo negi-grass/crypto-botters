@@ -139,7 +139,7 @@ impl<H: WebSocketHandler> WebSocketConnection<H> {
             sink: Arc<AsyncMutex<WebSocketSplitSink>>,
             reconnect_manager: ReconnectState,
             no_duplicate: bool,
-            window: Duration,
+            wait: Duration,
         ) {
             let mut cooldown = tokio::time::interval(cooldown);
             cooldown.set_missed_tick_behavior(MissedTickBehavior::Delay);
@@ -163,11 +163,20 @@ impl<H: WebSocketHandler> WebSocketConnection<H> {
                 // this completes immediately because we just added a permit
                 reconnect_manager.inner.reconnect_notify.notified().await;
 
+                if no_duplicate {
+                    tokio::time::sleep(wait).await;
+                }
+
                 // start a new connection
                 match WebSocketConnection::<H>::start_connection(Arc::clone(&connection)).await {
                     Ok(new_sink) => {
                         // replace the sink with the new one
                         let mut old_sink = mem::replace(&mut *sink.lock().await, new_sink);
+
+                        if no_duplicate {
+                            tokio::time::sleep(wait).await;
+                        }
+
                         if let Err(error) = old_sink.close().await {
                             log::warn!("An error occurred while closing old connection during auto-refresh: {}", error);
                         }
@@ -181,8 +190,7 @@ impl<H: WebSocketHandler> WebSocketConnection<H> {
                 }
 
                 if no_duplicate {
-                    // make sure we don't lose any message
-                    tokio::time::sleep(window).await;
+                    tokio::time::sleep(wait).await;
                 }
 
                 reconnect_manager.inner.reconnecting.store(false, Ordering::SeqCst);
@@ -209,7 +217,7 @@ impl<H: WebSocketHandler> WebSocketConnection<H> {
             Arc::clone(&sink),
             reconnect_manager.clone(),
             config.ignore_duplicate_during_reconnection,
-            config.reconnection_window,
+            config.reconnection_wait,
         ));
 
         Ok(Self {
@@ -404,7 +412,7 @@ pub struct WebSocketConfig {
     pub ignore_duplicate_during_reconnection: bool,
     /// When `ignore_duplicate_during_reconnection` is set to `true`, [WebSocketConnection] will wait for a
     /// certain amount of time to make sure no message is lost. [Default]s to 300ms
-    pub reconnection_window: Duration,
+    pub reconnection_wait: Duration,
 }
 
 impl WebSocketConfig {
@@ -421,7 +429,7 @@ impl Default for WebSocketConfig {
             refresh_after: Duration::ZERO,
             url_prefix: String::new(),
             ignore_duplicate_during_reconnection: false,
-            reconnection_window: Duration::from_millis(300),
+            reconnection_wait: Duration::from_millis(300),
         }
     }
 }
