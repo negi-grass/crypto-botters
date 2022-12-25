@@ -15,7 +15,8 @@
   - [HTTP API](https://lightning.bitflyer.com/docs)
   - [Realtime API](https://bf-lightning-api.readme.io/docs) (Socket.IO は非対応)
 
-以下のAPIは次のバージョンで対応します。
+以下のAPIは次のバージョンで対応する予定です。
 
 - [Binance](https://www.binance.com/en)
   - [European Options](https://binance-docs.github.io/apidocs/voptions/en/)
+- [Bybit](https://www.bybit.com)
