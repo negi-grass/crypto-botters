@@ -1,7 +1,17 @@
 # crypto-botters
 仮想通貨取引所のAPIと通信するためのライブラリです。
 
+[crates.io](https://crates.io/crates/crypto-botters)
+
 詳しくは examples/ や[この記事](https://qiita.com/negi_grass/items/dc67d0af0d7b8d1b5d78)を見てください。
+
+## 使い方
+
+Cargo.toml:
+```
+[dependencies]
+crypto-botters = { version = "0.1", features = ["binance", "bitflyer"] }
+```
 
 ## 対応API
 以下のAPIは最新バージョンで対応しています。
