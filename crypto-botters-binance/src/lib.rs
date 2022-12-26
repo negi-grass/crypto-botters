@@ -12,7 +12,7 @@ use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use generic_api_client::{http::*, websocket::*};
 
 /// The type returned by [Client::request()].
-pub type RequestResult<T> = Result<T, RequestError<&'static str, BinanceHandlerError>>;
+pub type BinanceRequestResult<T> = Result<T, RequestError<&'static str, BinanceHandlerError>>;
 
 /// A `struct` that provides the [generic_api_client]'s handlers.
 #[derive(Clone)]
@@ -52,6 +52,8 @@ pub enum BinanceHttpUrl {
     FuturesCoinM,
     /// https://testnet.binancefuture.com
     FuturesTest,
+    /// https://eapi.binance.com
+    EuropeanOptions,
     /// The url will not be modified by [BinanceRequestHandler]
     None,
 }
@@ -82,6 +84,8 @@ pub enum BinanceWebSocketUrl {
     FuturesUsdMTest,
     /// wss://dstream.binancefuture.com
     FuturesCoinMTest,
+    /// wss://nbstream.binance.com
+    EuropeanOptions,
     /// The url will not be modified by [BinanceRequestHandler]
     None,
 }
@@ -107,7 +111,7 @@ pub struct BinanceRequestHandler<'a, R: DeserializeOwned> {
     security: BinanceSecurity,
     base_url: BinanceHttpUrl,
     max_try: u8,
-    _phantom: PhantomData<*const R>,
+    _phantom: PhantomData<&'a R>,
 }
 
 pub struct BinanceWebSocketHandler<H: FnMut(serde_json::Value) + Send + 'static> {
@@ -142,7 +146,7 @@ impl Binance {
             security,
             base_url,
             max_try: self.request_max_try,
-            _phantom: PhantomData::default(),
+            _phantom: PhantomData,
         }
     }
 
@@ -303,16 +307,17 @@ impl BinanceHttpUrl {
     /// The string that this variant represents.
     pub fn to_str(&self) -> &'static str {
         match self {
-            BinanceHttpUrl::Spot => "https://api.binance.com",
-            BinanceHttpUrl::Spot1 => "https://api1.binance.com",
-            BinanceHttpUrl::Spot2 => "https://api2.binance.com",
-            BinanceHttpUrl::Spot3 => "https://api3.binance.com",
-            BinanceHttpUrl::SpotTest => "https://testnet.binance.vision",
-            BinanceHttpUrl::SpotData => "https://data.binance.com",
-            BinanceHttpUrl::FuturesUsdM => "https://fapi.binance.com",
-            BinanceHttpUrl::FuturesCoinM => "https://dapi.binance.com",
-            BinanceHttpUrl::FuturesTest => "https://testnet.binancefuture.com",
-            BinanceHttpUrl::None => "",
+            Self::Spot => "https://api.binance.com",
+            Self::Spot1 => "https://api1.binance.com",
+            Self::Spot2 => "https://api2.binance.com",
+            Self::Spot3 => "https://api3.binance.com",
+            Self::SpotTest => "https://testnet.binance.vision",
+            Self::SpotData => "https://data.binance.com",
+            Self::FuturesUsdM => "https://fapi.binance.com",
+            Self::FuturesCoinM => "https://dapi.binance.com",
+            Self::FuturesTest => "https://testnet.binancefuture.com",
+            Self::EuropeanOptions => "https://eapi.binance.com",
+            Self::None => "",
         }
     }
 }
@@ -320,18 +325,19 @@ impl BinanceHttpUrl {
 impl BinanceWebSocketUrl {
     pub fn to_str(&self) -> &'static str {
         match self {
-            BinanceWebSocketUrl::Spot9443 => "wss://stream.binance.com:9443",
-            BinanceWebSocketUrl::Spot443 => "wss://stream.binance.com:443",
-            BinanceWebSocketUrl::SpotTest => "wss://testnet.binance.vision",
-            BinanceWebSocketUrl::SpotData => "wss://data-stream.binance.com",
-            BinanceWebSocketUrl::WebSocket443 => "wss://ws-api.binance.com:443",
-            BinanceWebSocketUrl::WebSocket9443 => "wss://ws-api.binance.com:9443",
-            BinanceWebSocketUrl::FuturesUsdM => "wss://fstream.binance.com",
-            BinanceWebSocketUrl::FuturesUsdMAuth => "wss://fstream-auth.binance.com",
-            BinanceWebSocketUrl::FuturesCoinM => "wss://dstream.binance.com",
-            BinanceWebSocketUrl::FuturesUsdMTest => "wss://stream.binancefuture.com",
-            BinanceWebSocketUrl::FuturesCoinMTest => "wss://dstream.binancefuture.com",
-            BinanceWebSocketUrl::None => "",
+            Self::Spot9443 => "wss://stream.binance.com:9443",
+            Self::Spot443 => "wss://stream.binance.com:443",
+            Self::SpotTest => "wss://testnet.binance.vision",
+            Self::SpotData => "wss://data-stream.binance.com",
+            Self::WebSocket443 => "wss://ws-api.binance.com:443",
+            Self::WebSocket9443 => "wss://ws-api.binance.com:9443",
+            Self::FuturesUsdM => "wss://fstream.binance.com",
+            Self::FuturesUsdMAuth => "wss://fstream-auth.binance.com",
+            Self::FuturesCoinM => "wss://dstream.binance.com",
+            Self::FuturesUsdMTest => "wss://stream.binancefuture.com",
+            Self::FuturesCoinMTest => "wss://dstream.binancefuture.com",
+            Self::EuropeanOptions => "wss://nbstream.binance.com",
+            Self::None => "",
         }
     }
 }

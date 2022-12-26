@@ -14,7 +14,7 @@ use generic_api_client::{http::*, websocket::*};
 use generic_api_client::http::header::HeaderValue;
 
 /// The type returned by [Client::request()].
-pub type RequestResult<T> = Result<T, RequestError<&'static str, BitFlyerHandlerError>>;
+pub type BitFlyerRequestResult<T> = Result<T, RequestError<&'static str, BitFlyerHandlerError>>;
 
 /// A `struct` that provides the [generic_api_client]'s handlers.
 #[derive(Clone)]
@@ -56,7 +56,7 @@ pub struct BitFlyerRequestHandler<'a, R: DeserializeOwned> {
     api_secret: Option<&'a str>,
     security: BitflyerSecurity,
     max_try: u8,
-    _phantom: PhantomData<*const R>,
+    _phantom: PhantomData<&'a R>,
 }
 
 pub struct BitFlyerWebSocketHandler<H: FnMut(BitFlyerChannelMessage) + Send + 'static> {
@@ -88,7 +88,7 @@ impl BitFlyer {
             api_secret: self.api_secret.as_deref(),
             security,
             max_try: self.request_max_try,
-            _phantom: PhantomData::default(),
+            _phantom: PhantomData,
         }
     }
 

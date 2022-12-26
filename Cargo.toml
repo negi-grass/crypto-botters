@@ -4,7 +4,7 @@ default-members = ["generic-api-client", "crypto-botters-binance", "crypto-botte
 
 [package]
 name = "crypto-botters"
-version = "0.1.1"
+version = "0.2.0"
 authors = ["negi_grass"]
 edition = "2021"
 description = "A crate for interacting with various cryptocurrency exchanges."
@@ -15,6 +15,7 @@ documentation = "https://docs.rs/crypto-botters"
 repository = "https://github.com/negi-grass/crypto-botters"
 keywords = ["cryptocurrency", "finance", "trading", "client", "websocket"]
 categories = ["api-bindings", "asynchronous", "cryptography::cryptocurrencies", "authentication"]
+autoexamples = false
 
 [package.metadata.docs.rs]
 all-features = true
@@ -26,8 +27,8 @@ bitflyer = ["dep:crypto-botters-bitflyer"]
 
 [dependencies]
 generic-api-client = { version = "0.1", path = "generic-api-client" }
-crypto-botters-binance = { version = "0.1", path = "crypto-botters-binance", optional = true }
-crypto-botters-bitflyer = { version = "0.1", path = "crypto-botters-bitflyer", optional = true }
+crypto-botters-binance = { version = "0.2", path = "crypto-botters-binance", optional = true }
+crypto-botters-bitflyer = { version = "0.2", path = "crypto-botters-bitflyer", optional = true }
 
 [dev-dependencies]
 crypto-botters = { path = ".", features = ["full"] }
@@ -37,3 +38,39 @@ serde_json = "1.0.90"
 rust_decimal = { version = "1.27.0", features = ["serde-with-str", "serde-with-float"] }
 env_logger = "0.10.0"
 log = "0.4.17"
+
+[[example]]
+name = "binance_http_private"
+path = "examples/binance/binance_http_private.rs"
+
+[[example]]
+name = "binance_http_public"
+path = "examples/binance/binance_http_public.rs"
+
+[[example]]
+name = "binance_websocket_private"
+path = "examples/binance/binance_websocket_private.rs"
+
+[[example]]
+name = "binance_websocket_public"
+path = "examples/binance/binance_websocket_public.rs"
+
+[[example]]
+name = "binance_spawn"
+path = "examples/binance/binance_spawn.rs"
+
+[[example]]
+name = "bitflyer_http_private"
+path = "examples/bitflyer/bitflyer_http_private.rs"
+
+[[example]]
+name = "bitflyer_http_public"
+path = "examples/bitflyer/bitflyer_http_public.rs"
+
+[[example]]
+name = "bitflyer_websocket_private"
+path = "examples/bitflyer/bitflyer_websocket_private.rs"
+
+[[example]]
+name = "bitflyer_websocket_public"
+path = "examples/bitflyer/bitflyer_websocket_public.rs"
