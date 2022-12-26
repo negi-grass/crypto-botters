@@ -178,11 +178,12 @@ dependencies = [
 
 [[package]]
 name = "crypto-botters"
-version = "0.2.0"
+version = "0.1.0"
 dependencies = [
  "crypto-botters",
  "crypto-botters-binance",
  "crypto-botters-bitflyer",
+ "crypto-botters-bybit",
  "env_logger",
  "generic-api-client",
  "log",
@@ -217,6 +218,21 @@ dependencies = [
  "rand",
  "serde",
  "serde_json",
+ "sha2",
+]
+
+[[package]]
+name = "crypto-botters-bybit"
+version = "0.1.0"
+dependencies = [
+ "generic-api-client",
+ "hex",
+ "hmac",
+ "log",
+ "rand",
+ "serde",
+ "serde_json",
+ "serde_urlencoded",
  "sha2",
 ]
 

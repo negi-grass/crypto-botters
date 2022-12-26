@@ -1,10 +1,10 @@
 [workspace]
-members = ["generic-api-client", "crypto-botters-binance", "crypto-botters-bitflyer"]
-default-members = ["generic-api-client", "crypto-botters-binance", "crypto-botters-bitflyer"]
+members = ["generic-api-client", "crypto-botters-binance", "crypto-botters-bitflyer", "crypto-botters-bybit"]
+default-members = ["generic-api-client", "crypto-botters-binance", "crypto-botters-bitflyer", "crypto-botters-bybit"]
 
 [package]
 name = "crypto-botters"
-version = "0.2.0"
+version = "0.1.0"
 authors = ["negi_grass"]
 edition = "2021"
 description = "A crate for interacting with various cryptocurrency exchanges."
@@ -13,7 +13,7 @@ readme = "README.md"
 homepage = "https://github.com/negi-grass/crypto-botters"
 documentation = "https://docs.rs/crypto-botters"
 repository = "https://github.com/negi-grass/crypto-botters"
-keywords = ["cryptocurrency", "finance", "trading", "client", "websocket"]
+keywords = ["cryptocurrency", "bybit", "trading", "client", "websocket"]
 categories = ["api-bindings", "asynchronous", "cryptography::cryptocurrencies", "authentication"]
 autoexamples = false
 
@@ -24,11 +24,13 @@ all-features = true
 full = ["binance", "bitflyer"]
 binance = ["dep:crypto-botters-binance"]
 bitflyer = ["dep:crypto-botters-bitflyer"]
+bybit = ["dep:crypto-botters-bybit"]
 
 [dependencies]
 generic-api-client = { version = "0.1", path = "generic-api-client" }
 crypto-botters-binance = { version = "0.2", path = "crypto-botters-binance", optional = true }
 crypto-botters-bitflyer = { version = "0.2", path = "crypto-botters-bitflyer", optional = true }
+crypto-botters-bybit = { version = "0.1", path = "crypto-botters-bybit", optional = true }
 
 [dev-dependencies]
 crypto-botters = { path = ".", features = ["full"] }
