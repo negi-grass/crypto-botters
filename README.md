@@ -1,7 +1,7 @@
 # crypto-botters
-仮想通貨取引所のAPIと通信するためのRustライブラリです。
+[![](https://img.shields.io/crates/v/crypto-botters)](https://crates.io/crates/crypto-botters) [![](https://docs.rs/crypto-botters/badge.svg)](https://docs.rs/crypto-botters)
 
-[crates.io](https://crates.io/crates/crypto-botters)
+仮想通貨取引所のAPIと通信するためのRustライブラリです。
 
 詳しくは examples/ や[この記事](https://qiita.com/negi_grass/items/dc67d0af0d7b8d1b5d78)を見てください。
 
