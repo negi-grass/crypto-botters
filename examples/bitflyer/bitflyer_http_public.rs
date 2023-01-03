@@ -3,8 +3,8 @@ use rust_decimal::prelude::*;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use crypto_botters::{
-    http::Client,
-    bitflyer::{BitFlyer, BitflyerSecurity},
+    Client,
+    bitflyer::{BitFlyerOption},
 };
 
 #[tokio::main]
@@ -12,7 +12,6 @@ async fn main() {
     env_logger::builder()
         .filter_level(LevelFilter::Debug)
         .init();
-    let bitflyer = BitFlyer::new(None, None);
     let client = Client::new();
 
     // typed
@@ -39,7 +38,7 @@ async fn main() {
     let executions: Vec<Execution> = client.get(
         "/v1/executions",
         Some(&ExecutionsParams { product_code: "FX_BTC_JPY", count: 10 }),
-        &bitflyer.request(BitflyerSecurity::None),
+        [BitFlyerOption::Default],
     ).await.expect("failed to get executions");
     println!("BTC executions:\n{:?}", executions);
 
@@ -47,7 +46,7 @@ async fn main() {
     let orderbook: serde_json::Value = client.get(
         "/v1/board",
         Some(&json!({ "product_code": "FX_BTC_JPY" })),
-        &bitflyer.request(BitflyerSecurity::None),
+        [BitFlyerOption::Default],
     ).await.expect("failed get orderbook");
     println!("BTC mid price:\n{:?}", orderbook["mid_price"]);
 }

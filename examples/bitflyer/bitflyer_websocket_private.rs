@@ -3,10 +3,7 @@ use std::{
     time::Duration,
 };
 use log::LevelFilter;
-use crypto_botters::{
-    websocket::WebSocketConnection,
-    bitflyer::BitFlyer,
-};
+use crypto_botters::{Client, bitflyer::BitFlyerOption};
 
 #[tokio::main]
 async fn main() {
@@ -15,13 +12,17 @@ async fn main() {
         .init();
     let key = env::var("BITFLYER_API_KEY").expect("no API key found");
     let secret = env::var("BITFLYER_API_SECRET").expect("no API secret found");
-    let bitflyer = BitFlyer::new(Some(key), Some(secret));
+    let mut client = Client::new();
+    client.default_option(BitFlyerOption::Key(key));
+    client.default_option(BitFlyerOption::Secret(secret));
 
-    let connection = WebSocketConnection::new(
+    let connection = client.websocket(
         "/json-rpc",
-        bitflyer.websocket(|message| {
-            println!("{:?}", message);
-        }, vec!["child_order_events"], true),
+        |message| println!("{:?}", message),
+        [
+            BitFlyerOption::WebSocketChannels(vec!["child_order_events".to_owned()]),
+            BitFlyerOption::WebSocketAuth(true),
+        ],
     ).await.expect("failed to connect websocket");
 
     // receive messages

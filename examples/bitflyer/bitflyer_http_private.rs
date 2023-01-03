@@ -3,8 +3,8 @@ use log::LevelFilter;
 use serde::Serialize;
 use serde_json::json;
 use crypto_botters::{
-    http::Client,
-    bitflyer::{BitFlyer, BitflyerSecurity},
+    Client,
+    bitflyer::BitFlyerOption,
 };
 
 #[tokio::main]
@@ -14,8 +14,9 @@ async fn main() {
         .init();
     let key = env::var("BITFLYER_API_KEY").expect("no API key found");
     let secret = env::var("BITFLYER_API_SECRET").expect("no API secret found");
-    let bitflyer = BitFlyer::new(Some(key), Some(secret));
-    let client = Client::new();
+    let mut client = Client::new();
+    client.default_option(BitFlyerOption::Key(key));
+    client.default_option(BitFlyerOption::Secret(secret));
 
     // typed
     #[derive(Serialize)]
@@ -28,7 +29,7 @@ async fn main() {
     let result: Result<(), _> = client.post(
         "/v1/me/cancelchildorder",
         Some(&CancelOrderParams { product_code: "FX_BTC_JPY", child_order_id: "JOR20150707-055555-022222" }), // example id
-        &bitflyer.request(BitflyerSecurity::Sign),
+        [BitFlyerOption::HttpAuth(true)],
     ).await;
     println!("Cancel order result:\n{:?}", result);
 
@@ -36,7 +37,7 @@ async fn main() {
     let commission: serde_json::Value = client.get(
         "/v1/me/gettradingcommission",
         Some(&json!({ "product_code": "BTC_JPY" })),
-        &bitflyer.request(BitflyerSecurity::Sign),
+        [BitFlyerOption::HttpAuth(true)],
     ).await.expect("failed get commission");
     println!("commission rate:\n{:?}", commission["commission_rate"]);
 }
