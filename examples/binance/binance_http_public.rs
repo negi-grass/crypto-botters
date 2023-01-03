@@ -3,8 +3,8 @@ use rust_decimal::prelude::*;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use crypto_botters::{
-    http::Client,
-    binance::{Binance, BinanceAuth, BinanceHttpUrl},
+    Client,
+    binance::{BinanceHttpUrl, BinanceOption},
 };
 
 #[tokio::main]
@@ -12,8 +12,8 @@ async fn main() {
     env_logger::builder()
         .filter_level(LevelFilter::Debug)
         .init();
-    let binance = Binance::new(None, None);
-    let client = Client::new();
+    let mut client = Client::new();
+    client.default_option(BinanceOption::HttpUrl(BinanceHttpUrl::Spot));
 
     // typed
     #[derive(Serialize)]
@@ -32,7 +32,7 @@ async fn main() {
     let ticker: Ticker = client.get(
         "/api/v3/ticker/price",
         Some(&TickerParams { symbol: "BTCUSDT" }),
-        &binance.request(BinanceAuth::None, BinanceHttpUrl::Spot),
+        [BinanceOption::Default],
     ).await.expect("failed to get tickers");
     println!("BTC & ETH prices:\n{:?}", ticker.price);
 
@@ -40,7 +40,7 @@ async fn main() {
     let orderbook: serde_json::Value = client.get(
         "https://api.binance.com/api/v3/ticker/bookTicker",
         Some(&json!({ "symbol": "BTCUSDT" })),
-        &binance.request_no_url(BinanceAuth::None),
+        [BinanceOption::HttpUrl(BinanceHttpUrl::None)],
     ).await.expect("failed get orderbook");
     println!("BTC bidPrice:\n{:?}", orderbook["bidPrice"]);
 }

@@ -6,18 +6,6 @@ use std::fmt::Debug;
 /// A `trait` that represents an option which can be set when creating handlers
 pub trait HandlerOption: Default {
     type Options: HandlerOptions<OptionItem=Self>;
-
-    // /// Create a [generic_api_client::http::RequestHandler] from some options.
-    // #[allow(unused_variables)]
-    // fn request_handler<'a, R>(options: Self::Options) -> Self::RequestHandler where Self: HttpOption<'a, R> {
-    //     unimplemented!()
-    // }
-
-    // /// Create a [generic_api_client::websocket::WebSocketHandler] from some options.
-    // #[allow(unused_variables)]
-    // fn websocket_handler<H>(handler: H, options: Self::Options) -> Self::WebSocketHandler where Self: WebSocketOption<H> {
-    //     unimplemented!()
-    // }
 }
 
 /// Set of [HandlerOption] s

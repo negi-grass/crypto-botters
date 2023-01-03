@@ -6,7 +6,7 @@ use serde::Serialize;
 pub use crypto_botters_binance as binance;
 #[cfg(feature = "bitflyer")]
 pub use crypto_botters_bitflyer as bitflyer;
-use generic_api_client::websocket::{WebSocketConnection, WebSocketHandler};
+pub use generic_api_client;
 
 // very long type, make it a macro
 macro_rules! request_return_type {
@@ -34,13 +34,23 @@ impl Client {
         Self::default()
     }
 
+    /// Update the default options for this [Client]
+    #[inline(always)]
+    pub fn default_option<O>(&mut self, option: O)
+    where
+        O: HandlerOption,
+        Self: GetOptions<O::Options>,
+    {
+        self.options_mut().update(option);
+    }
+
     #[inline]
     fn merged_options<O>(&self, options: impl IntoIterator<Item=O>) -> O::Options
     where
         O: HandlerOption,
         Self:GetOptions<O::Options>,
     {
-        let mut default_options = self.option().clone();
+        let mut default_options = self.options().clone();
         for option in options {
             default_options.update(option);
         }
@@ -165,17 +175,17 @@ impl Client {
 }
 
 pub trait GetOptions<O: HandlerOptions> {
-    fn option(&self) -> &O;
-    fn option_mut(&mut self) -> &mut O;
+    fn options(&self) -> &O;
+    fn options_mut(&mut self) -> &mut O;
 }
 
 #[cfg(feature = "binance")]
 impl GetOptions<binance::BinanceOptions> for Client {
-    fn option(&self) -> &binance::BinanceOptions {
+    fn options(&self) -> &binance::BinanceOptions {
         &self.binance
     }
 
-    fn option_mut(&mut self) -> &mut binance::BinanceOptions {
+    fn options_mut(&mut self) -> &mut binance::BinanceOptions {
         &mut self.binance
     }
 }
