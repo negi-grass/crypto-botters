@@ -3,39 +3,86 @@
 
 use std::{
     marker::PhantomData,
-    time::{SystemTime, Duration},
+    time::SystemTime,
 };
 use hmac::{Hmac, Mac};
 use sha2::Sha256;
 use rand::{Rng, distributions::Alphanumeric};
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use serde_json::json;
-use generic_api_client::{http::*, websocket::*};
-use generic_api_client::http::header::HeaderValue;
+use crypto_botters_api::{HandlerOption, HandlerOptions, HttpOption, WebSocketOption};
+use generic_api_client::{http::{*, header::HeaderValue}, websocket::*};
 
 /// The type returned by [Client::request()].
 pub type BitFlyerRequestResult<T> = Result<T, RequestError<&'static str, BitFlyerHandlerError>>;
 
-/// A `struct` that provides the [generic_api_client]'s handlers.
-#[derive(Clone)]
-pub struct BitFlyer {
-    api_key: Option<String>,
-    api_secret: Option<String>,
-    /// How many times should the request be sent if it keeps failing. Defaults to 1.
-    /// See also: field `max_try` of [RequestConfig]
-    pub request_max_try: u8,
-    /// Whether the websocket handler should receive duplicate message. Defaults to false.
-    /// See also: field `ignore_duplicate_during_reconnection` of [WebSocketConfig].
-    pub websocket_allow_duplicate_message: bool,
-    /// The interval of auto reconnection. Defaults to disabled.
-    /// See also: field `refresh_after` of [WebSocketConfig]
-    pub websocket_refresh_interval: Duration,
+/// Options that can be set when creating handlers
+pub enum BitFlyerOption {
+    /// [Default] variant, does nothing
+    Default,
+    /// API key
+    Key(String),
+    /// Api secret
+    Secret(String),
+    /// Base url for HTTP requests
+    HttpUrl(BitFlyerHttpUrl),
+    /// Whether [BitFlyerRequestHandler] should perform authentication
+    HttpAuth(bool),
+    /// [RequestConfig] used when sending requests.
+    /// `url_prefix` will be overridden by [HttpUrl](Self::HttpUrl) unless `HttpUrl` is [BinanceHttpUrl::None].
+    RequestConfig(RequestConfig),
+    /// Base url for WebSocket connections
+    WebSocketUrl(BitFlyerWebSocketUrl),
+    /// Whether [BitFlyerWebSocketHandler] should perform authentication
+    WebSocketAuth(bool),
+    /// The channels to be subscribed by [BitFlyerWebSocketHandler].
+    WebSocketChannels(Vec<String>),
+    /// [WebSocketConfig] used for creating [WebSocketConnection]s
+    /// `url_prefix` will be overridden by [WebSocketUrl](Self::WebSocketUrl) unless `WebSocketUrl` is [BinanceWebSocketUrl::None].
+    /// By default, `refresh_after` is set to 12 hours and `ignore_duplicate_during_reconnection` is set to `true`.
+    WebSocketConfig(WebSocketConfig),
 }
 
+/// A `struct` that represents a set of [BitFlyerOption] s.
+#[derive(Clone, Debug)]
+pub struct BitFlyerOptions {
+    /// see [BitFlyerOption::Key]
+    pub key: Option<String>,
+    /// see [BitFlyerOption::Secret]
+    pub secret: Option<String>,
+    /// see [BitFlyerOption::HttpUrl]
+    pub http_url: BitFlyerHttpUrl,
+    /// see [BitFlyerOption::HttpAuth]
+    pub http_auth: bool,
+    /// see [BitFlyerOption::RequestConfig]
+    pub request_config: RequestConfig,
+    /// see [BitFlyerOption::WebSocketUrl]
+    pub websocket_url: BitFlyerWebSocketUrl,
+    /// see [BitFlyerOption::WebSocketAuth]
+    pub websocket_auth: bool,
+    /// see [BitFlyerOptions::WebSocketChannels]
+    pub websocket_channels: Vec<String>,
+    /// see [BitFlyerOption::WebSocketConfig]
+    pub websocket_config: WebSocketConfig,
+}
+
+/// A `enum` that represents the base url of the BitFlyer HTTP API.
 #[derive(Debug, Eq, PartialEq, Copy, Clone)]
-pub enum BitflyerSecurity {
+pub enum BitFlyerHttpUrl {
+    /// https://api.bitflyer.com
+    Default,
+    /// The url will not be modified by [BitFlyerRequestHandler]
     None,
-    Sign,
+}
+
+/// A `enum` that represents the base url of the BitFlyer Realtime API
+#[derive(Debug, Eq, PartialEq, Copy, Clone)]
+#[non_exhaustive]
+pub enum BitFlyerWebSocketUrl {
+    /// wss://ws.lightstream.bitflyer.com
+    Default,
+    /// The url will not be modified by [BitFlyerWebSocketHandler]
+    None,
 }
 
 #[derive(Deserialize, Debug)]
@@ -50,68 +97,19 @@ pub enum BitFlyerHandlerError {
     ParseError,
 }
 
-#[derive(Copy, Clone)]
+/// A `struct` that implements [RequestHandler]
 pub struct BitFlyerRequestHandler<'a, R: DeserializeOwned> {
-    api_key: Option<&'a str>,
-    api_secret: Option<&'a str>,
-    security: BitflyerSecurity,
-    max_try: u8,
+    options: BitFlyerOptions,
     _phantom: PhantomData<&'a R>,
 }
 
+/// A `struct` that implements [WebSocketHandler]
 pub struct BitFlyerWebSocketHandler<H: FnMut(BitFlyerChannelMessage) + Send + 'static> {
-    api_key: Option<String>,
-    api_secret: Option<String>,
     message_handler: H,
-    channels: Vec<String>,
-    auth: bool,
     auth_id: Option<String>,
-    allow_duplicate: bool,
-    refresh: Duration,
+    options: BitFlyerOptions,
 }
 
-impl BitFlyer {
-    pub fn new(api_key: Option<String>, api_secret: Option<String>) -> Self {
-        Self {
-            api_key,
-            api_secret,
-            request_max_try: 1,
-            websocket_allow_duplicate_message: false,
-            websocket_refresh_interval: Duration::ZERO, // disable
-        }
-    }
-
-    /// Returns a `impl` [RequestHandler] to be passed to [Client::request()].
-    pub fn request<R: DeserializeOwned>(&self, security: BitflyerSecurity) -> BitFlyerRequestHandler<R> {
-        BitFlyerRequestHandler {
-            api_key: self.api_key.as_deref(),
-            api_secret: self.api_secret.as_deref(),
-            security,
-            max_try: self.request_max_try,
-            _phantom: PhantomData,
-        }
-    }
-
-    /// Returns a `impl` [WebSocketHandler] to be passed to [WebSocketConnection::new()].
-    pub fn websocket<H>(&self, message_handler: H, channels: Vec<&str>, auth: bool) -> BitFlyerWebSocketHandler<H>
-    where
-        H: FnMut(BitFlyerChannelMessage) + Send + 'static,
-    {
-        let channels = channels.into_iter().map(ToOwned::to_owned).collect();
-        BitFlyerWebSocketHandler {
-            api_key: self.api_key.clone(),
-            api_secret: self.api_secret.clone(),
-            message_handler,
-            channels,
-            auth,
-            auth_id: None,
-            allow_duplicate: self.websocket_allow_duplicate_message,
-            refresh: self.websocket_refresh_interval,
-        }
-    }
-}
-
-// https://binance-docs.github.io/apidocs/spot/en/#general-api-information
 impl<'a, B, R> RequestHandler<B> for BitFlyerRequestHandler<'a, R>
 where
     B: Serialize,
@@ -122,9 +120,10 @@ where
     type BuildError = &'static str;
 
     fn request_config(&self) -> RequestConfig {
-        let mut config = RequestConfig::new();
-        config.url_prefix = "https://api.bitflyer.com".to_owned();
-        config.max_try = self.max_try;
+        let mut config = self.options.request_config.clone();
+        if self.options.http_url != BitFlyerHttpUrl::None {
+            config.url_prefix = self.options.http_url.as_str().to_owned();
+        }
         config
     }
 
@@ -138,7 +137,7 @@ where
 
         let mut request = builder.build().or(Err("failed to build request"))?;
 
-        if self.security == BitflyerSecurity::Sign {
+        if self.options.http_auth {
             // https://lightning.bitflyer.com/docs?lang=en#authentication
             let time = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap(); // always after the epoch
             let timestamp = time.as_millis() as u64;
@@ -155,13 +154,13 @@ where
 
             let sign_contents = format!("{}{}{}{}", timestamp, request.method(), path, body);
 
-            let secret = self.api_secret.ok_or("API secret not set")?;
+            let secret = self.options.secret.as_deref().ok_or("API secret not set")?;
             let mut hmac = Hmac::<Sha256>::new_from_slice(secret.as_bytes()).unwrap(); // hmac accepts key of any length
 
             hmac.update(sign_contents.as_bytes());
             let signature = hex::encode(hmac.finalize().into_bytes());
 
-            let key = HeaderValue::from_str(self.api_key.ok_or("API key not set")?).or(
+            let key = HeaderValue::from_str(self.options.key.as_deref().ok_or("API key not set")?).or(
                 Err("invalid character in API key")
             )?;
             let headers = request.headers_mut();
@@ -196,18 +195,18 @@ where
 
 impl<H> WebSocketHandler for BitFlyerWebSocketHandler<H> where H: FnMut(BitFlyerChannelMessage) + Send + 'static, {
     fn websocket_config(&self) -> WebSocketConfig {
-        let mut config = WebSocketConfig::new();
-        config.url_prefix = "wss://ws.lightstream.bitflyer.com".to_owned();
-        config.ignore_duplicate_during_reconnection = !self.allow_duplicate;
-        config.refresh_after = self.refresh;
+        let mut config = self.options.websocket_config.clone();
+        if self.options.websocket_url != BitFlyerWebSocketUrl::None {
+            config.url_prefix = self.options.websocket_url.as_str().to_owned();
+        }
         config
     }
 
     fn handle_start(&mut self) -> Vec<WebSocketMessage> {
-        if self.auth {
+        if self.options.websocket_auth {
             // https://bf-lightning-api.readme.io/docs/realtime-api-auth
-            if let Some(key) = &self.api_key {
-                if let Some(secret) = &self.api_secret {
+            if let Some(key) = self.options.key.as_deref() {
+                if let Some(secret) = self.options.secret.as_deref() {
                     let time = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap(); // always after the epoch
                     let timestamp = time.as_millis() as u64;
                     let nonce: String = rand::thread_rng()
@@ -264,7 +263,7 @@ impl<H> WebSocketHandler for BitFlyerWebSocketHandler<H> where H: FnMut(BitFlyer
                         return Vec::new();
                     },
                 };
-                if self.auth && self.auth_id == message.id {
+                if self.options.websocket_auth && self.auth_id == message.id {
                     // result of auth
                     if message.result == Some(serde_json::Value::Bool(true)) {
                         log::debug!("WebSocket authentication successful");
@@ -288,8 +287,98 @@ impl<H> WebSocketHandler for BitFlyerWebSocketHandler<H> where H: FnMut(BitFlyer
 
 impl<H> BitFlyerWebSocketHandler<H> where H: FnMut(BitFlyerChannelMessage) + Send + 'static, {
     fn message_subscribe(&self) -> Vec<WebSocketMessage> {
-        self.channels.clone().into_iter().map(|channel| {
+        self.options.websocket_channels.clone().into_iter().map(|channel| {
             WebSocketMessage::Text(json!({ "method": "subscribe", "params": { "channel": channel } }).to_string())
         }).collect()
+    }
+}
+
+impl BitFlyerHttpUrl {
+    /// The base URL that this variant represents.
+    fn as_str(&self) -> &'static str {
+        match self {
+            Self::Default => "https://api.bitflyer.com",
+            Self::None => "",
+        }
+    }
+}
+
+impl BitFlyerWebSocketUrl {
+    /// The base URL that this variant represents.
+    fn as_str(&self) -> &'static str {
+        match self {
+            Self::Default => "wss://ws.lightstream.bitflyer.com",
+            Self::None => "",
+        }
+    }
+}
+
+impl HandlerOptions for BitFlyerOptions {
+    type OptionItem = BitFlyerOption;
+
+    fn update(&mut self, option: Self::OptionItem) {
+        match option {
+            BitFlyerOption::Default => (),
+            BitFlyerOption::Key(v) => self.key = Some(v),
+            BitFlyerOption::Secret(v) => self.secret = Some(v),
+            BitFlyerOption::HttpUrl(v) => self.http_url = v,
+            BitFlyerOption::HttpAuth(v) => self.http_auth = v,
+            BitFlyerOption::RequestConfig(v) => self.request_config = v,
+            BitFlyerOption::WebSocketUrl(v) => self.websocket_url = v,
+            BitFlyerOption::WebSocketAuth(v) => self.websocket_auth = v,
+            BitFlyerOption::WebSocketChannels(v) => self.websocket_channels = v,
+            BitFlyerOption::WebSocketConfig(v) => self.websocket_config = v,
+        }
+    }
+}
+
+impl Default for BitFlyerOptions {
+    fn default() -> Self {
+        let mut websocket_config = WebSocketConfig::new();
+        websocket_config.ignore_duplicate_during_reconnection = true;
+        Self {
+            key: None,
+            secret: None,
+            http_url: BitFlyerHttpUrl::Default,
+            http_auth: false,
+            request_config: RequestConfig::default(),
+            websocket_url: BitFlyerWebSocketUrl::Default,
+            websocket_auth: false,
+            websocket_channels: vec![],
+            websocket_config,
+        }
+    }
+}
+
+impl<'a, R: DeserializeOwned + 'a> HttpOption<'a, R> for BitFlyerOption {
+    type RequestHandler = BitFlyerRequestHandler<'a, R>;
+
+    fn request_handler(options: Self::Options) -> Self::RequestHandler {
+        BitFlyerRequestHandler::<'a, R> {
+            options,
+            _phantom: PhantomData,
+        }
+    }
+}
+
+impl<H: FnMut(BitFlyerChannelMessage) + Send + 'static> WebSocketOption<H> for BitFlyerOption {
+    type WebSocketHandler = BitFlyerWebSocketHandler<H>;
+
+    fn websocket_handler(handler: H, options: Self::Options) -> Self::WebSocketHandler {
+        BitFlyerWebSocketHandler {
+            message_handler: handler,
+            auth_id: None,
+            options,
+        }
+    }
+}
+
+impl HandlerOption for BitFlyerOption {
+    type Options = BitFlyerOptions;
+}
+
+impl Default for BitFlyerOption {
+    fn default() -> Self {
+        Self::Default
     }
 }

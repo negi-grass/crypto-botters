@@ -216,6 +216,7 @@ dependencies = [
 name = "crypto-botters-bitflyer"
 version = "0.2.0"
 dependencies = [
+ "crypto-botters-api",
  "generic-api-client",
  "hex",
  "hmac",

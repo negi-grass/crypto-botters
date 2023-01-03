@@ -26,6 +26,8 @@ pub struct Client {
     client: http::Client,
     #[cfg(feature = "binance")]
     binance: binance::BinanceOptions,
+    #[cfg(feature = "bitflyer")]
+    bitflyer: bitflyer::BitFlyerOptions,
 }
 
 impl Client {
@@ -187,5 +189,16 @@ impl GetOptions<binance::BinanceOptions> for Client {
 
     fn options_mut(&mut self) -> &mut binance::BinanceOptions {
         &mut self.binance
+    }
+}
+
+#[cfg(feature = "bitflyer")]
+impl GetOptions<bitflyer::BitFlyerOptions> for Client {
+    fn options(&self) -> &bitflyer::BitFlyerOptions {
+        &self.bitflyer
+    }
+
+    fn options_mut(&mut self) -> &mut bitflyer::BitFlyerOptions {
+        &mut self.bitflyer
     }
 }
