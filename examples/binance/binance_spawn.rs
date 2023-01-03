@@ -1,19 +1,17 @@
 use log::LevelFilter;
 use serde_json::json;
 use crypto_botters::{
-    http::Client,
-    binance::{Binance, BinanceSecurity, BinanceRequestResult},
+    Client,
+    binance::{BinanceOption, BinanceRequestResult},
 };
 
 struct Api {
-    binance: Binance,
     client: Client,
 }
 
 impl Api {
     fn new() -> Self {
         Self {
-            binance: Binance::new(None, None),
             client: Client::new(),
         }
     }
@@ -22,7 +20,7 @@ impl Api {
         self.client.get(
             "https://api.binance.com/api/v3/ticker/bookTicker",
             Some(&json!({ "symbol": "BTCUSDT" })),
-            &self.binance.request_no_url(BinanceSecurity::None),
+            [BinanceOption::Default],
         ).await
     }
 }

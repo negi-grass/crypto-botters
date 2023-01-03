@@ -11,9 +11,10 @@ use tokio::{
     time::MissedTickBehavior,
 };
 use tokio_tungstenite::{
-    tungstenite as tungstenite,
+    tungstenite,
     MaybeTlsStream,
 };
+pub use tungstenite::Error as TungsteniteError;
 use futures_util::{
     sink::SinkExt,
     stream::{StreamExt, SplitSink},
@@ -29,7 +30,7 @@ type FeederMessage = Option<(bool, tungstenite::Result<tungstenite::Message>)>;
 /// Dropping this `struct` terminates the connection.
 ///
 /// # Reconnecting
-/// `WebSocketConnection` automatically reconnects when an [Error][tungstenite::Error] occurs.
+/// `WebSocketConnection` automatically reconnects when an [TungsteniteError] occurs.
 /// Note, that during reconnection, it is **possible** that the [WebSocketHandler] receives multiple identical messages
 /// even though the message was sent only once by the server, or receives only one message even though
 /// multiple identical messages were sent by the server, because there could be a time difference in the new connection and
@@ -56,7 +57,7 @@ struct ConnectionInner<H: WebSocketHandler> {
 
 impl<H: WebSocketHandler> WebSocketConnection<H> {
     /// Starts a new `WebSocketConnection` to the given url using the given [handler][WebSocketHandler].
-    pub async fn new(url: &str, handler: H) -> Result<Self, tungstenite::Error> {
+    pub async fn new(url: &str, handler: H) -> Result<Self, TungsteniteError> {
         let config = handler.websocket_config();
         let handler = Arc::new(SyncMutex::new(handler));
         let url = config.url_prefix + url;
@@ -228,7 +229,7 @@ impl<H: WebSocketHandler> WebSocketConnection<H> {
         })
     }
 
-    async fn start_connection(connection: Arc<ConnectionInner<impl WebSocketHandler>>) -> Result<WebSocketSplitSink, tungstenite::Error> {
+    async fn start_connection(connection: Arc<ConnectionInner<impl WebSocketHandler>>) -> Result<WebSocketSplitSink, TungsteniteError> {
         let (websocket_stream, _) = tokio_tungstenite::connect_async(connection.url.clone()).await?;
         let (mut sink, mut stream) = websocket_stream.split();
 
@@ -253,7 +254,7 @@ impl<H: WebSocketHandler> WebSocketConnection<H> {
     }
 
     /// Sends a message to the connection.
-    pub async fn send_message(&mut self, message: WebSocketMessage) -> Result<(), tungstenite::Error> {
+    pub async fn send_message(&mut self, message: WebSocketMessage) -> Result<(), TungsteniteError> {
         self.sink.lock().await.send(message.into_message()).await
     }
 
