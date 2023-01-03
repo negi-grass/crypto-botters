@@ -266,7 +266,7 @@ impl<H> WebSocketHandler for BinanceWebSocketHandler<H> where H: FnMut(serde_jso
             WebSocketMessage::Binary(_) => log::warn!("Unexpected binary message received"),
             WebSocketMessage::Ping(_) | WebSocketMessage::Pong(_) => (),
         }
-        Vec::new()
+        vec![]
     }
 }
 
