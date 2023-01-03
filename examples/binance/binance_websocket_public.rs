@@ -1,22 +1,18 @@
 use std::time::Duration;
 use log::LevelFilter;
-use crypto_botters::{
-    websocket::WebSocketConnection,
-    binance::{Binance, BinanceWebSocketUrl},
-};
+use crypto_botters::{binance::{BinanceOption, BinanceWebSocketUrl}, Client};
 
 #[tokio::main]
 async fn main() {
     env_logger::builder()
         .filter_level(LevelFilter::Debug)
         .init();
-    let binance = Binance::new(None, None);
+    let client = Client::new();
 
-    let connection = WebSocketConnection::new(
+    let connection = client.websocket(
         "/ws/btcusdt@trade",
-        binance.websocket(|message| {
-            println!("{}", message);
-        }, BinanceWebSocketUrl::Spot443)
+        |message| println!("{}", message),
+        [BinanceOption::WebSocketUrl(BinanceWebSocketUrl::Spot443)],
     ).await.expect("failed to connect websocket");
     // receive messages
     tokio::time::sleep(Duration::from_secs(1)).await;

@@ -9,25 +9,52 @@ use std::{
 use hmac::{Hmac, Mac};
 use sha2::Sha256;
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
+use crypto_botters_api::*;
 use generic_api_client::{http::*, websocket::*};
 
 /// The type returned by [Client::request()].
 pub type BinanceRequestResult<T> = Result<T, RequestError<&'static str, BinanceHandlerError>>;
 
-/// A `struct` that provides the [generic_api_client]'s handlers.
-#[derive(Clone)]
-pub struct Binance {
-    api_key: Option<String>,
-    api_secret: Option<String>,
-    /// How many times should the request be sent if it keeps failing. Defaults to 1.
-    /// See also: field `max_try` of [RequestConfig]
-    pub request_max_try: u8,
-    /// Whether the websocket handler should receive duplicate message. Defaults to disabled.
-    /// See also: field `ignore_duplicate_during_reconnection` of [WebSocketConfig].
-    pub websocket_allow_duplicate_message: bool,
-    /// The interval of auto reconnection. Defaults to 12 hours.
-    /// See also: field `refresh_after` of [WebSocketConfig]
-    pub websocket_refresh_interval: Duration,
+/// Options that can be set when creating handlers
+pub enum BinanceOption {
+    /// [Default] variant, does nothing
+    Default,
+    /// API key
+    Key(String),
+    /// Api secret
+    Secret(String),
+    /// Base url for HTTP requests
+    HttpUrl(BinanceHttpUrl),
+    /// Authentication type for HTTP requests
+    HttpAuth(BinanceAuth),
+    /// [RequestConfig] used when sending requests.
+    /// `url_prefix` will be overridden by [HttpUrl](Self::HttpUrl) unless `HttpUrl` is [BinanceHttpUrl::None].
+    RequestConfig(RequestConfig),
+    /// Base url for WebSocket connections
+    WebSocketUrl(BinanceWebSocketUrl),
+    /// [WebSocketConfig] used for creating [WebSocketConnection]s
+    /// `url_prefix` will be overridden by [WebSocketUrl](Self::WebSocketUrl) unless `WebSocketUrl` is [BinanceWebSocketUrl::None].
+    /// By default, `refresh_after` is set to 12 hours and `ignore_duplicate_during_reconnection` is set to `true`.
+    WebSocketConfig(WebSocketConfig),
+}
+
+/// A `struct` that represents a set of [BinanceOption] s.
+#[derive(Clone, Debug)]
+pub struct BinanceOptions {
+    /// see [BinanceOption::Key]
+    pub key: Option<String>,
+    /// see [BinanceOption::Secret]
+    pub secret: Option<String>,
+    /// see [BinanceOption::HttpUrl]
+    pub http_url: BinanceHttpUrl,
+    /// see [BinanceOption::HttpAuth]
+    pub http_auth: BinanceAuth,
+    /// see [BinanceOption::RequestConfig]
+    pub request_config: RequestConfig,
+    /// see [BinanceOption::WebSocketUrl]
+    pub websocket_url: BinanceWebSocketUrl,
+    /// see [BinanceOption::WebSocketConfig]
+    pub websocket_config: WebSocketConfig,
 }
 
 /// A `enum` that represents the base url of the Binance REST API.
@@ -91,10 +118,10 @@ pub enum BinanceWebSocketUrl {
 }
 
 #[derive(Debug, Eq, PartialEq, Copy, Clone)]
-pub enum BinanceSecurity {
-    None,
-    Key,
+pub enum BinanceAuth {
     Sign,
+    Key,
+    None,
 }
 
 #[derive(Debug)]
@@ -104,83 +131,22 @@ pub enum BinanceHandlerError {
     ParseError,
 }
 
-#[derive(Copy, Clone)]
+/// A `struct` that implements [RequestHandler]
 pub struct BinanceRequestHandler<'a, R: DeserializeOwned> {
-    api_key: Option<&'a str>,
-    api_secret: Option<&'a str>,
-    security: BinanceSecurity,
-    base_url: BinanceHttpUrl,
-    max_try: u8,
+    options: BinanceOptions,
     _phantom: PhantomData<&'a R>,
 }
 
+/// A `struct` that implements [WebSocketHandler]
 pub struct BinanceWebSocketHandler<H: FnMut(serde_json::Value) + Send + 'static> {
     message_handler: H,
-    base_url: BinanceWebSocketUrl,
-    allow_duplicate: bool,
-    refresh: Duration,
+    options: BinanceOptions,
 }
 
 #[derive(Deserialize, Debug)]
 pub struct BinanceError {
     pub code: i32,
     pub msg: String,
-}
-
-impl Binance {
-    pub fn new(api_key: Option<String>, api_secret: Option<String>) -> Self {
-        Self {
-            api_key,
-            api_secret,
-            request_max_try: 1,
-            websocket_allow_duplicate_message: false,
-            websocket_refresh_interval: Duration::from_secs(60 * 60 * 12), // 12 hours
-        }
-    }
-
-    /// Returns a `impl` [RequestHandler] to be passed to [Client::request()].
-    pub fn request<R: DeserializeOwned>(&self, security: BinanceSecurity, base_url: BinanceHttpUrl) -> BinanceRequestHandler<R> {
-        BinanceRequestHandler {
-            api_key: self.api_key.as_deref(),
-            api_secret: self.api_secret.as_deref(),
-            security,
-            base_url,
-            max_try: self.request_max_try,
-            _phantom: PhantomData,
-        }
-    }
-
-    /// Returns a `impl` [RequestHandler] to be passed to [Client::request()].
-    ///
-    /// The difference between [request()][Self::request()] is that the `base_url` parameter is not needed.
-    #[inline(always)]
-    pub fn request_no_url<R: DeserializeOwned>(&self, security: BinanceSecurity) -> BinanceRequestHandler<R> {
-        self.request(security, BinanceHttpUrl::None)
-    }
-
-    /// Returns a `impl` [WebSocketHandler] to be passed to [WebSocketConnection::new()].
-    pub fn websocket<H>(&self, message_handler: H, base_url: BinanceWebSocketUrl) -> BinanceWebSocketHandler<H>
-    where
-        H: FnMut(serde_json::Value) + Send + 'static,
-    {
-        BinanceWebSocketHandler {
-            message_handler,
-            base_url,
-            allow_duplicate: self.websocket_allow_duplicate_message,
-            refresh: self.websocket_refresh_interval,
-        }
-    }
-
-    /// Returns a `impl` [WebSocketHandler] to be passed to [WebSocketConnection::new()].
-    ///
-    /// The difference between [websocket()][Self::websocket()] is that the `base_url` parameter is not needed.
-    #[inline(always)]
-    pub fn websocket_no_url<H>(&self, message_handler: H) -> BinanceWebSocketHandler<H>
-    where
-        H: FnMut(serde_json::Value) + Send + 'static,
-    {
-        self.websocket(message_handler, BinanceWebSocketUrl::None)
-    }
 }
 
 // https://binance-docs.github.io/apidocs/spot/en/#general-api-information
@@ -194,9 +160,10 @@ where
     type BuildError = &'static str;
 
     fn request_config(&self) -> RequestConfig {
-        let mut config = RequestConfig::new();
-        config.url_prefix = self.base_url.to_string();
-        config.max_try = self.max_try;
+        let mut config = self.options.request_config.clone();
+        if self.options.http_url != BinanceHttpUrl::None {
+            config.url_prefix = self.options.http_url.as_str().to_owned();
+        }
         config
     }
 
@@ -210,18 +177,18 @@ where
                 .body(encoded);
         }
 
-        if self.security != BinanceSecurity::None {
+        if self.options.http_auth != BinanceAuth::None {
             // https://binance-docs.github.io/apidocs/spot/en/#signed-trade-user_data-and-margin-endpoint-security
-            let key = self.api_key.ok_or("API key not set")?;
+            let key = self.options.key.as_deref().ok_or("API key not set")?;
             builder = builder.header("X-MBX-APIKEY", key);
 
-            if self.security == BinanceSecurity::Sign {
+            if self.options.http_auth == BinanceAuth::Sign {
                 let time = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap(); // always after the epoch
                 let timestamp = time.as_millis();
 
                 builder = builder.query(&[("timestamp", timestamp)]);
 
-                let secret = self.api_secret.ok_or("API secret not set")?;
+                let secret = self.options.secret.as_deref().ok_or("API secret not set")?;
                 let mut hmac = Hmac::<Sha256>::new_from_slice(secret.as_bytes()).unwrap(); // hmac accepts key of any length
 
                 let mut request = builder.build().or(Err("Failed to build request"))?;
@@ -280,10 +247,10 @@ where
 
 impl<H> WebSocketHandler for BinanceWebSocketHandler<H> where H: FnMut(serde_json::Value) + Send + 'static, {
     fn websocket_config(&self) -> WebSocketConfig {
-        let mut config = WebSocketConfig::new();
-        config.url_prefix = self.base_url.to_string();
-        config.ignore_duplicate_during_reconnection = !self.allow_duplicate;
-        config.refresh_after = self.refresh;
+        let mut config = self.options.websocket_config.clone();
+        if self.options.websocket_url != BinanceWebSocketUrl::None {
+            config.url_prefix = self.options.websocket_url.as_str().to_owned();
+        }
         config
     }
 
@@ -299,13 +266,13 @@ impl<H> WebSocketHandler for BinanceWebSocketHandler<H> where H: FnMut(serde_jso
             WebSocketMessage::Binary(_) => log::warn!("Unexpected binary message received"),
             WebSocketMessage::Ping(_) | WebSocketMessage::Pong(_) => (),
         }
-        Vec::new()
+        vec![]
     }
 }
 
 impl BinanceHttpUrl {
     /// The string that this variant represents.
-    pub fn to_str(&self) -> &'static str {
+    fn as_str(&self) -> &'static str {
         match self {
             Self::Spot => "https://api.binance.com",
             Self::Spot1 => "https://api1.binance.com",
@@ -323,7 +290,7 @@ impl BinanceHttpUrl {
 }
 
 impl BinanceWebSocketUrl {
-    pub fn to_str(&self) -> &'static str {
+    pub fn as_str(&self) -> &'static str {
         match self {
             Self::Spot9443 => "wss://stream.binance.com:9443",
             Self::Spot443 => "wss://stream.binance.com:443",
@@ -342,14 +309,68 @@ impl BinanceWebSocketUrl {
     }
 }
 
-impl ToString for BinanceHttpUrl {
-    fn to_string(&self) -> String {
-        self.to_str().to_owned()
+impl HandlerOptions for BinanceOptions {
+    type OptionItem = BinanceOption;
+
+    fn update(&mut self, option: Self::OptionItem) {
+        match option {
+            BinanceOption::Default => (),
+            BinanceOption::Key(v) => self.key = Some(v),
+            BinanceOption::Secret(v) => self.secret = Some(v),
+            BinanceOption::HttpUrl(v) => self.http_url = v,
+            BinanceOption::HttpAuth(v) => self.http_auth = v,
+            BinanceOption::RequestConfig(v) => self.request_config = v,
+            BinanceOption::WebSocketUrl(v) => self.websocket_url = v,
+            BinanceOption::WebSocketConfig(v) => self.websocket_config = v,
+        }
     }
 }
 
-impl ToString for BinanceWebSocketUrl {
-    fn to_string(&self) -> String {
-        self.to_str().to_owned()
+impl Default for BinanceOptions {
+    fn default() -> Self {
+        let mut websocket_config = WebSocketConfig::new();
+        websocket_config.refresh_after = Duration::from_secs(60 * 60 * 12);
+        websocket_config.ignore_duplicate_during_reconnection = true;
+        Self {
+            key: None,
+            secret: None,
+            http_url: BinanceHttpUrl::None,
+            http_auth: BinanceAuth::None,
+            request_config: RequestConfig::default(),
+            websocket_url: BinanceWebSocketUrl::None,
+            websocket_config,
+        }
+    }
+}
+
+impl<'a, R: DeserializeOwned + 'a> HttpOption<'a, R> for BinanceOption {
+    type RequestHandler = BinanceRequestHandler<'a, R>;
+
+    fn request_handler(options: Self::Options) -> Self::RequestHandler {
+        BinanceRequestHandler::<'a, R> {
+            options,
+            _phantom: PhantomData,
+        }
+    }
+}
+
+impl<H: FnMut(serde_json::Value) + Send + 'static> WebSocketOption<H> for BinanceOption {
+    type WebSocketHandler = BinanceWebSocketHandler<H>;
+
+    fn websocket_handler(handler: H, options: Self::Options) -> Self::WebSocketHandler {
+        BinanceWebSocketHandler {
+            message_handler: handler,
+            options,
+        }
+    }
+}
+
+impl HandlerOption for BinanceOption {
+    type Options = BinanceOptions;
+}
+
+impl Default for BinanceOption {
+    fn default() -> Self {
+        Self::Default
     }
 }

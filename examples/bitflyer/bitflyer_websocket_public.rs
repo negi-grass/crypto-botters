@@ -1,22 +1,18 @@
 use std::time::Duration;
 use log::LevelFilter;
-use crypto_botters::{
-    websocket::WebSocketConnection,
-    bitflyer::BitFlyer,
-};
+use crypto_botters::{Client, bitflyer::BitFlyerOption};
 
 #[tokio::main]
 async fn main() {
     env_logger::builder()
         .filter_level(LevelFilter::Debug)
         .init();
-    let bitflyer = BitFlyer::new(None, None);
+    let client = Client::new();
 
-    let connection = WebSocketConnection::new(
+    let connection = client.websocket(
         "/json-rpc",
-        bitflyer.websocket(|message| {
-            println!("{:?}", message);
-        }, vec!["lightning_board_FX_BTC_JPY"], false),
+        |message| println!("{:?}", message),
+        [BitFlyerOption::WebSocketChannels(vec!["lightning_board_FX_BTC_JPY".to_owned()])],
     ).await.expect("failed to connect websocket");
     // receive messages
     tokio::time::sleep(Duration::from_secs(5)).await;

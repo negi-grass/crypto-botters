@@ -2,10 +2,7 @@ use std::env;
 use log::LevelFilter;
 use rust_decimal::prelude::*;
 use serde::{Deserialize, Serialize};
-use crypto_botters::{
-    http::Client,
-    binance::{Binance, BinanceSecurity, BinanceHttpUrl},
-};
+use crypto_botters::{Client, binance::{BinanceAuth, BinanceHttpUrl, BinanceOption}};
 
 #[tokio::main]
 async fn main() {
@@ -14,8 +11,9 @@ async fn main() {
         .init();
     let key = env::var("BINANCE_API_KEY").expect("no API key found");
     let secret = env::var("BINANCE_API_SECRET").expect("no API secret found");
-    let binance = Binance::new(Some(key), Some(secret));
-    let client = Client::new();
+    let mut client = Client::new();
+    client.default_option(BinanceOption::Key(key));
+    client.default_option(BinanceOption::Secret(secret));
 
     // typed
     #[derive(Serialize)]
@@ -43,14 +41,14 @@ async fn main() {
     let trades: Vec<OldTrade> = client.get(
         "/api/v3/historicalTrades",
         Some(&TradesLookupParams { symbol: "BTCUSDT", limit: 3 }),
-        &binance.request(BinanceSecurity::Key, BinanceHttpUrl::Spot),
+        [BinanceOption::HttpUrl(BinanceHttpUrl::Spot), BinanceOption::HttpAuth(BinanceAuth::Key)],
     ).await.expect("failed to get trades");
     println!("Trade price:\n{:?}", trades[0].price);
 
     // not typed
     let dusts: serde_json::Value = client.post_no_body(
         "https://api.binance.com/sapi/v1/asset/dust-btc",
-        &binance.request_no_url(BinanceSecurity::Sign),
+        [BinanceOption::HttpAuth(BinanceAuth::Sign)],
     ).await.expect("failed get dusts");
     println!("My dust assets(BTC):\n{:?}", dusts["totalTransferBtc"]);
 }

@@ -3,6 +3,7 @@ use serde::Serialize;
 use thiserror::Error;
 pub use reqwest::{Request, RequestBuilder, StatusCode, Method, header::{self, HeaderMap}};
 pub use bytes::Bytes;
+pub use serde;
 
 /// Client for communicating with APIs through HTTP/HTTPS.
 ///
@@ -15,6 +16,7 @@ pub struct Client {
 
 impl Client {
     /// Constructs a new `Client`.
+    #[inline(always)]
     pub fn new() -> Self {
         Self {
             client: reqwest::Client::new(),
@@ -66,7 +68,7 @@ impl Client {
                         // max retry count
                         return Err(RequestError::SendRequest(error));
                     }
-                    log::warn!("Retrying sending reqeust");
+                    log::warn!("Retrying sending reqeust, count: {}", count);
                     // else, continue
                     count += 1;
                     tokio::time::sleep(config.retry_cooldown).await;
