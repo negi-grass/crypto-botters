@@ -1,6 +1,4 @@
 [workspace]
-members = ["generic-api-client", "crypto-botters-binance", "crypto-botters-bitflyer"]
-default-members = ["generic-api-client", "crypto-botters-binance", "crypto-botters-bitflyer"]
 
 [package]
 name = "crypto-botters"
@@ -27,6 +25,7 @@ bitflyer = ["dep:crypto-botters-bitflyer"]
 
 [dependencies]
 generic-api-client = { version = "0.1", path = "generic-api-client" }
+crypto-botters-api = { version = "0.1", path = "crypto-botters-api" }
 crypto-botters-binance = { version = "0.2", path = "crypto-botters-binance", optional = true }
 crypto-botters-bitflyer = { version = "0.2", path = "crypto-botters-bitflyer", optional = true }
 

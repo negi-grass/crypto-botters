@@ -3,6 +3,7 @@ use serde::Serialize;
 use thiserror::Error;
 pub use reqwest::{Request, RequestBuilder, StatusCode, Method, header::{self, HeaderMap}};
 pub use bytes::Bytes;
+pub use serde;
 
 /// Client for communicating with APIs through HTTP/HTTPS.
 ///

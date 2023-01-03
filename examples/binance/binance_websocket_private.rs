@@ -8,7 +8,7 @@ use crypto_botters::{
     websocket::WebSocketConnection,
     binance::{Binance, BinanceWebSocketUrl},
 };
-use crypto_botters_binance::{BinanceHttpUrl, BinanceSecurity};
+use crypto_botters_binance::{BinanceHttpUrl, BinanceAuth};
 
 #[tokio::main]
 async fn main() {
@@ -23,7 +23,7 @@ async fn main() {
     let key: serde_json::Value = client.post(
         "/sapi/v1/userDataStream/isolated",
         Some(&[("symbol", "BTCUSDT")]),
-        &binance.request(BinanceSecurity::Key, BinanceHttpUrl::Spot),
+        &binance.request(BinanceAuth::Key, BinanceHttpUrl::Spot),
     ).await.expect("failed to get listen key");
 
     let _connection = WebSocketConnection::new(

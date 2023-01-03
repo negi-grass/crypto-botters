@@ -4,7 +4,7 @@ use rust_decimal::prelude::*;
 use serde::{Deserialize, Serialize};
 use crypto_botters::{
     http::Client,
-    binance::{Binance, BinanceSecurity, BinanceHttpUrl},
+    binance::{Binance, BinanceAuth, BinanceHttpUrl},
 };
 
 #[tokio::main]
@@ -43,14 +43,14 @@ async fn main() {
     let trades: Vec<OldTrade> = client.get(
         "/api/v3/historicalTrades",
         Some(&TradesLookupParams { symbol: "BTCUSDT", limit: 3 }),
-        &binance.request(BinanceSecurity::Key, BinanceHttpUrl::Spot),
+        &binance.request(BinanceAuth::Key, BinanceHttpUrl::Spot),
     ).await.expect("failed to get trades");
     println!("Trade price:\n{:?}", trades[0].price);
 
     // not typed
     let dusts: serde_json::Value = client.post_no_body(
         "https://api.binance.com/sapi/v1/asset/dust-btc",
-        &binance.request_no_url(BinanceSecurity::Sign),
+        &binance.request_no_url(BinanceAuth::Sign),
     ).await.expect("failed get dusts");
     println!("My dust assets(BTC):\n{:?}", dusts["totalTransferBtc"]);
 }

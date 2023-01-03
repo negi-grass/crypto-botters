@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 use crypto_botters::{
     http::Client,
-    binance::{Binance, BinanceSecurity, BinanceHttpUrl},
+    binance::{Binance, BinanceAuth, BinanceHttpUrl},
 };
 
 #[tokio::main]
@@ -32,7 +32,7 @@ async fn main() {
     let ticker: Ticker = client.get(
         "/api/v3/ticker/price",
         Some(&TickerParams { symbol: "BTCUSDT" }),
-        &binance.request(BinanceSecurity::None, BinanceHttpUrl::Spot),
+        &binance.request(BinanceAuth::None, BinanceHttpUrl::Spot),
     ).await.expect("failed to get tickers");
     println!("BTC & ETH prices:\n{:?}", ticker.price);
 
@@ -40,7 +40,7 @@ async fn main() {
     let orderbook: serde_json::Value = client.get(
         "https://api.binance.com/api/v3/ticker/bookTicker",
         Some(&json!({ "symbol": "BTCUSDT" })),
-        &binance.request_no_url(BinanceSecurity::None),
+        &binance.request_no_url(BinanceAuth::None),
     ).await.expect("failed get orderbook");
     println!("BTC bidPrice:\n{:?}", orderbook["bidPrice"]);
 }
