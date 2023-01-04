@@ -178,7 +178,7 @@ dependencies = [
 
 [[package]]
 name = "crypto-botters"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "crypto-botters",
  "crypto-botters-api",
@@ -232,6 +232,7 @@ dependencies = [
 name = "crypto-botters-bybit"
 version = "0.1.0"
 dependencies = [
+ "crypto-botters-api",
  "generic-api-client",
  "hex",
  "hmac",

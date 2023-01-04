@@ -170,7 +170,7 @@ where
     fn build_request(&self, mut builder: RequestBuilder, request_body: &Option<B>, _: u8) -> Result<Request, Self::BuildError> {
         if let Some(body) = request_body {
             let encoded = serde_urlencoded::to_string(body).or(
-                Err("could not parse body as application/x-www-form-urlencoded"),
+                Err("could not serialize body as application/x-www-form-urlencoded"),
             )?;
             builder = builder
                 .header(header::CONTENT_TYPE, "application/x-www-form-urlencoded")
