@@ -1,6 +1,13 @@
 [package]
 name = "crypto-botters-api"
 version = "0.1.0"
+authors = ["negi_grass"]
 edition = "2021"
+description = "This crate is meant to be used by other crates of the crypto-botters project"
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/negi-grass/crypto-botters"
+documentation = "https://docs.rs/crypto-botters-bybit"
+repository = "https://github.com/negi-grass/crypto-botters"
 
 [dependencies]

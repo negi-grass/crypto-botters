@@ -21,7 +21,7 @@ macro_rules! request_return_type {
         >
     };
 }
-Fi
+
 #[derive(Default, Debug)]
 pub struct Client {
     client: http::Client,
