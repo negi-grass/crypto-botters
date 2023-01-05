@@ -23,7 +23,7 @@ pub trait HttpOption<'a, R>: HandlerOption {
     fn request_handler(options: Self::Options) -> Self::RequestHandler;
 }
 
-/// A `trait` that shows the implementing type is able to create [generic_api_client::websocket::WebSockethandler]s
+/// A `trait` that shows the implementing type is able to create [generic_api_client::websocket::WebSocketHandler]s
 pub trait WebSocketOption<H>: HandlerOption {
     type WebSocketHandler;
 

@@ -21,7 +21,7 @@ macro_rules! request_return_type {
         >
     };
 }
-
+Fi
 #[derive(Default, Debug)]
 pub struct Client {
     client: http::Client,
@@ -34,7 +34,7 @@ pub struct Client {
 }
 
 impl Client {
-    /// Creats a new [Client].
+    /// Creates a new [Client].
     pub fn new() -> Self {
         Self::default()
     }
