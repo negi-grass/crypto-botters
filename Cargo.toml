@@ -19,15 +19,17 @@ autoexamples = false
 all-features = true
 
 [features]
-full = ["binance", "bitflyer"]
+full = ["binance", "bitflyer", "bybit"]
 binance = ["dep:crypto-botters-binance"]
 bitflyer = ["dep:crypto-botters-bitflyer"]
+bybit = ["dep:crypto-botters-bybit"]
 
 [dependencies]
 generic-api-client = { version = "0.1", path = "generic-api-client" }
 crypto-botters-api = { version = "0.1", path = "crypto-botters-api" }
 crypto-botters-binance = { version = "0.2", path = "crypto-botters-binance", optional = true }
 crypto-botters-bitflyer = { version = "0.2", path = "crypto-botters-bitflyer", optional = true }
+crypto-botters-bybit = { version = "0.1", path = "crypto-botters-bybit", optional = true }
 
 [dev-dependencies]
 crypto-botters = { path = ".", features = ["full"] }
@@ -73,3 +75,51 @@ path = "examples/bitflyer/bitflyer_websocket_private.rs"
 [[example]]
 name = "bitflyer_websocket_public"
 path = "examples/bitflyer/bitflyer_websocket_public.rs"
+
+[[example]]
+name = "bybit_unified_margin"
+path = "examples/bybit/bybit_unified_margin.rs"
+
+[[example]]
+name = "bybit_contract"
+path = "examples/bybit/bybit_contract.rs"
+
+[[example]]
+name = "bybit_inverse_perpetual"
+path = "examples/bybit/bybit_inverse_perpetual.rs"
+
+[[example]]
+name = "bybit_usdt_perpetual"
+path = "examples/bybit/bybit_usdt_perpetual.rs"
+
+[[example]]
+name = "bybit_inverse_futures"
+path = "examples/bybit/bybit_inverse_futures.rs"
+
+[[example]]
+name = "bybit_spot_v3"
+path = "examples/bybit/bybit_spot_v3.rs"
+
+[[example]]
+name = "bybit_spot_v1"
+path = "examples/bybit/bybit_spot_v1.rs"
+
+[[example]]
+name = "bybit_account_asset_v3"
+path = "examples/bybit/bybit_account_asset_v3.rs"
+
+[[example]]
+name = "bybit_account_asset_v1"
+path = "examples/bybit/bybit_account_asset_v1.rs"
+
+[[example]]
+name = "bybit_copy_trading"
+path = "examples/bybit/bybit_copy_trading.rs"
+
+[[example]]
+name = "bybit_usdc_option"
+path = "examples/bybit/bybit_usdc_option.rs"
+
+[[example]]
+name = "bybit_usdc_perpetual"
+path = "examples/bybit/bybit_usdc_perpetual.rs"

@@ -2,12 +2,13 @@ use crypto_botters_api::*;
 use generic_api_client::{http::{self, *}, websocket::*};
 use serde::Serialize;
 
+pub use generic_api_client;
 #[cfg(feature = "binance")]
 pub use crypto_botters_binance as binance;
 #[cfg(feature = "bitflyer")]
 pub use crypto_botters_bitflyer as bitflyer;
-pub use generic_api_client;
-
+#[cfg(feature = "bybit")]
+pub use crypto_botters_bybit as bybit;
 // very long type, make it a macro
 macro_rules! request_return_type {
     ($lt:lifetime, $Response:ty, $Options:ty,  $Body:ty) => {
@@ -28,6 +29,8 @@ pub struct Client {
     binance: binance::BinanceOptions,
     #[cfg(feature = "bitflyer")]
     bitflyer: bitflyer::BitFlyerOptions,
+    #[cfg(feature = "bybit")]
+    bybit: bybit::BybitOptions,
 }
 
 impl Client {
@@ -200,5 +203,16 @@ impl GetOptions<bitflyer::BitFlyerOptions> for Client {
 
     fn options_mut(&mut self) -> &mut bitflyer::BitFlyerOptions {
         &mut self.bitflyer
+    }
+}
+
+#[cfg(feature = "bybit")]
+impl GetOptions<bybit::BybitOptions> for Client {
+    fn options(&self) -> &bybit::BybitOptions {
+        &self.bybit
+    }
+
+    fn options_mut(&mut self) -> &mut bybit::BybitOptions {
+        &mut self.bybit
     }
 }

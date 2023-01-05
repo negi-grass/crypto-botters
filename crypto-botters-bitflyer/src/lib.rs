@@ -29,7 +29,7 @@ pub enum BitFlyerOption {
     /// Whether [BitFlyerRequestHandler] should perform authentication
     HttpAuth(bool),
     /// [RequestConfig] used when sending requests.
-    /// `url_prefix` will be overridden by [HttpUrl](Self::HttpUrl) unless `HttpUrl` is [BinanceHttpUrl::None].
+    /// `url_prefix` will be overridden by [HttpUrl](Self::HttpUrl) unless `HttpUrl` is [BitFlyerHttpUrl::None].
     RequestConfig(RequestConfig),
     /// Base url for WebSocket connections
     WebSocketUrl(BitFlyerWebSocketUrl),
@@ -38,8 +38,8 @@ pub enum BitFlyerOption {
     /// The channels to be subscribed by [BitFlyerWebSocketHandler].
     WebSocketChannels(Vec<String>),
     /// [WebSocketConfig] used for creating [WebSocketConnection]s
-    /// `url_prefix` will be overridden by [WebSocketUrl](Self::WebSocketUrl) unless `WebSocketUrl` is [BinanceWebSocketUrl::None].
-    /// By default, `refresh_after` is set to 12 hours and `ignore_duplicate_during_reconnection` is set to `true`.
+    /// `url_prefix` will be overridden by [WebSocketUrl](Self::WebSocketUrl) unless `WebSocketUrl` is [BitFlyerWebSocketUrl::None].
+    /// By default, ignore_duplicate_during_reconnection` is set to `true`.
     WebSocketConfig(WebSocketConfig),
 }
 
@@ -129,7 +129,7 @@ where
 
     fn build_request(&self, mut builder: RequestBuilder, request_body: &Option<B>, _: u8) -> Result<Request, Self::BuildError> {
         if let Some(body) = request_body {
-            let json = serde_json::to_vec(body).or(Err("could not serialize body as JSON"))?;
+            let json = serde_json::to_vec(body).or(Err("could not serialize body as application/json"))?;
             builder = builder
                 .header(header::CONTENT_TYPE, "application/json")
                 .body(json);
