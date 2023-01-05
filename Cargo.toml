@@ -27,8 +27,8 @@ bybit = ["dep:crypto-botters-bybit"]
 [dependencies]
 generic-api-client = { version = "0.1", path = "generic-api-client" }
 crypto-botters-api = { version = "0.1", path = "crypto-botters-api" }
-crypto-botters-binance = { version = "0.2", path = "crypto-botters-binance", optional = true }
-crypto-botters-bitflyer = { version = "0.2", path = "crypto-botters-bitflyer", optional = true }
+crypto-botters-binance = { version = "0.3", path = "crypto-botters-binance", optional = true }
+crypto-botters-bitflyer = { version = "0.3", path = "crypto-botters-bitflyer", optional = true }
 crypto-botters-bybit = { version = "0.1", path = "crypto-botters-bybit", optional = true }
 
 [dev-dependencies]

@@ -1,6 +1,6 @@
 [package]
 name = "crypto-botters-bitflyer"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["negi_grass"]
 edition = "2021"
 description = "A crate for interacting with the bitFlyer API."
