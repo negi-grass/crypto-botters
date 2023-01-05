@@ -1,4 +1,3 @@
-use std::env;
 use log::LevelFilter;
 use crypto_botters::{Client, bybit::{BybitOption}};
 

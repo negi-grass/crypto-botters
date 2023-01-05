@@ -14,7 +14,7 @@ use serde::{
 };
 use serde_json::json;
 use crypto_botters_api::{HandlerOption, HandlerOptions, HttpOption};
-use generic_api_client::{http::{*, header::HeaderValue}, websocket::*};
+use generic_api_client::{http::{*, header::HeaderValue}};
 
 /// The type returned by [Client::request()].
 pub type BybitRequestResult<T> = Result<T, RequestError<&'static str, BybitHandlerError>>;
@@ -36,14 +36,14 @@ pub enum BybitOption {
     /// [RequestConfig] used when sending requests.
     /// `url_prefix` will be overridden by [HttpUrl](Self::HttpUrl) unless `HttpUrl` is [BinanceHttpUrl::None].
     RequestConfig(RequestConfig),
-    /// Base url for WebSocket connections
-    WebSocketUrl(BybitWebSocketUrl),
-    /// Whether [BitFlyerWebSocketHandler] should perform authentication
-    WebSocketAuth(bool),
-    /// [WebSocketConfig] used for creating [WebSocketConnection]s
-    /// `url_prefix` will be overridden by [WebSocketUrl](Self::WebSocketUrl) unless `WebSocketUrl` is [BybitWebSocketUrl::None].
-    /// By default, `ignore_duplicate_during_reconnection` is set to `true`.
-    WebSocketConfig(WebSocketConfig),
+    // /// Base url for WebSocket connections
+    // WebSocketUrl(BybitWebSocketUrl),
+    // /// Whether [BitFlyerWebSocketHandler] should perform authentication
+    // WebSocketAuth(bool),
+    // /// [WebSocketConfig] used for creating [WebSocketConnection]s
+    // /// `url_prefix` will be overridden by [WebSocketUrl](Self::WebSocketUrl) unless `WebSocketUrl` is [BybitWebSocketUrl::None].
+    // /// By default, `ignore_duplicate_during_reconnection` is set to `true`.
+    // WebSocketConfig(WebSocketConfig),
 }
 
 /// A `struct` that represents a set of [BybitOption] s.
@@ -61,12 +61,12 @@ pub struct BybitOptions {
     pub recv_window: Option<i32>,
     /// see [BybitOption::RequestConfig]
     pub request_config: RequestConfig,
-    /// see [BybitOption::WebSocketUrl]
-    pub websocket_url: BybitWebSocketUrl,
-    /// see [BybitOption::WebSocketAuth]
-    pub websocket_auth: bool,
-    /// see [BybitOption::WebSocketConfig]
-    pub websocket_config: WebSocketConfig,
+    // /// see [BybitOption::WebSocketUrl]
+    // pub websocket_url: BybitWebSocketUrl,
+    // /// see [BybitOption::WebSocketAuth]
+    // pub websocket_auth: bool,
+    // /// see [BybitOption::WebSocketConfig]
+    // pub websocket_config: WebSocketConfig,
 }
 
 /// A `enum` that represents the base url of the Bybit REST API.
@@ -82,18 +82,18 @@ pub enum BybitHttpUrl {
     None,
 }
 
-/// A `enum` that represents the base url of the Bybit WebSocket API.
-#[derive(Debug, Eq, PartialEq, Copy, Clone)]
-pub enum BybitWebSocketUrl {
-    /// wss://stream.bybit.com
-    Bybit,
-    /// wss://stream.bytick.com
-    Bytick,
-    /// wss://stream-testnet.bybit.com
-    Test,
-    /// The url will not be modified by [BybitWebSocketHandler]
-    None,
-}
+// /// A `enum` that represents the base url of the Bybit WebSocket API.
+// #[derive(Debug, Eq, PartialEq, Copy, Clone)]
+// pub enum BybitWebSocketUrl {
+//     /// wss://stream.bybit.com
+//     Bybit,
+//     /// wss://stream.bytick.com
+//     Bytick,
+//     /// wss://stream-testnet.bybit.com
+//     Test,
+//     /// The url will not be modified by [BybitWebSocketHandler]
+//     None,
+// }
 
 /// Represents the auth type.
 ///
@@ -383,17 +383,17 @@ impl HandlerOptions for BybitOptions {
             BybitOption::HttpAuth(v) => self.http_auth = v,
             BybitOption::RecvWindow(v) => self.recv_window = Some(v),
             BybitOption::RequestConfig(v) => self.request_config = v,
-            BybitOption::WebSocketUrl(v) => self.websocket_url = v,
-            BybitOption::WebSocketAuth(v) => self.websocket_auth = v,
-            BybitOption::WebSocketConfig(v) => self.websocket_config = v,
+            // BybitOption::WebSocketUrl(v) => self.websocket_url = v,
+            // BybitOption::WebSocketAuth(v) => self.websocket_auth = v,
+            // BybitOption::WebSocketConfig(v) => self.websocket_config = v,
         }
     }
 }
 
 impl Default for BybitOptions {
     fn default() -> Self {
-        let mut websocket_config = WebSocketConfig::new();
-        websocket_config.ignore_duplicate_during_reconnection = true;
+        // let mut websocket_config = WebSocketConfig::new();
+        // websocket_config.ignore_duplicate_during_reconnection = true;
         Self {
             key: None,
             secret: None,
@@ -401,9 +401,9 @@ impl Default for BybitOptions {
             http_auth: BybitHttpAuth::None,
             recv_window: None,
             request_config: RequestConfig::default(),
-            websocket_url: BybitWebSocketUrl::Bybit,
-            websocket_auth: false,
-            websocket_config,
+            // websocket_url: BybitWebSocketUrl::Bybit,
+            // websocket_auth: false,
+            // websocket_config,
         }
     }
 }
