@@ -7,7 +7,7 @@ description = "This crate is meant to be used by other crates of the crypto-bott
 license = "MIT"
 readme = "README.md"
 homepage = "https://github.com/negi-grass/crypto-botters"
-documentation = "https://docs.rs/crypto-botters-bybit"
+documentation = "https://docs.rs/crypto-botters-api"
 repository = "https://github.com/negi-grass/crypto-botters"
 
 [dependencies]
