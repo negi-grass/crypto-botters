@@ -131,6 +131,12 @@ pub enum BinanceHandlerError {
     ParseError,
 }
 
+#[derive(Deserialize, Debug)]
+pub struct BinanceError {
+    pub code: i32,
+    pub msg: String,
+}
+
 /// A `struct` that implements [RequestHandler]
 pub struct BinanceRequestHandler<'a, R: DeserializeOwned> {
     options: BinanceOptions,
@@ -141,12 +147,6 @@ pub struct BinanceRequestHandler<'a, R: DeserializeOwned> {
 pub struct BinanceWebSocketHandler<H: FnMut(serde_json::Value) + Send + 'static> {
     message_handler: H,
     options: BinanceOptions,
-}
-
-#[derive(Deserialize, Debug)]
-pub struct BinanceError {
-    pub code: i32,
-    pub msg: String,
 }
 
 // https://binance-docs.github.io/apidocs/spot/en/#general-api-information

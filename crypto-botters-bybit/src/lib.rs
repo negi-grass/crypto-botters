@@ -113,6 +113,12 @@ pub enum BybitHttpAuth {
     None,
 }
 
+pub enum BybitHandlerError {
+    ApiError(serde_json::Value),
+    IpBan(serde_json::Value),
+    ParseError,
+}
+
 /// A `struct` that implements [RequestHandler]
 pub struct BybitRequestHandler<'a, R: DeserializeOwned> {
     options: BybitOptions,
@@ -125,7 +131,7 @@ where
     R: DeserializeOwned,
 {
     type Successful = R;
-    type Unsuccessful = ();
+    type Unsuccessful = BybitHandlerError;
     type BuildError = &'static str;
 
     fn request_config(&self) -> RequestConfig {
@@ -164,8 +170,29 @@ where
         }
     }
 
-    fn handle_response(&self, status: StatusCode, headers: HeaderMap, response_body: Bytes) -> Result<Self::Successful, Self::Unsuccessful> {
-        todo!()
+    fn handle_response(&self, status: StatusCode, _: HeaderMap, response_body: Bytes) -> Result<Self::Successful, Self::Unsuccessful> {
+        if status.is_success() {
+            serde_json::from_slice(&response_body).map_err(|error| {
+                log::error!("Failed to parse response due to an error: {}", error);
+                BybitHandlerError::ParseError
+            })
+        } else {
+            // https://bybit-exchange.github.io/docs/spot/v3/#t-ratelimits
+            let error = match serde_json::from_slice(&response_body) {
+                Ok(parsed) => {
+                    if status == 403 {
+                        BybitHandlerError::IpBan(parsed)
+                    } else {
+                        BybitHandlerError::ApiError(parsed)
+                    }
+                }
+                Err(error) => {
+                    log::error!("Failed to parse error response due to an error: {}", error);
+                    BybitHandlerError::ParseError
+                },
+            };
+            Err(error)
+        }
     }
 }
 

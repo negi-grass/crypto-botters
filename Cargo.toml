@@ -75,3 +75,7 @@ path = "examples/bitflyer/bitflyer_websocket_private.rs"
 [[example]]
 name = "bitflyer_websocket_public"
 path = "examples/bitflyer/bitflyer_websocket_public.rs"
+
+[[example]]
+name = "bybit_unified_margin"
+path = "examples/bybit/bybit_unified_margin.rs"
