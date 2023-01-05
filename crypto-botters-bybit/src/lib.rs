@@ -12,8 +12,12 @@ use serde::{
     Serialize,
     de::DeserializeOwned,
 };
+use serde_json::json;
 use crypto_botters_api::{HandlerOption, HandlerOptions, HttpOption};
 use generic_api_client::{http::{*, header::HeaderValue}, websocket::*};
+
+/// The type returned by [Client::request()].
+pub type BybitRequestResult<T> = Result<T, RequestError<&'static str, BybitHandlerError>>;
 
 /// Options that can be set when creating handlers
 pub enum BybitOption {
@@ -27,6 +31,8 @@ pub enum BybitOption {
     HttpUrl(BybitHttpUrl),
     /// Type of authentication used for HTTP requests.
     HttpAuth(BybitHttpAuth),
+    /// receive window parameter used for requests
+    RecvWindow(i32),
     /// [RequestConfig] used when sending requests.
     /// `url_prefix` will be overridden by [HttpUrl](Self::HttpUrl) unless `HttpUrl` is [BinanceHttpUrl::None].
     RequestConfig(RequestConfig),
@@ -51,6 +57,8 @@ pub struct BybitOptions {
     pub http_url: BybitHttpUrl,
     /// see [BybitOption::HttpAuth]
     pub http_auth: BybitHttpAuth,
+    /// see [BybitOption::RecvWindow]
+    pub recv_window: Option<i32>,
     /// see [BybitOption::RequestConfig]
     pub request_config: RequestConfig,
     /// see [BybitOption::WebSocketUrl]
@@ -96,23 +104,23 @@ pub enum BybitWebSocketUrl {
 /// |Futures v2 Inverse Perpetual|Type1|
 /// |Futures v2 USDT Perpetual|Type1|
 /// |Futures v2 Inverse Futures|Type1|
-/// |Spot v3|SpotType2|
+/// |Spot v3|Type2|
 /// |Spot v1|SpotType1|
 /// |Account Asset v3|Type2|
 /// |Account Asset v1|Type1|
 /// |Copy Trading|Type2|
-/// |USDC Contract Option|SpotType2|
-/// |USDC Contract Perpetual|SpotType2|
+/// |USDC Contract Option|Type2|
+/// |USDC Contract Perpetual|Type2|
 /// |Tax|Type2|
 #[derive(Debug, Eq, PartialEq, Copy, Clone)]
 pub enum BybitHttpAuth {
     Type1,
     SpotType1,
     Type2,
-    SpotType2,
     None,
 }
 
+#[derive(Debug)]
 pub enum BybitHandlerError {
     ApiError(serde_json::Value),
     IpBan(serde_json::Value),
@@ -162,10 +170,9 @@ where
         let hmac = Hmac::<Sha256>::new_from_slice(secret.as_bytes()).unwrap(); // hmac accepts key of any length
 
         match self.options.http_auth {
-            BybitHttpAuth::Type1 => Self::type1_auth(builder, request_body, key, timestamp, hmac, false),
-            BybitHttpAuth::SpotType1 => Self::type1_auth(builder, request_body, key, timestamp, hmac, true),
-            BybitHttpAuth::Type2 => Self::type2_auth(builder, request_body, key, timestamp, hmac, false),
-            BybitHttpAuth::SpotType2 => Self::type2_auth(builder, request_body, key, timestamp, hmac, true),
+            BybitHttpAuth::Type1 => Self::type1_auth(builder, request_body, key, timestamp, hmac, false, self.options.recv_window),
+            BybitHttpAuth::SpotType1 => Self::type1_auth(builder, request_body, key, timestamp, hmac, true, self.options.recv_window),
+            BybitHttpAuth::Type2 => Self::type2_auth(builder, request_body, key, timestamp, hmac, self.options.recv_window),
             BybitHttpAuth::None => unreachable!(), // we've already handled this case
         }
     }
@@ -197,7 +204,7 @@ where
 }
 
 impl<'a, R> BybitRequestHandler<'a, R> where R: DeserializeOwned {
-    fn type1_auth<B>(builder: RequestBuilder, request_body: &Option<B>, key: &str, timestamp: u128, mut hmac: Hmac<Sha256>, spot: bool)
+    fn type1_auth<B>(builder: RequestBuilder, request_body: &Option<B>, key: &str, timestamp: u128, mut hmac: Hmac<Sha256>, spot: bool, window: Option<i32>)
         -> Result<Request, <BybitRequestHandler<'a, R> as RequestHandler<B>>::BuildError>
     where
         B: Serialize,
@@ -222,7 +229,14 @@ impl<'a, R> BybitRequestHandler<'a, R> where R: DeserializeOwned {
 
         let mut request = builder.build().or(Err("failed to build request"))?;
         if matches!(*request.method(), Method::GET | Method::DELETE) {
-            let queries: Vec<_> = request.url().query_pairs().collect();
+            let mut queries: Vec<_> = request.url().query_pairs().collect();
+            if let Some(window) = window {
+                if spot {
+                    queries.push((Cow::Borrowed("recvWindow"), Cow::Owned(window.to_string())));
+                } else {
+                    queries.push((Cow::Borrowed("recv_window"), Cow::Owned(window.to_string())));
+                }
+            }
             let query = sort_and_add(queries, key, timestamp);
             request.url_mut().set_query(Some(&query));
 
@@ -232,71 +246,70 @@ impl<'a, R> BybitRequestHandler<'a, R> where R: DeserializeOwned {
             request.url_mut().query_pairs_mut().append_pair("sign", &signature);
 
             if let Some(body) = request_body {
-                let (body_string, content_type) = if spot {
-                    (
-                        serde_urlencoded::to_string(body).or(Err("could not serialize body as application/x-www-form-urlencoded"))?,
-                        "application/x-www-form-urlencoded",
-                    )
+                if spot {
+                    let body_string = serde_urlencoded::to_string(body).or(Err("could not serialize body as application/x-www-form-urlencoded"))?;
+                    *request.body_mut() = Some(body_string.into());
+                    request.headers_mut().insert(header::CONTENT_TYPE, HeaderValue::from_static("application/x-www-form-urlencoded"));
                 } else {
-                    (
-                        serde_json::to_string(body).or(Err("could not serialize body as application/json"))?,
-                        "application/json",
-                    )
-                };
-                *request.body_mut() = Some(body_string.into());
-                request.headers_mut().insert(header::CONTENT_TYPE, HeaderValue::from_static(content_type));
+                    let body_string = serde_json::to_string(body).or(Err("could not serialize body as application/json"))?;
+                    *request.body_mut() = Some(body_string.into());
+                    request.headers_mut().insert(header::CONTENT_TYPE, HeaderValue::from_static("application/json"));
+                }
             }
         } else {
-            let body = if let Some(body) = request_body {
+            let mut body = if let Some(body) = request_body {
                 serde_urlencoded::to_string(body).or(Err("could not serialize body as application/x-www-form-urlencoded"))?
             } else {
                 String::new()
             };
-
-            let mut pairs: Vec<_> = body.split('&')
-                .map(|pair| pair.split_once('=').unwrap_or((pair, "")))
-                .collect();
-            pairs.push(("api_key", key));
-            let timestamp = timestamp.to_string();
-            pairs.push(("timestamp", &timestamp));
-            pairs.sort_unstable();
-
-            let mut body_string = String::new();
-            for (key, value) in pairs {
-                body_string.push_str(key);
-                if !value.is_empty() {
-                    body_string.push('=');
-                    body_string.push_str(value);
+            if let Some(window) = window {
+                if !body.is_empty() {
+                    body.push('&');
                 }
-                body_string.push('&');
+                if spot {
+                    body.push_str("recvWindow=");
+                } else {
+                    body.push_str("recv_window=");
+                }
+                body.push_str(&window.to_string());
             }
-            body_string.pop(); // the last '&'
 
-            hmac.update(body_string.as_bytes());
+            let pairs: Vec<_> = body.split('&')
+                .map(|pair| pair.split_once('=').unwrap_or((pair, "")))
+                .map(|(k, v)| (Cow::Borrowed(k), Cow::Borrowed(v)))
+                .collect();
+            let mut body_query_string = sort_and_add(pairs, key, timestamp);
+
+            hmac.update(body_query_string.as_bytes());
             let signature = hex::encode(hmac.finalize().into_bytes());
 
             if spot {
-                body_string.push_str(&format!("sign={}", signature));
+                body_query_string.push_str(&format!("sign={}", signature));
 
-                *request.body_mut() = Some(body_string.into());
-
+                *request.body_mut() = Some(body_query_string.into());
                 request.headers_mut().insert(header::CONTENT_TYPE, HeaderValue::from_static("application/x-www-form-urlencoded"));
             } else {
-                let mut json = serde_json::to_value(&body).or(Err("could not serialize body as application/json"))?;
+                let mut json = serde_json::to_value(request_body).or(Err("could not serialize body as application/json"))?;
                 let Some(map) = json.as_object_mut() else {
-                    return Err("body must to serializable as a JSON object");
+                    return Err("body must to be serializable as a JSON object");
                 };
                 map.insert("sign".to_owned(), serde_json::Value::String(signature));
+                if let Some(window) = window {
+                    if spot {
+                        map.insert("recvWindow".to_owned(), serde_json::Value::Number(window.into()));
+                    } else {
+                        map.insert("recv_window".to_owned(), serde_json::Value::Number(window.into()));
+                    }
+                }
 
                 *request.body_mut() = Some(json.to_string().into());
-
                 request.headers_mut().insert(header::CONTENT_TYPE, HeaderValue::from_static("application/json"));
             }
         }
         Ok(request)
     }
 
-    fn type2_auth<B>(mut builder: RequestBuilder, request_body: &Option<B>, key: &str, timestamp: u128, mut hmac: Hmac<Sha256>, spot: bool)
+    fn type2_auth<B>(mut builder: RequestBuilder, request_body: &Option<B>, key: &str, timestamp: u128, mut hmac: Hmac<Sha256>, window: Option<i32>)
         -> Result<Request, <BybitRequestHandler<'a, R> as RequestHandler<B>>::BuildError>
     where
         B: Serialize,
@@ -311,39 +324,24 @@ impl<'a, R> BybitRequestHandler<'a, R> where R: DeserializeOwned {
             None
         };
 
-        let mut request = builder.build().or(Err("failed to build reqeust"))?;
+        let mut request = builder.build().or(Err("failed to build request"))?;
 
         let mut sign_contents = format!("{}{}", timestamp, key);
-        let window_str = if spot {
-            "recvWindow"
-        } else {
-            "recv_window"
-        };
-        let window;
+        if let Some(window) = window {
+            sign_contents.push_str(&window.to_string());
+        }
 
         if matches!(*request.method(), Method::GET | Method::DELETE) {
-            let window_pair = request.url().query_pairs().find(|(key, _)| key == window_str);
-            window = if let Some((_, window_value)) = window_pair {
-                sign_contents.push_str(&window_value);
-                Some(window_value.into_owned())
-            } else {
-                None
-            };
             if let Some(query) = request.url().query() {
                 sign_contents.push_str(query);
             }
         } else {
-            let window_value = body.as_ref().and_then(|body| body.get(window_str));
-            window = if let Some(window_value) = window_value {
-                let window_string = window_value.to_string();
-                sign_contents.push_str(&window_string);
-                Some(window_string)
-            } else {
-                None
-            };
-            if let Some(body) = body {
-                sign_contents.push_str(&body.to_string());
-            }
+            let body = body.unwrap_or_else(|| {
+                *request.body_mut() = Some("{}".into());
+                request.headers_mut().insert(header::CONTENT_TYPE, HeaderValue::from_static("application/json"));
+                json!({})
+            });
+            sign_contents.push_str(&body.to_string());
         }
 
         hmac.update(sign_contents.as_bytes());
@@ -355,9 +353,8 @@ impl<'a, R> BybitRequestHandler<'a, R> where R: DeserializeOwned {
         headers.insert("X-BAPI-API-KEY", HeaderValue::from_str(key).or(Err("invalid character in API key"))?);
         headers.insert("X-BAPI-TIMESTAMP", HeaderValue::from(timestamp as u64));
         if let Some(window) = window {
-            headers.insert("X-BAPI-RECV-WINDOW", HeaderValue::from_str(&window).or(Err("invalid character in recv window"))?);
+            headers.insert("X-BAPI-RECV-WINDOW", HeaderValue::from(window));
         }
-
         Ok(request)
     }
 }
@@ -384,6 +381,7 @@ impl HandlerOptions for BybitOptions {
             BybitOption::Secret(v) => self.secret = Some(v),
             BybitOption::HttpUrl(v) => self.http_url = v,
             BybitOption::HttpAuth(v) => self.http_auth = v,
+            BybitOption::RecvWindow(v) => self.recv_window = Some(v),
             BybitOption::RequestConfig(v) => self.request_config = v,
             BybitOption::WebSocketUrl(v) => self.websocket_url = v,
             BybitOption::WebSocketAuth(v) => self.websocket_auth = v,
@@ -401,6 +399,7 @@ impl Default for BybitOptions {
             secret: None,
             http_url: BybitHttpUrl::Bybit,
             http_auth: BybitHttpAuth::None,
+            recv_window: None,
             request_config: RequestConfig::default(),
             websocket_url: BybitWebSocketUrl::Bybit,
             websocket_auth: false,

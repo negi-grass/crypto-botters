@@ -79,3 +79,47 @@ path = "examples/bitflyer/bitflyer_websocket_public.rs"
 [[example]]
 name = "bybit_unified_margin"
 path = "examples/bybit/bybit_unified_margin.rs"
+
+[[example]]
+name = "bybit_contract"
+path = "examples/bybit/bybit_contract.rs"
+
+[[example]]
+name = "bybit_inverse_perpetual"
+path = "examples/bybit/bybit_inverse_perpetual.rs"
+
+[[example]]
+name = "bybit_usdt_perpetual"
+path = "examples/bybit/bybit_usdt_perpetual.rs"
+
+[[example]]
+name = "bybit_inverse_futures"
+path = "examples/bybit/bybit_inverse_futures.rs"
+
+[[example]]
+name = "bybit_spot_v3"
+path = "examples/bybit/bybit_spot_v3.rs"
+
+[[example]]
+name = "bybit_spot_v1"
+path = "examples/bybit/bybit_spot_v1.rs"
+
+[[example]]
+name = "bybit_account_asset_v3"
+path = "examples/bybit/bybit_account_asset_v3.rs"
+
+[[example]]
+name = "bybit_account_asset_v1"
+path = "examples/bybit/bybit_account_asset_v1.rs"
+
+[[example]]
+name = "bybit_copy_trading"
+path = "examples/bybit/bybit_copy_trading.rs"
+
+[[example]]
+name = "bybit_usdc_option"
+path = "examples/bybit/bybit_usdc_option.rs"
+
+[[example]]
+name = "bybit_usdc_perpetual"
+path = "examples/bybit/bybit_usdc_perpetual.rs"
