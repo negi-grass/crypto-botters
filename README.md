@@ -2,7 +2,7 @@
 [![](https://img.shields.io/crates/v/crypto-botters)](https://crates.io/crates/crypto-botters)
 [![](https://docs.rs/crypto-botters/badge.svg)](https://docs.rs/crypto-botters)
 
-日本語は下にあります。
+[日本語は下にあります](https://github.com/negi-grass/crypto-botters#%E6%97%A5%E6%9C%AC%E8%AA%9E)
 
 This is a Rust library for communicating with cryptocurrency exchange APIs.
 
@@ -185,7 +185,6 @@ async fn main() {
 }
 ```
 この例では、BinanceでBNBに変換できる資産を取得しています。
-The above code queries assets that are convertable into BNB using the Binance API.
 
 ### オプション
 リクエストを送るときには、オプションを設定できます。この例では、`[BinanceOption::HttpAuth(BinanceAuth::Sign)]`
