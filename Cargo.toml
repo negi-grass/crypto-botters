@@ -123,3 +123,19 @@ path = "examples/bybit/bybit_usdc_option.rs"
 [[example]]
 name = "bybit_usdc_perpetual"
 path = "examples/bybit/bybit_usdc_perpetual.rs"
+
+[[example]]
+name = "bybit_usdt_contract_websocket_public"
+path = "examples/bybit/bybit_usdt_contract_websocket_public.rs"
+
+[[example]]
+name = "bybit_usdc_contract_websocket_public"
+path = "examples/bybit/bybit_usdc_contract_websocket_public.rs"
+
+[[example]]
+name = "bybit_spot_v3_websocket_public"
+path = "examples/bybit/bybit_spot_v3_websocket_public.rs"
+
+[[example]]
+name = "bybit_spot_v3_websocket_private"
+path = "examples/bybit/bybit_spot_v3_websocket_private.rs"
