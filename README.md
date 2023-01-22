@@ -3,7 +3,7 @@
 [![](https://docs.rs/crypto-botters/badge.svg)](https://docs.rs/crypto-botters)
 [![](https://github.com/negi-grass/crypto-botters/actions/workflows/clippy.yml/badge.svg)](https://github.com/negi-grass/crypto-botters/actions/workflows/clippy.yml)
 
-[日本語は下にあります](https://github.com/negi-grass/crypto-botters#%E6%97%A5%E6%9C%AC%E8%AA%9E)
+[日本語は下にあります](#%E6%97%A5%E6%9C%AC%E8%AA%9E)
 
 This is a Rust library for communicating with cryptocurrency exchange APIs.
 
@@ -14,28 +14,42 @@ This library:
 
 ## Supported APIs
 The following APIs are currently supported.
-- [Binance](https://www.binance.com/en)
+- [Binance](https://www.binance.com/en) ([Examples](https://github.com/negi-grass/crypto-botters/tree/main/examples/binance))
   - [Spot/Margin/Savings/Mining](https://binance-docs.github.io/apidocs/spot/en/)
+    ([WebSocket](https://binance-docs.github.io/apidocs/spot/en/#websocket-market-streams))
   - [USDⓈ-M Futures](https://binance-docs.github.io/apidocs/futures/en/)
+    ([WebSocket](https://binance-docs.github.io/apidocs/futures/en/#websocket-market-streams))
   - [COIN-M Futures](https://binance-docs.github.io/apidocs/delivery/en/)
+    ([WebSocket](https://binance-docs.github.io/apidocs/delivery/en/#websocket-market-streams))
   - [European Options](https://binance-docs.github.io/apidocs/voptions/en/)
+    ([WebSocket](https://binance-docs.github.io/apidocs/voptions/en/#websocket-market-streams))
   - [WebSocket API](https://binance-docs.github.io/apidocs/websocket_api/en/)
-- [bitFlyer](https://bitflyer.com)
+- [bitFlyer](https://bitflyer.com) ([Examples](https://github.com/negi-grass/crypto-botters/tree/main/examples/bitflyer))
   - [HTTP API](https://lightning.bitflyer.com/docs)
   - [Realtime API](https://bf-lightning-api.readme.io/docs) (Socket.IO not supported)
-- [Bybit](https://www.bybit.com/en-US/) (WebSocket not supported yet)
+- [Bybit](https://www.bybit.com/en-US/) ([Examples](https://github.com/negi-grass/crypto-botters/tree/main/examples/bybit))
   - [Derivatives v3 Unified Margin](https://bybit-exchange.github.io/docs/derivativesV3/unified_margin/)
+    ([WebSocket](https://bybit-exchange.github.io/docs/derivativesV3/unified_margin/#t-websocket))
   - [Derivatives v3 Contract](https://bybit-exchange.github.io/docs/derivativesV3/contract/)
+    ([WebSocket](https://bybit-exchange.github.io/docs/derivativesV3/contract/#t-websocket))
   - [Futures v2 Inverse Perpetual](https://bybit-exchange.github.io/docs/futuresV2/inverse/)
+    ([WebSocket](https://bybit-exchange.github.io/docs/futuresV2/inverse/#t-websocket))
   - [Futures v2 USDT Perpetual](https://bybit-exchange.github.io/docs/futuresV2/linear/)
+    ([WebSocket](https://bybit-exchange.github.io/docs/futuresV2/linear/#t-websocket))
   - [Futures v2 Inverse Futures](https://bybit-exchange.github.io/docs/futuresV2/inverse_futures/)
+    ([WebSocket](https://bybit-exchange.github.io/docs/futuresV2/inverse_futures/#t-websocket))
   - [Spot v3](https://bybit-exchange.github.io/docs/spot/v3/)
+    ([WebSocket](https://bybit-exchange.github.io/docs/spot/v3/#t-websocket))
   - [Spot v1](https://bybit-exchange.github.io/docs/spot/v1/)
+    ([WebSocket](https://bybit-exchange.github.io/docs/spot/v1/#t-websocket))
   - [Account Asset v3](https://bybit-exchange.github.io/docs/account_asset/v3/)
   - [Account Asset v1](https://bybit-exchange.github.io/docs/account_asset/v1/)
   - [Copy Trading](https://bybit-exchange.github.io/docs/copy_trading/)
+    ([WebSocket](https://bybit-exchange.github.io/docs/copy_trading/#t-websocket))
   - [USDC Contract Option](https://bybit-exchange.github.io/docs/usdc/option/)
+    ([WebSocket](https://bybit-exchange.github.io/docs/usdc/option/#t-websocket))
   - [USDC Contract Perpetual](https://bybit-exchange.github.io/docs/usdc/perpetual/)
+    ([WebSocket](https://bybit-exchange.github.io/docs/usdc/perpetual/#t-websocket))
   - [Tax](https://bybit-exchange.github.io/docs/tax/)
 
 ## Usage
@@ -123,6 +137,7 @@ request a reconnection, or close the connection.
 
 ## 日本語
 これは仮想通貨取引所のAPIと通信するためのRustライブラリです。
+
 特徴:
 - 非同期
 - WebSocketに対応
@@ -130,28 +145,42 @@ request a reconnection, or close the connection.
 
 ## 対応API
 以下のAPIに対応しています。
-- [Binance](https://www.binance.com/en)
+- [Binance](https://www.binance.com/en) ([例](https://github.com/negi-grass/crypto-botters/tree/main/examples/binance))
   - [Spot/Margin/Savings/Mining](https://binance-docs.github.io/apidocs/spot/en/)
+    ([WebSocket](https://binance-docs.github.io/apidocs/spot/en/#websocket-market-streams))
   - [USDⓈ-M Futures](https://binance-docs.github.io/apidocs/futures/en/)
+    ([WebSocket](https://binance-docs.github.io/apidocs/futures/en/#websocket-market-streams))
   - [COIN-M Futures](https://binance-docs.github.io/apidocs/delivery/en/)
+    ([WebSocket](https://binance-docs.github.io/apidocs/delivery/en/#websocket-market-streams))
   - [European Options](https://binance-docs.github.io/apidocs/voptions/en/)
+    ([WebSocket](https://binance-docs.github.io/apidocs/voptions/en/#websocket-market-streams))
   - [WebSocket API](https://binance-docs.github.io/apidocs/websocket_api/en/)
-- [bitFlyer](https://bitflyer.com)
+- [bitFlyer](https://bitflyer.com) ([例](https://github.com/negi-grass/crypto-botters/tree/main/examples/bitflyer))
   - [HTTP API](https://lightning.bitflyer.com/docs)
   - [Realtime API](https://bf-lightning-api.readme.io/docs) (Socket.IO は非対応)
-- [Bybit](https://www.bybit.com/en-US/) (WebSocket は未対応)
+- [Bybit](https://www.bybit.com/en-US/) ([例](https://github.com/negi-grass/crypto-botters/tree/main/examples/bybit))
   - [Derivatives v3 Unified Margin](https://bybit-exchange.github.io/docs/derivativesV3/unified_margin/)
+    ([WebSocket](https://bybit-exchange.github.io/docs/derivativesV3/unified_margin/#t-websocket))
   - [Derivatives v3 Contract](https://bybit-exchange.github.io/docs/derivativesV3/contract/)
+    ([WebSocket](https://bybit-exchange.github.io/docs/derivativesV3/contract/#t-websocket))
   - [Futures v2 Inverse Perpetual](https://bybit-exchange.github.io/docs/futuresV2/inverse/)
+    ([WebSocket](https://bybit-exchange.github.io/docs/futuresV2/inverse/#t-websocket))
   - [Futures v2 USDT Perpetual](https://bybit-exchange.github.io/docs/futuresV2/linear/)
+    ([WebSocket](https://bybit-exchange.github.io/docs/futuresV2/linear/#t-websocket))
   - [Futures v2 Inverse Futures](https://bybit-exchange.github.io/docs/futuresV2/inverse_futures/)
+    ([WebSocket](https://bybit-exchange.github.io/docs/futuresV2/inverse_futures/#t-websocket))
   - [Spot v3](https://bybit-exchange.github.io/docs/spot/v3/)
+    ([WebSocket](https://bybit-exchange.github.io/docs/spot/v3/#t-websocket))
   - [Spot v1](https://bybit-exchange.github.io/docs/spot/v1/)
+    ([WebSocket](https://bybit-exchange.github.io/docs/spot/v1/#t-websocket))
   - [Account Asset v3](https://bybit-exchange.github.io/docs/account_asset/v3/)
   - [Account Asset v1](https://bybit-exchange.github.io/docs/account_asset/v1/)
   - [Copy Trading](https://bybit-exchange.github.io/docs/copy_trading/)
+    ([WebSocket](https://bybit-exchange.github.io/docs/copy_trading/#t-websocket))
   - [USDC Contract Option](https://bybit-exchange.github.io/docs/usdc/option/)
+    ([WebSocket](https://bybit-exchange.github.io/docs/usdc/option/#t-websocket))
   - [USDC Contract Perpetual](https://bybit-exchange.github.io/docs/usdc/perpetual/)
+    ([WebSocket](https://bybit-exchange.github.io/docs/usdc/perpetual/#t-websocket))
   - [Tax](https://bybit-exchange.github.io/docs/tax/)
 
 ## 使い方
