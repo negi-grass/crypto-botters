@@ -2,7 +2,7 @@
 
 [package]
 name = "crypto-botters"
-version = "0.3.0"
+version = "0.4.0"
 authors = ["negi_grass"]
 edition = "2021"
 description = "A crate for interacting with various cryptocurrency exchanges."
@@ -30,7 +30,7 @@ generic-api-client = { version = "0.1", path = "generic-api-client" }
 crypto-botters-api = { version = "0.1", path = "crypto-botters-api" }
 crypto-botters-binance = { version = "0.3", path = "crypto-botters-binance", optional = true }
 crypto-botters-bitflyer = { version = "0.3", path = "crypto-botters-bitflyer", optional = true }
-crypto-botters-bybit = { version = "0.1", path = "crypto-botters-bybit", optional = true }
+crypto-botters-bybit = { version = "0.2", path = "crypto-botters-bybit", optional = true }
 crypto-botters-coincheck = { version = "0.1", path = "crypto-botters-coincheck", optional = true }
 
 [dev-dependencies]

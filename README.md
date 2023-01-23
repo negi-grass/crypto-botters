@@ -51,6 +51,10 @@ The following APIs are currently supported.
   - [USDC Contract Perpetual](https://bybit-exchange.github.io/docs/usdc/perpetual/)
     ([WebSocket](https://bybit-exchange.github.io/docs/usdc/perpetual/#t-websocket))
   - [Tax](https://bybit-exchange.github.io/docs/tax/)
+- [Coincheck](https://coincheck.com/ja/documents/exchange/api) ([Examples](https://github.com/negi-grass/crypto-botters/tree/main/examples/coincheck))
+  - [Public API](https://coincheck.com/ja/documents/exchange/api#public)
+  - [Private API](https://coincheck.com/ja/documents/exchange/api#private)
+  - [WebSoket API](https://coincheck.com/ja/documents/exchange/api#websocket)
 
 ## Usage
 More than 20 examples can be found in the [examples directory](https://github.com/negi-grass/crypto-botters/tree/main/examples).
@@ -58,7 +62,7 @@ More than 20 examples can be found in the [examples directory](https://github.co
 Cargo.toml:
 ```
 [dependencies]
-crypto-botters = { version = "0.3", features = ["binance", "bitflyer", "bybit"] }
+crypto-botters = { version = "0.4", features = ["binance", "bitflyer", "bybit", "coincheck"] }
 ```
 Enable the features for the exchanges that you use.
 
@@ -182,7 +186,10 @@ request a reconnection, or close the connection.
   - [USDC Contract Perpetual](https://bybit-exchange.github.io/docs/usdc/perpetual/)
     ([WebSocket](https://bybit-exchange.github.io/docs/usdc/perpetual/#t-websocket))
   - [Tax](https://bybit-exchange.github.io/docs/tax/)
-
+- [Coincheck](https://coincheck.com/ja/documents/exchange/api) ([例](https://github.com/negi-grass/crypto-botters/tree/main/examples/coincheck))
+  - [Public API](https://coincheck.com/ja/documents/exchange/api#public)
+  - [Private API](https://coincheck.com/ja/documents/exchange/api#private)
+  - [WebSoket API](https://coincheck.com/ja/documents/exchange/api#websocket)
 ## 使い方
 [examples ディレクトリ](https://github.com/negi-grass/crypto-botters/tree/main/examples) にサンプルが20以上あります。
 
