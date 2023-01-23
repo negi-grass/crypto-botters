@@ -9,6 +9,8 @@ pub use crypto_botters_binance as binance;
 pub use crypto_botters_bitflyer as bitflyer;
 #[cfg(feature = "bybit")]
 pub use crypto_botters_bybit as bybit;
+#[cfg(feature = "coincheck")]
+pub use crypto_botters_coincheck as coincheck;
 // very long type, make it a macro
 macro_rules! request_return_type {
     ($lt:lifetime, $Response:ty, $Options:ty,  $Body:ty) => {
@@ -31,6 +33,8 @@ pub struct Client {
     bitflyer: bitflyer::BitFlyerOptions,
     #[cfg(feature = "bybit")]
     bybit: bybit::BybitOptions,
+    #[cfg(feature = "coincheck")]
+    coincheck: coincheck::CoincheckOptions,
 }
 
 impl Client {
@@ -220,5 +224,18 @@ impl GetOptions<bybit::BybitOptions> for Client {
     #[inline(always)]
     fn default_options_mut(&mut self) -> &mut bybit::BybitOptions {
         &mut self.bybit
+    }
+}
+
+#[cfg(feature = "coincheck")]
+impl GetOptions<coincheck::CoincheckOptions> for Client {
+    #[inline(always)]
+    fn default_options(&self) -> &coincheck::CoincheckOptions {
+        &self.coincheck
+    }
+
+    #[inline(always)]
+    fn default_options_mut(&mut self) -> &mut coincheck::CoincheckOptions {
+        &mut self.coincheck
     }
 }

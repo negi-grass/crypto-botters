@@ -183,7 +183,6 @@ where
             let error = match serde_json::from_slice(&response_body) {
                 Ok(parsed_error) => BitFlyerHandlerError::ApiError(parsed_error),
                 Err(error) => {
-                    dbg!(response_body);
                     log::error!("Failed to parse error response due to an error: {}", error);
                     BitFlyerHandlerError::ParseError
                 }

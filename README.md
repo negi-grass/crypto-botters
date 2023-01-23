@@ -104,7 +104,7 @@ you would pass an array of `BybitOption`s.
 Some options are the same across requests. For example, you will probably use the same API key for each request.
 For those options, you can set **default options** for `Client`. Default options are applied to all requests.
 
-In the above example, `client.default_option(BinanceOption::Key(key));` sets the option for Binance API key as a default option.
+In the above example, `client.update_default_option(BinanceOption::Key(key));` sets the option for Binance API key as a default option.
 Because of this, passing an option for API key in `post_no_body()` is not required.
 
 ### Response type
@@ -235,7 +235,7 @@ async fn main() {
 そのようなオプションは**デフォルトオプション**として`Client`に設定できます。デフォルトオプションは、その`Client`を
 使って送られるすべてのリクエストに適用されます。
 
-この例では、`client.default_option(BinanceOption::Key(key));`でAPIキーのオプションをデフォルトオプションとして設定
+この例では、`client.update_default_option(BinanceOption::Key(key));`でAPIキーのオプションをデフォルトオプションとして設定
 しています。このため、`post_no_body()`にAPIキーのオプションを指定する必要がなくなっています。
 
 ### レスポンスの型
