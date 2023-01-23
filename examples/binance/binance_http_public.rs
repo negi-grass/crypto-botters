@@ -13,7 +13,7 @@ async fn main() {
         .filter_level(LevelFilter::Debug)
         .init();
     let mut client = Client::new();
-    client.default_option(BinanceOption::HttpUrl(BinanceHttpUrl::Spot));
+    client.update_default_option(BinanceOption::HttpUrl(BinanceHttpUrl::Spot));
 
     // typed
     #[derive(Serialize)]

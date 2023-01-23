@@ -41,12 +41,12 @@ impl Client {
 
     /// Update the default options for this [Client]
     #[inline(always)]
-    pub fn default_option<O>(&mut self, option: O)
+    pub fn update_default_option<O>(&mut self, option: O)
     where
         O: HandlerOption,
         Self: GetOptions<O::Options>,
     {
-        self.options_mut().update(option);
+        self.default_options_mut().update(option);
     }
 
     #[inline]
@@ -55,7 +55,7 @@ impl Client {
         O: HandlerOption,
         Self:GetOptions<O::Options>,
     {
-        let mut default_options = self.options().clone();
+        let mut default_options = self.default_options().clone();
         for option in options {
             default_options.update(option);
         }
@@ -180,39 +180,39 @@ impl Client {
 }
 
 pub trait GetOptions<O: HandlerOptions> {
-    fn options(&self) -> &O;
-    fn options_mut(&mut self) -> &mut O;
+    fn default_options(&self) -> &O;
+    fn default_options_mut(&mut self) -> &mut O;
 }
 
 #[cfg(feature = "binance")]
 impl GetOptions<binance::BinanceOptions> for Client {
-    fn options(&self) -> &binance::BinanceOptions {
+    fn default_options(&self) -> &binance::BinanceOptions {
         &self.binance
     }
 
-    fn options_mut(&mut self) -> &mut binance::BinanceOptions {
+    fn default_options_mut(&mut self) -> &mut binance::BinanceOptions {
         &mut self.binance
     }
 }
 
 #[cfg(feature = "bitflyer")]
 impl GetOptions<bitflyer::BitFlyerOptions> for Client {
-    fn options(&self) -> &bitflyer::BitFlyerOptions {
+    fn default_options(&self) -> &bitflyer::BitFlyerOptions {
         &self.bitflyer
     }
 
-    fn options_mut(&mut self) -> &mut bitflyer::BitFlyerOptions {
+    fn default_options_mut(&mut self) -> &mut bitflyer::BitFlyerOptions {
         &mut self.bitflyer
     }
 }
 
 #[cfg(feature = "bybit")]
 impl GetOptions<bybit::BybitOptions> for Client {
-    fn options(&self) -> &bybit::BybitOptions {
+    fn default_options(&self) -> &bybit::BybitOptions {
         &self.bybit
     }
 
-    fn options_mut(&mut self) -> &mut bybit::BybitOptions {
+    fn default_options_mut(&mut self) -> &mut bybit::BybitOptions {
         &mut self.bybit
     }
 }

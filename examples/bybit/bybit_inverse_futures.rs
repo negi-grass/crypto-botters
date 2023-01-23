@@ -12,9 +12,9 @@ async fn main() {
     let key = env::var("BYBIT_API_KEY").expect("no API key found");
     let secret = env::var("BYBIT_API_SECRET").expect("no API secret found");
     let mut client = Client::new();
-    client.default_option(BybitOption::Key(key));
-    client.default_option(BybitOption::Secret(secret));
-    client.default_option(BybitOption::RecvWindow(3000));
+    client.update_default_option(BybitOption::Key(key));
+    client.update_default_option(BybitOption::Secret(secret));
+    client.update_default_option(BybitOption::RecvWindow(3000));
 
     let cancel_all: serde_json::Value = client.post(
         "/futures/private/order/cancelAll",

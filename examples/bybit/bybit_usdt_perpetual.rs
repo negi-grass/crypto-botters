@@ -11,8 +11,8 @@ async fn main() {
     let key = env::var("BYBIT_API_KEY").expect("no API key found");
     let secret = env::var("BYBIT_API_SECRET").expect("no API secret found");
     let mut client = Client::new();
-    client.default_option(BybitOption::Key(key));
-    client.default_option(BybitOption::Secret(secret));
+    client.update_default_option(BybitOption::Key(key));
+    client.update_default_option(BybitOption::Secret(secret));
 
     // public
     let funding_rate: serde_json::Value = client.get(

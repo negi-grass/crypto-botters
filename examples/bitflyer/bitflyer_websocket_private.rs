@@ -13,8 +13,8 @@ async fn main() {
     let key = env::var("BITFLYER_API_KEY").expect("no API key found");
     let secret = env::var("BITFLYER_API_SECRET").expect("no API secret found");
     let mut client = Client::new();
-    client.default_option(BitFlyerOption::Key(key));
-    client.default_option(BitFlyerOption::Secret(secret));
+    client.update_default_option(BitFlyerOption::Key(key));
+    client.update_default_option(BitFlyerOption::Secret(secret));
 
     let connection = client.websocket(
         "/json-rpc",

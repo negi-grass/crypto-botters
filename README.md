@@ -73,8 +73,8 @@ async fn main() {
   let key = env::var("BINANCE_API_KEY").expect("no API key found");
   let secret = env::var("BINANCE_API_SECRET").expect("no API secret found");
   let mut client = Client::new();
-  client.default_option(BinanceOption::Key(key));
-  client.default_option(BinanceOption::Secret(secret));
+  client.update_default_option(BinanceOption::Key(key));
+  client.update_default_option(BinanceOption::Secret(secret));
   
   let dusts: serde_json::Value = client.post_no_body(
     "https://api.binance.com/sapi/v1/asset/dust-btc",
@@ -204,8 +204,8 @@ async fn main() {
   let key = env::var("BINANCE_API_KEY").expect("no API key found");
   let secret = env::var("BINANCE_API_SECRET").expect("no API secret found");
   let mut client = Client::new();
-  client.default_option(BinanceOption::Key(key));
-  client.default_option(BinanceOption::Secret(secret));
+  client.update_default_option(BinanceOption::Key(key));
+  client.update_default_option(BinanceOption::Secret(secret));
   
   let dusts: serde_json::Value = client.post_no_body(
     "https://api.binance.com/sapi/v1/asset/dust-btc",

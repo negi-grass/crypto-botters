@@ -368,7 +368,7 @@ pub trait WebSocketHandler: Send + 'static {
     /// This could be called multiple times because the connection can be reconnected.
     fn handle_start(&mut self) -> Vec<WebSocketMessage> {
         log::debug!("WebSocket connection started");
-        Vec::new()
+        vec![]
     }
 
     /// Called when the [WebSocketConnection] received a message, returns messages to be sent to the server.

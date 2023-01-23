@@ -260,7 +260,7 @@ impl<H> WebSocketHandler for BitFlyerWebSocketHandler<H> where H: FnMut(BitFlyer
                     Ok(message) => message,
                     Err(_) => {
                         log::warn!("Invalid JSON-RPC message received");
-                        return Vec::new();
+                        return vec![];
                     },
                 };
                 if self.options.websocket_auth && self.auth_id == message.id {
@@ -281,7 +281,7 @@ impl<H> WebSocketHandler for BitFlyerWebSocketHandler<H> where H: FnMut(BitFlyer
             WebSocketMessage::Binary(_) => log::warn!("Unexpected binary message received"),
             WebSocketMessage::Ping(_) | WebSocketMessage::Pong(_) => (),
         }
-        Vec::new()
+        vec![]
     }
 }
 

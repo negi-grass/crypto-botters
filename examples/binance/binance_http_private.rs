@@ -12,8 +12,8 @@ async fn main() {
     let key = env::var("BINANCE_API_KEY").expect("no API key found");
     let secret = env::var("BINANCE_API_SECRET").expect("no API secret found");
     let mut client = Client::new();
-    client.default_option(BinanceOption::Key(key));
-    client.default_option(BinanceOption::Secret(secret));
+    client.update_default_option(BinanceOption::Key(key));
+    client.update_default_option(BinanceOption::Secret(secret));
 
     // typed
     #[derive(Serialize)]
