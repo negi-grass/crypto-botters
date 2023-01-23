@@ -185,6 +185,7 @@ dependencies = [
  "crypto-botters-binance",
  "crypto-botters-bitflyer",
  "crypto-botters-bybit",
+ "crypto-botters-coincheck",
  "env_logger",
  "generic-api-client",
  "log",
@@ -238,6 +239,21 @@ dependencies = [
  "hmac",
  "log",
  "rand",
+ "serde",
+ "serde_json",
+ "serde_urlencoded",
+ "sha2",
+]
+
+[[package]]
+name = "crypto-botters-coincheck"
+version = "0.1.0"
+dependencies = [
+ "crypto-botters-api",
+ "generic-api-client",
+ "hex",
+ "hmac",
+ "log",
  "serde",
  "serde_json",
  "serde_urlencoded",
