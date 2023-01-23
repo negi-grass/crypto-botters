@@ -286,6 +286,7 @@ impl<H> WebSocketHandler for BitFlyerWebSocketHandler<H> where H: FnMut(BitFlyer
 }
 
 impl<H> BitFlyerWebSocketHandler<H> where H: FnMut(BitFlyerChannelMessage) + Send + 'static, {
+    #[inline]
     fn message_subscribe(&self) -> Vec<WebSocketMessage> {
         self.options.websocket_channels.clone().into_iter().map(|channel| {
             WebSocketMessage::Text(json!({ "method": "subscribe", "params": { "channel": channel } }).to_string())
@@ -295,6 +296,7 @@ impl<H> BitFlyerWebSocketHandler<H> where H: FnMut(BitFlyerChannelMessage) + Sen
 
 impl BitFlyerHttpUrl {
     /// The base URL that this variant represents.
+    #[inline(always)]
     fn as_str(&self) -> &'static str {
         match self {
             Self::Default => "https://api.bitflyer.com",
@@ -305,6 +307,7 @@ impl BitFlyerHttpUrl {
 
 impl BitFlyerWebSocketUrl {
     /// The base URL that this variant represents.
+    #[inline(always)]
     fn as_str(&self) -> &'static str {
         match self {
             Self::Default => "wss://ws.lightstream.bitflyer.com",
@@ -353,6 +356,7 @@ impl Default for BitFlyerOptions {
 impl<'a, R: DeserializeOwned + 'a> HttpOption<'a, R> for BitFlyerOption {
     type RequestHandler = BitFlyerRequestHandler<'a, R>;
 
+    #[inline(always)]
     fn request_handler(options: Self::Options) -> Self::RequestHandler {
         BitFlyerRequestHandler::<'a, R> {
             options,
@@ -364,6 +368,7 @@ impl<'a, R: DeserializeOwned + 'a> HttpOption<'a, R> for BitFlyerOption {
 impl<H: FnMut(BitFlyerChannelMessage) + Send + 'static> WebSocketOption<H> for BitFlyerOption {
     type WebSocketHandler = BitFlyerWebSocketHandler<H>;
 
+    #[inline(always)]
     fn websocket_handler(handler: H, options: Self::Options) -> Self::WebSocketHandler {
         BitFlyerWebSocketHandler {
             message_handler: handler,

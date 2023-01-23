@@ -445,6 +445,7 @@ impl<H> BybitWebSocketHandler<H> where H: FnMut(serde_json::Value) + Send + 'sta
 
 impl BybitHttpUrl {
     /// The URL that this variant represents.
+    #[inline(always)]
     pub fn as_str(&self) -> &'static str {
         match self {
             Self::Bybit => "https://api.bybit.com",
@@ -457,6 +458,7 @@ impl BybitHttpUrl {
 
 impl BybitWebSocketUrl {
     /// The URL that this variant represents.
+    #[inline(always)]
     pub fn as_str(&self) -> &'static str {
         match self {
             Self::Bybit => "wss://stream.bybit.com",
@@ -509,6 +511,7 @@ impl Default for BybitOptions {
 impl<'a, R: DeserializeOwned + 'a> HttpOption<'a, R> for BybitOption {
     type RequestHandler = BybitRequestHandler<'a, R>;
 
+    #[inline(always)]
     fn request_handler(options: Self::Options) -> Self::RequestHandler {
         BybitRequestHandler::<'a, R> {
             options,
@@ -520,6 +523,7 @@ impl<'a, R: DeserializeOwned + 'a> HttpOption<'a, R> for BybitOption {
 impl <H: FnMut(serde_json::Value) + Send + 'static> WebSocketOption<H> for BybitOption {
     type WebSocketHandler = BybitWebSocketHandler<H>;
 
+    #[inline(always)]
     fn websocket_handler(handler: H, options: Self::Options) -> Self::WebSocketHandler {
         BybitWebSocketHandler {
             message_handler: handler,

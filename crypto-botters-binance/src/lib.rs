@@ -271,7 +271,8 @@ impl<H> WebSocketHandler for BinanceWebSocketHandler<H> where H: FnMut(serde_jso
 }
 
 impl BinanceHttpUrl {
-    /// The string that this variant represents.
+    /// The URL that this variant represents.
+    #[inline(always)]
     fn as_str(&self) -> &'static str {
         match self {
             Self::Spot => "https://api.binance.com",
@@ -290,6 +291,8 @@ impl BinanceHttpUrl {
 }
 
 impl BinanceWebSocketUrl {
+    /// The URL that this variant represents.
+    #[inline(always)]
     pub fn as_str(&self) -> &'static str {
         match self {
             Self::Spot9443 => "wss://stream.binance.com:9443",
@@ -346,6 +349,7 @@ impl Default for BinanceOptions {
 impl<'a, R: DeserializeOwned + 'a> HttpOption<'a, R> for BinanceOption {
     type RequestHandler = BinanceRequestHandler<'a, R>;
 
+    #[inline(always)]
     fn request_handler(options: Self::Options) -> Self::RequestHandler {
         BinanceRequestHandler::<'a, R> {
             options,
@@ -357,6 +361,7 @@ impl<'a, R: DeserializeOwned + 'a> HttpOption<'a, R> for BinanceOption {
 impl<H: FnMut(serde_json::Value) + Send + 'static> WebSocketOption<H> for BinanceOption {
     type WebSocketHandler = BinanceWebSocketHandler<H>;
 
+    #[inline(always)]
     fn websocket_handler(handler: H, options: Self::Options) -> Self::WebSocketHandler {
         BinanceWebSocketHandler {
             message_handler: handler,

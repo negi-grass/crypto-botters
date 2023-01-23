@@ -186,10 +186,12 @@ pub trait GetOptions<O: HandlerOptions> {
 
 #[cfg(feature = "binance")]
 impl GetOptions<binance::BinanceOptions> for Client {
+    #[inline(always)]
     fn default_options(&self) -> &binance::BinanceOptions {
         &self.binance
     }
 
+    #[inline(always)]
     fn default_options_mut(&mut self) -> &mut binance::BinanceOptions {
         &mut self.binance
     }
@@ -197,10 +199,12 @@ impl GetOptions<binance::BinanceOptions> for Client {
 
 #[cfg(feature = "bitflyer")]
 impl GetOptions<bitflyer::BitFlyerOptions> for Client {
+    #[inline(always)]
     fn default_options(&self) -> &bitflyer::BitFlyerOptions {
         &self.bitflyer
     }
 
+    #[inline(always)]
     fn default_options_mut(&mut self) -> &mut bitflyer::BitFlyerOptions {
         &mut self.bitflyer
     }
@@ -208,10 +212,12 @@ impl GetOptions<bitflyer::BitFlyerOptions> for Client {
 
 #[cfg(feature = "bybit")]
 impl GetOptions<bybit::BybitOptions> for Client {
+    #[inline(always)]
     fn default_options(&self) -> &bybit::BybitOptions {
         &self.bybit
     }
 
+    #[inline(always)]
     fn default_options_mut(&mut self) -> &mut bybit::BybitOptions {
         &mut self.bybit
     }
