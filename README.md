@@ -196,7 +196,7 @@ request a reconnection, or close the connection.
 Cargo.toml:
 ```
 [dependencies]
-crypto-botters = { version = "0.3", features = ["binance", "bitflyer", "bybit"] }
+crypto-botters = { version = "0.4", features = ["binance", "bitflyer", "bybit", "coincheck"] }
 ```
 使いたい取引所のfeatureを有効化してください。
 
