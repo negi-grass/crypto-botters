@@ -173,6 +173,7 @@ impl Client {
         self.client.delete_no_query(url, &O::request_handler(self.merged_options(options))).await
     }
 
+    #[inline(always)]
     pub async fn websocket<O, H>(&self, url: &str, handler: H, options: impl IntoIterator<Item=O>) -> Result<WebSocketConnection<O::WebSocketHandler>, TungsteniteError>
     where
         O: WebSocketOption<H>,
