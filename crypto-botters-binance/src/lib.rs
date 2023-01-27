@@ -69,6 +69,8 @@ pub enum BinanceHttpUrl {
     Spot2,
     /// https://api3.binance.com
     Spot3,
+    /// https://api4.binance.com
+    Spot4,
     /// https://testnet.binance.vision
     SpotTest,
     /// https://data.binance.com
@@ -279,6 +281,7 @@ impl BinanceHttpUrl {
             Self::Spot1 => "https://api1.binance.com",
             Self::Spot2 => "https://api2.binance.com",
             Self::Spot3 => "https://api3.binance.com",
+            Self::Spot4 => "https://api4.binance.com",
             Self::SpotTest => "https://testnet.binance.vision",
             Self::SpotData => "https://data.binance.com",
             Self::FuturesUsdM => "https://fapi.binance.com",
