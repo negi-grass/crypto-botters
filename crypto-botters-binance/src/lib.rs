@@ -13,7 +13,8 @@ use crypto_botters_api::*;
 use generic_api_client::{http::*, websocket::*};
 
 /// The type returned by [Client::request()].
-pub type BinanceRequestResult<T> = Result<T, RequestError<&'static str, BinanceHandlerError>>;
+pub type BinanceRequestResult<T> = Result<T, BinanceRequestError>;
+pub type BinanceRequestError = RequestError<&'static str, BinanceHandlerError>;
 
 /// Options that can be set when creating handlers
 pub enum BinanceOption {

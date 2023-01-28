@@ -13,7 +13,8 @@ use crypto_botters_api::{HandlerOption, HandlerOptions, HttpOption, WebSocketOpt
 use generic_api_client::{http::{*, header::HeaderValue}, websocket::*};
 
 /// The type returned by [Client::request()].
-pub type CoincheckRequestResult<T> = Result<T, RequestError<&'static str, CoincheckHandlerError>>;
+pub type CoincheckRequestResult<T> = Result<T, CoincheckRequestError>;
+pub type CoincheckRequestError = RequestError<&'static str, CoincheckHandlerError>;
 
 /// Options that can be set when creating handlers
 pub enum CoincheckOption {

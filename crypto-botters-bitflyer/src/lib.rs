@@ -14,7 +14,8 @@ use crypto_botters_api::{HandlerOption, HandlerOptions, HttpOption, WebSocketOpt
 use generic_api_client::{http::{*, header::HeaderValue}, websocket::*};
 
 /// The type returned by [Client::request()].
-pub type BitFlyerRequestResult<T> = Result<T, RequestError<&'static str, BitFlyerHandlerError>>;
+pub type BitFlyerRequestResult<T> = Result<T, BitFlyerRequestError>;
+pub type BitFlyerRequestError = RequestError<&'static str, BitFlyerHandlerError>;
 
 /// Options that can be set when creating handlers
 pub enum BitFlyerOption {
