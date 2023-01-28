@@ -286,7 +286,7 @@ impl<'a, R> BybitRequestHandler<'a, R> where R: DeserializeOwned {
             let signature = hex::encode(hmac.finalize().into_bytes());
 
             if spot {
-                body_query_string.push_str(&format!("sign={}", signature));
+                body_query_string.push_str(&format!("sign={signature}"));
 
                 *request.body_mut() = Some(body_query_string.into());
                 request.headers_mut().insert(header::CONTENT_TYPE, HeaderValue::from_static("application/x-www-form-urlencoded"));
@@ -328,7 +328,7 @@ impl<'a, R> BybitRequestHandler<'a, R> where R: DeserializeOwned {
 
         let mut request = builder.build().or(Err("failed to build request"))?;
 
-        let mut sign_contents = format!("{}{}", timestamp, key);
+        let mut sign_contents = format!("{timestamp}{key}");
         if let Some(window) = window {
             sign_contents.push_str(&window.to_string());
         }
@@ -379,7 +379,7 @@ impl<H> WebSocketHandler for BybitWebSocketHandler<H> where H: FnMut(serde_json:
 
                     let mut hmac = Hmac::<Sha256>::new_from_slice(secret.as_bytes()).unwrap(); // hmac accepts key of any length
 
-                    hmac.update(format!("GET/realtime{}", expires).as_bytes());
+                    hmac.update(format!("GET/realtime{expires}").as_bytes());
                     let signature = hex::encode(hmac.finalize().into_bytes());
 
                     return vec![

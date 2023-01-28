@@ -216,7 +216,7 @@ impl<H> WebSocketHandler for BitFlyerWebSocketHandler<H> where H: FnMut(BitFlyer
 
                     let mut hmac = Hmac::<Sha256>::new_from_slice(secret.as_bytes()).unwrap(); // hmac accepts key of any length
 
-                    hmac.update(format!("{}{}", timestamp, nonce).as_bytes());
+                    hmac.update(format!("{timestamp}{nonce}").as_bytes());
                     let signature = hex::encode(hmac.finalize().into_bytes());
 
                     let id = format!("_auth{}", time.as_nanos());
