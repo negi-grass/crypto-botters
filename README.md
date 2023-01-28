@@ -12,49 +12,14 @@ This library:
 - supports WebSocket
 - supports deserializing responses into user-defined types
 
-## Supported APIs
-The following APIs are currently supported.
-- [Binance](https://www.binance.com/en) ([Examples](https://github.com/negi-grass/crypto-botters/tree/main/examples/binance))
-  - [Spot/Margin/Savings/Mining](https://binance-docs.github.io/apidocs/spot/en/)
-    ([WebSocket](https://binance-docs.github.io/apidocs/spot/en/#websocket-market-streams))
-  - [USDⓈ-M Futures](https://binance-docs.github.io/apidocs/futures/en/)
-    ([WebSocket](https://binance-docs.github.io/apidocs/futures/en/#websocket-market-streams))
-  - [COIN-M Futures](https://binance-docs.github.io/apidocs/delivery/en/)
-    ([WebSocket](https://binance-docs.github.io/apidocs/delivery/en/#websocket-market-streams))
-  - [European Options](https://binance-docs.github.io/apidocs/voptions/en/)
-    ([WebSocket](https://binance-docs.github.io/apidocs/voptions/en/#websocket-market-streams))
-  - [WebSocket API](https://binance-docs.github.io/apidocs/websocket_api/en/)
-- [bitFlyer](https://bitflyer.com) ([Examples](https://github.com/negi-grass/crypto-botters/tree/main/examples/bitflyer))
-  - [HTTP API](https://lightning.bitflyer.com/docs)
-  - [Realtime API](https://bf-lightning-api.readme.io/docs) (Socket.IO not supported)
-- [Bybit](https://www.bybit.com/en-US/) ([Examples](https://github.com/negi-grass/crypto-botters/tree/main/examples/bybit))
-  - [Derivatives v3 Unified Margin](https://bybit-exchange.github.io/docs/derivativesV3/unified_margin/)
-    ([WebSocket](https://bybit-exchange.github.io/docs/derivativesV3/unified_margin/#t-websocket))
-  - [Derivatives v3 Contract](https://bybit-exchange.github.io/docs/derivativesV3/contract/)
-    ([WebSocket](https://bybit-exchange.github.io/docs/derivativesV3/contract/#t-websocket))
-  - [Futures v2 Inverse Perpetual](https://bybit-exchange.github.io/docs/futuresV2/inverse/)
-    ([WebSocket](https://bybit-exchange.github.io/docs/futuresV2/inverse/#t-websocket))
-  - [Futures v2 USDT Perpetual](https://bybit-exchange.github.io/docs/futuresV2/linear/)
-    ([WebSocket](https://bybit-exchange.github.io/docs/futuresV2/linear/#t-websocket))
-  - [Futures v2 Inverse Futures](https://bybit-exchange.github.io/docs/futuresV2/inverse_futures/)
-    ([WebSocket](https://bybit-exchange.github.io/docs/futuresV2/inverse_futures/#t-websocket))
-  - [Spot v3](https://bybit-exchange.github.io/docs/spot/v3/)
-    ([WebSocket](https://bybit-exchange.github.io/docs/spot/v3/#t-websocket))
-  - [Spot v1](https://bybit-exchange.github.io/docs/spot/v1/)
-    ([WebSocket](https://bybit-exchange.github.io/docs/spot/v1/#t-websocket))
-  - [Account Asset v3](https://bybit-exchange.github.io/docs/account_asset/v3/)
-  - [Account Asset v1](https://bybit-exchange.github.io/docs/account_asset/v1/)
-  - [Copy Trading](https://bybit-exchange.github.io/docs/copy_trading/)
-    ([WebSocket](https://bybit-exchange.github.io/docs/copy_trading/#t-websocket))
-  - [USDC Contract Option](https://bybit-exchange.github.io/docs/usdc/option/)
-    ([WebSocket](https://bybit-exchange.github.io/docs/usdc/option/#t-websocket))
-  - [USDC Contract Perpetual](https://bybit-exchange.github.io/docs/usdc/perpetual/)
-    ([WebSocket](https://bybit-exchange.github.io/docs/usdc/perpetual/#t-websocket))
-  - [Tax](https://bybit-exchange.github.io/docs/tax/)
-- [Coincheck](https://coincheck.com/) ([Examples](https://github.com/negi-grass/crypto-botters/tree/main/examples/coincheck))
-  - [Public API](https://coincheck.com/ja/documents/exchange/api#public)
-  - [Private API](https://coincheck.com/ja/documents/exchange/api#private)
-  - [WebSoket API](https://coincheck.com/ja/documents/exchange/api#websocket)
+## Supported Exchanges
+The following Exchanges are currently supported.
+|Exchange|Official API document|Example usages of this library|
+|--------|-------------------|------------------|
+|[Binance](https://www.binance.com)|[API document](https://binance-docs.github.io/apidocs/spot/en/)|[Examples](https://github.com/negi-grass/crypto-botters/tree/main/examples/binance)|
+|[bitFlyer](https://bitflyer.com)|[API document](https://lightning.bitflyer.com/docs)|[Examples](https://github.com/negi-grass/crypto-botters/tree/main/examples/bitflyer)|
+|[Bybit](https://www.bybit.com)|[API document](https://bybit-exchange.github.io/docs/spot/v3/)|[Examples](https://github.com/negi-grass/crypto-botters/tree/main/examples/bybit)|
+|[Coincheck](https://coincheck.com)|[API document](https://coincheck.com/documents/exchange/api)|[Examples](https://github.com/negi-grass/crypto-botters/tree/main/examples/coincheck)|
 
 ## Usage
 More than 20 examples can be found in the [examples directory](https://github.com/negi-grass/crypto-botters/tree/main/examples).
@@ -147,49 +112,15 @@ request a reconnection, or close the connection.
 - WebSocketに対応
 - レスポンスをユーザーの定義した型に変換
 
-## 対応API
-以下のAPIに対応しています。
-- [Binance](https://www.binance.com/en) ([例](https://github.com/negi-grass/crypto-botters/tree/main/examples/binance))
-  - [Spot/Margin/Savings/Mining](https://binance-docs.github.io/apidocs/spot/en/)
-    ([WebSocket](https://binance-docs.github.io/apidocs/spot/en/#websocket-market-streams))
-  - [USDⓈ-M Futures](https://binance-docs.github.io/apidocs/futures/en/)
-    ([WebSocket](https://binance-docs.github.io/apidocs/futures/en/#websocket-market-streams))
-  - [COIN-M Futures](https://binance-docs.github.io/apidocs/delivery/en/)
-    ([WebSocket](https://binance-docs.github.io/apidocs/delivery/en/#websocket-market-streams))
-  - [European Options](https://binance-docs.github.io/apidocs/voptions/en/)
-    ([WebSocket](https://binance-docs.github.io/apidocs/voptions/en/#websocket-market-streams))
-  - [WebSocket API](https://binance-docs.github.io/apidocs/websocket_api/en/)
-- [bitFlyer](https://bitflyer.com) ([例](https://github.com/negi-grass/crypto-botters/tree/main/examples/bitflyer))
-  - [HTTP API](https://lightning.bitflyer.com/docs)
-  - [Realtime API](https://bf-lightning-api.readme.io/docs) (Socket.IO は非対応)
-- [Bybit](https://www.bybit.com/en-US/) ([例](https://github.com/negi-grass/crypto-botters/tree/main/examples/bybit))
-  - [Derivatives v3 Unified Margin](https://bybit-exchange.github.io/docs/derivativesV3/unified_margin/)
-    ([WebSocket](https://bybit-exchange.github.io/docs/derivativesV3/unified_margin/#t-websocket))
-  - [Derivatives v3 Contract](https://bybit-exchange.github.io/docs/derivativesV3/contract/)
-    ([WebSocket](https://bybit-exchange.github.io/docs/derivativesV3/contract/#t-websocket))
-  - [Futures v2 Inverse Perpetual](https://bybit-exchange.github.io/docs/futuresV2/inverse/)
-    ([WebSocket](https://bybit-exchange.github.io/docs/futuresV2/inverse/#t-websocket))
-  - [Futures v2 USDT Perpetual](https://bybit-exchange.github.io/docs/futuresV2/linear/)
-    ([WebSocket](https://bybit-exchange.github.io/docs/futuresV2/linear/#t-websocket))
-  - [Futures v2 Inverse Futures](https://bybit-exchange.github.io/docs/futuresV2/inverse_futures/)
-    ([WebSocket](https://bybit-exchange.github.io/docs/futuresV2/inverse_futures/#t-websocket))
-  - [Spot v3](https://bybit-exchange.github.io/docs/spot/v3/)
-    ([WebSocket](https://bybit-exchange.github.io/docs/spot/v3/#t-websocket))
-  - [Spot v1](https://bybit-exchange.github.io/docs/spot/v1/)
-    ([WebSocket](https://bybit-exchange.github.io/docs/spot/v1/#t-websocket))
-  - [Account Asset v3](https://bybit-exchange.github.io/docs/account_asset/v3/)
-  - [Account Asset v1](https://bybit-exchange.github.io/docs/account_asset/v1/)
-  - [Copy Trading](https://bybit-exchange.github.io/docs/copy_trading/)
-    ([WebSocket](https://bybit-exchange.github.io/docs/copy_trading/#t-websocket))
-  - [USDC Contract Option](https://bybit-exchange.github.io/docs/usdc/option/)
-    ([WebSocket](https://bybit-exchange.github.io/docs/usdc/option/#t-websocket))
-  - [USDC Contract Perpetual](https://bybit-exchange.github.io/docs/usdc/perpetual/)
-    ([WebSocket](https://bybit-exchange.github.io/docs/usdc/perpetual/#t-websocket))
-  - [Tax](https://bybit-exchange.github.io/docs/tax/)
-- [Coincheck](https://coincheck.com/ja/) ([例](https://github.com/negi-grass/crypto-botters/tree/main/examples/coincheck))
-  - [Public API](https://coincheck.com/ja/documents/exchange/api#public)
-  - [Private API](https://coincheck.com/ja/documents/exchange/api#private)
-  - [WebSoket API](https://coincheck.com/ja/documents/exchange/api#websocket)
+## 対応取引所
+以下の取引所に対応しています。
+|取引所名|公式APIドキュメント|本ライブラリ使用例|
+|--------|-------------------|------------------|
+|[Binance](https://www.binance.com)|[APIドキュメント](https://binance-docs.github.io/apidocs/spot/en/)|[使用例](https://github.com/negi-grass/crypto-botters/tree/main/examples/binance)|
+|[bitFlyer](https://bitflyer.com)|[APIドキュメント](https://lightning.bitflyer.com/docs)|[使用例](https://github.com/negi-grass/crypto-botters/tree/main/examples/bitflyer)|
+|[Bybit](https://www.bybit.com)|[APIドキュメント](https://bybit-exchange.github.io/docs/spot/v3/)|[使用例](https://github.com/negi-grass/crypto-botters/tree/main/examples/bybit)|
+|[Coincheck](https://coincheck.com)|[APIドキュメント](https://coincheck.com/ja/documents/exchange/api)|[使用例](https://github.com/negi-grass/crypto-botters/tree/main/examples/coincheck)|
+
 ## 使い方
 [examples ディレクトリ](https://github.com/negi-grass/crypto-botters/tree/main/examples) にサンプルが20以上あります。
 
