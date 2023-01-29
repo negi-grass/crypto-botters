@@ -155,9 +155,8 @@ async fn main() {
 この例では、BinanceでBNBに変換できる資産を取得しています。
 
 ### オプション
-リクエストを送るときには、オプションを設定できます。この例では、`[BinanceOption::HttpAuth(BinanceAuth::Sign)]`
-がオプションです。
-普通はオプションの配列として渡します。
+リクエストを送るときには、オプションを設定できます。この例では、`[BinanceOption::HttpAuth(BinanceAuth::Sign)]`がオプションです。
+オプションのイテレータなら何でもいいです。この例では配列を使っています。
 
 オプションは
 - APIキーやシークレットを指定する
@@ -165,20 +164,19 @@ async fn main() {
 
 などのために設定します。
 
-オプションの型がどの取引所を使うかを定めます。この例では`BinanceOption`型を渡しているため、Binance用に認証アルゴリズムが
-用いられます。`BybitOption`を渡せばBybitへのリクエストとして扱われます。
+オプションの型がどの取引所を使うかを定めます。この例では`BinanceOption`型を渡しているため、Binanceの認証アルゴリズムが用いられます。`BybitOption`型を渡せばBybitへのリクエストとして扱われます。
 
 ### デフォルトオプション
 複数のリクエスト間で変わらないオプションもあります。例えば、すべてのリクエストで同じAPIキーを使うことが多いと思います。
 そのようなオプションは**デフォルトオプション**として`Client`に設定できます。デフォルトオプションは、その`Client`を
-使って送られるすべてのリクエストに適用されます。
+使って送られるすべてのリクエストに適用されます。それぞれのリクエストで渡すオプションで上書きすることもできます。
 
 この例では、`client.update_default_option(BinanceOption::Key(key));`でAPIキーのオプションをデフォルトオプションとして設定
 しています。このため、`post_no_body()`にAPIキーのオプションを指定する必要がなくなっています。
 
 ### レスポンスの型
 レスポンスは指定した型に自動的に変換されます。この例では、`dusts`の型を`serde_json::Value`と指定しているため、
-レスポンスが自動で`serde_json::Value`型に変換されています。`DeserializeOwned`を実装している肩ならどんな型でも指定できます。
+レスポンスが自動で`serde_json::Value`型に変換されています。`DeserializeOwned`を実装している型ならどんな型でも指定できます。
 
 ### WebSocket
 ```rust
@@ -201,8 +199,7 @@ async fn main() {
 ```
 この例では、BinanceのBTCUSDTの取引をリアルタイムで受信しています。
 
-`Client::websocket()`メソッドは`WebSocketConnection`を返します。これに対し、メッセージを送信する、再接続を要求する、接続を
-切断するなどの処理が行なえます。
+`Client::websocket()`メソッドは`WebSocketConnection`型を返します。これに対し、メッセージを送信する、再接続を要求する、接続を切断するなどの処理が行なえます。
 
 ## その他
 開発者：[@negi_grass](https://twitter.com/negi_grass)
