@@ -207,7 +207,7 @@ version = "0.1.0"
 
 [[package]]
 name = "crypto-botters-binance"
-version = "0.3.0"
+version = "0.3.1"
 dependencies = [
  "crypto-botters-api",
  "generic-api-client",
@@ -222,7 +222,7 @@ dependencies = [
 
 [[package]]
 name = "crypto-botters-bitflyer"
-version = "0.3.0"
+version = "0.3.1"
 dependencies = [
  "crypto-botters-api",
  "generic-api-client",
@@ -237,7 +237,7 @@ dependencies = [
 
 [[package]]
 name = "crypto-botters-bybit"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "crypto-botters-api",
  "generic-api-client",
@@ -253,7 +253,7 @@ dependencies = [
 
 [[package]]
 name = "crypto-botters-coincheck"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "crypto-botters-api",
  "generic-api-client",
