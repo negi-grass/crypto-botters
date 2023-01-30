@@ -1,14 +1,14 @@
 [package]
 name = "generic-api-client"
-version = "0.1.2"
+version = "0.1.3"
 authors = ["negi_grass"]
 edition = "2021"
 description = "A client for HTTP/HTTPS/WebSocket APIs."
 license = "MIT"
 readme = "README.md"
-homepage = "https://github.com/negi-grass/crypto-botters"
+homepage = "https://github.com/negi-grass/crypto-botters/tree/main/generic-api-client"
 documentation = "https://docs.rs/generic-api-client"
-repository = "https://github.com/negi-grass/crypto-botters"
+repository = "https://github.com/negi-grass/crypto-botters/tree/main/generic-api-client"
 keywords = ["client", "websocket", "asynchronous"]
 categories = ["api-bindings", "asynchronous"]
 
