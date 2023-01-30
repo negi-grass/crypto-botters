@@ -14,12 +14,13 @@ This library:
 
 ## Supported Exchanges
 The following Exchanges are currently supported.
-|Exchange|Official API document|Example usages of this library|
-|--------|-------------------|------------------|
-|[Binance](https://www.binance.com)|[API document](https://binance-docs.github.io/apidocs/spot/en/)|[Examples](https://github.com/negi-grass/crypto-botters/tree/main/examples/binance)|
-|[bitFlyer](https://bitflyer.com)|[API document](https://lightning.bitflyer.com/docs)|[Examples](https://github.com/negi-grass/crypto-botters/tree/main/examples/bitflyer)|
-|[Bybit](https://www.bybit.com)|[API document](https://bybit-exchange.github.io/docs/spot/v3/)|[Examples](https://github.com/negi-grass/crypto-botters/tree/main/examples/bybit)|
-|[Coincheck](https://coincheck.com)|[API document](https://coincheck.com/documents/exchange/api)|[Examples](https://github.com/negi-grass/crypto-botters/tree/main/examples/coincheck)|
+
+| Exchange                           | Official API document                                           | Example usages of this library                                                        |
+|------------------------------------|-----------------------------------------------------------------|---------------------------------------------------------------------------------------|
+| [Binance](https://www.binance.com) | [API document](https://binance-docs.github.io/apidocs/spot/en/) | [Examples](https://github.com/negi-grass/crypto-botters/tree/main/examples/binance)   |
+| [bitFlyer](https://bitflyer.com)   | [API document](https://lightning.bitflyer.com/docs)             | [Examples](https://github.com/negi-grass/crypto-botters/tree/main/examples/bitflyer)  |
+| [Bybit](https://www.bybit.com)     | [API document](https://bybit-exchange.github.io/docs/spot/v3/)  | [Examples](https://github.com/negi-grass/crypto-botters/tree/main/examples/bybit)     |
+| [Coincheck](https://coincheck.com) | [API document](https://coincheck.com/documents/exchange/api)    | [Examples](https://github.com/negi-grass/crypto-botters/tree/main/examples/coincheck) |
 
 ## Usage
 More than 20 examples can be found in the [examples directory](https://github.com/negi-grass/crypto-botters/tree/main/examples).
@@ -114,12 +115,13 @@ request a reconnection, or close the connection.
 
 ## 対応取引所
 以下の取引所に対応しています。
-|取引所名|公式APIドキュメント|本ライブラリ使用例|
-|--------|-------------------|------------------|
-|[Binance](https://www.binance.com)|[APIドキュメント](https://binance-docs.github.io/apidocs/spot/en/)|[使用例](https://github.com/negi-grass/crypto-botters/tree/main/examples/binance)|
-|[bitFlyer](https://bitflyer.com)|[APIドキュメント](https://lightning.bitflyer.com/docs)|[使用例](https://github.com/negi-grass/crypto-botters/tree/main/examples/bitflyer)|
-|[Bybit](https://www.bybit.com)|[APIドキュメント](https://bybit-exchange.github.io/docs/spot/v3/)|[使用例](https://github.com/negi-grass/crypto-botters/tree/main/examples/bybit)|
-|[Coincheck](https://coincheck.com)|[APIドキュメント](https://coincheck.com/ja/documents/exchange/api)|[使用例](https://github.com/negi-grass/crypto-botters/tree/main/examples/coincheck)|
+
+| 取引所名                               | 公式APIドキュメント                                                  | 本ライブラリ使用例                                                                        |
+|------------------------------------|--------------------------------------------------------------|----------------------------------------------------------------------------------|
+| [Binance](https://www.binance.com) | [APIドキュメント](https://binance-docs.github.io/apidocs/spot/en/) | [使用例](https://github.com/negi-grass/crypto-botters/tree/main/examples/binance)   |
+| [bitFlyer](https://bitflyer.com)   | [APIドキュメント](https://lightning.bitflyer.com/docs)             | [使用例](https://github.com/negi-grass/crypto-botters/tree/main/examples/bitflyer)  |
+| [Bybit](https://www.bybit.com)     | [APIドキュメント](https://bybit-exchange.github.io/docs/spot/v3/)  | [使用例](https://github.com/negi-grass/crypto-botters/tree/main/examples/bybit)     |
+| [Coincheck](https://coincheck.com) | [APIドキュメント](https://coincheck.com/ja/documents/exchange/api) | [使用例](https://github.com/negi-grass/crypto-botters/tree/main/examples/coincheck) |
 
 ## 使い方
 [examples ディレクトリ](https://github.com/negi-grass/crypto-botters/tree/main/examples) にサンプルが20以上あります。
