@@ -62,27 +62,27 @@ pub struct BinanceOptions {
 #[derive(Debug, Eq, PartialEq, Copy, Clone)]
 #[non_exhaustive]
 pub enum BinanceHttpUrl {
-    /// https://api.binance.com
+    /// `https://api.binance.com`
     Spot,
-    /// https://api1.binance.com
+    /// `https://api1.binance.com`
     Spot1,
-    /// https://api2.binance.com
+    /// `https://api2.binance.com`
     Spot2,
-    /// https://api3.binance.com
+    /// `https://api3.binance.com`
     Spot3,
-    /// https://api4.binance.com
+    /// `https://api4.binance.com`
     Spot4,
-    /// https://testnet.binance.vision
+    /// `https://testnet.binance.vision`
     SpotTest,
-    /// https://data.binance.com
+    /// `https://data.binance.com`
     SpotData,
-    /// https://fapi.binance.com
+    /// `https://fapi.binance.com`
     FuturesUsdM,
-    /// https://dapi.binance.com
+    /// `https://dapi.binance.com`
     FuturesCoinM,
-    /// https://testnet.binancefuture.com
+    /// `https://testnet.binancefuture.com`
     FuturesTest,
-    /// https://eapi.binance.com
+    /// `https://eapi.binance.com`
     EuropeanOptions,
     /// The url will not be modified by [BinanceRequestHandler]
     None,
@@ -92,29 +92,29 @@ pub enum BinanceHttpUrl {
 #[derive(Debug, Eq, PartialEq, Copy, Clone)]
 #[non_exhaustive]
 pub enum BinanceWebSocketUrl {
-    /// wss://stream.binance.com:9443
+    /// `wss://stream.binance.com:9443`
     Spot9443,
-    /// wss://stream.binance.com:443
+    /// `wss://stream.binance.com:443`
     Spot443,
-    /// wss://testnet.binance.vision
+    /// `wss://testnet.binance.vision`
     SpotTest,
-    /// wss://data-stream.binance.com
+    /// `wss://data-stream.binance.com`
     SpotData,
-    /// wss://ws-api.binance.com:443
+    /// `wss://ws-api.binance.com:443`
     WebSocket443,
-    /// wss://ws-api.binance.com:9443
+    /// `wss://ws-api.binance.com:9443`
     WebSocket9443,
-    /// wss://fstream.binance.com
+    /// `wss://fstream.binance.com`
     FuturesUsdM,
-    /// wss://fstream-auth.binance.com
+    /// `wss://fstream-auth.binance.com`
     FuturesUsdMAuth,
-    /// wss://dstream.binance.com
+    /// `wss://dstream.binance.com`
     FuturesCoinM,
-    /// wss://stream.binancefuture.com
+    /// `wss://stream.binancefuture.com`
     FuturesUsdMTest,
-    /// wss://dstream.binancefuture.com
+    /// `wss://dstream.binancefuture.com`
     FuturesCoinMTest,
-    /// wss://nbstream.binance.com
+    /// `wss://nbstream.binance.com`
     EuropeanOptions,
     /// The url will not be modified by [BinanceRequestHandler]
     None,

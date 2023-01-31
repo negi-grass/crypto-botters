@@ -65,7 +65,7 @@ pub struct CoincheckOptions {
 /// A `enum` that represents the base url of the Coincheck HTTP API.
 #[derive(Debug, Eq, PartialEq, Copy, Clone)]
 pub enum CoincheckHttpUrl {
-    /// https://coincheck.com
+    /// `https://coincheck.com`
     Default,
     /// The url will not be modified by [CoincheckRequestHandler]
     None,
@@ -75,7 +75,7 @@ pub enum CoincheckHttpUrl {
 #[derive(Debug, Eq, PartialEq, Copy, Clone)]
 #[non_exhaustive]
 pub enum CoincheckWebSocketUrl {
-    /// wss://ws-api.coincheck.com/
+    /// `wss://ws-api.coincheck.com/`
     Default,
     /// The url will not be modified by [CoincheckWebSocketHandler]
     None,

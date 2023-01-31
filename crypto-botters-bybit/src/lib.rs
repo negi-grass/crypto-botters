@@ -70,11 +70,11 @@ pub struct BybitOptions {
 /// A `enum` that represents the base url of the Bybit REST API.
 #[derive(Debug, Eq, PartialEq, Copy, Clone)]
 pub enum BybitHttpUrl {
-    /// https://api.bybit.com
+    /// `https://api.bybit.com`
     Bybit,
-    /// https://api.bytick.com
+    /// `https://api.bytick.com`
     Bytick,
-    /// https://api-testnet.bybit.com
+    /// `https://api-testnet.bybit.com`
     Test,
     /// The url will not be modified by [BybitRequestHandler]
     None,
@@ -83,11 +83,11 @@ pub enum BybitHttpUrl {
 /// A `enum` that represents the base url of the Bybit WebSocket API.
 #[derive(Debug, Eq, PartialEq, Copy, Clone)]
 pub enum BybitWebSocketUrl {
-    /// wss://stream.bybit.com
+    /// `wss://stream.bybit.com`
     Bybit,
-    /// wss://stream.bytick.com
+    /// `wss://stream.bytick.com`
     Bytick,
-    /// wss://stream-testnet.bybit.com
+    /// `wss://stream-testnet.bybit.com`
     Test,
     /// The url will not be modified by [BybitWebSocketHandler]
     None,

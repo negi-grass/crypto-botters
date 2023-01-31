@@ -80,7 +80,7 @@ pub enum BitFlyerHttpUrl {
 #[derive(Debug, Eq, PartialEq, Copy, Clone)]
 #[non_exhaustive]
 pub enum BitFlyerWebSocketUrl {
-    /// wss://ws.lightstream.bitflyer.com
+    /// `wss://ws.lightstream.bitflyer.com`
     Default,
     /// The url will not be modified by [BitFlyerWebSocketHandler]
     None,
