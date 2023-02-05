@@ -254,7 +254,7 @@ impl<H: WebSocketHandler> WebSocketConnection<H> {
     }
 
     /// Sends a message to the connection.
-    pub async fn send_message(&mut self, message: WebSocketMessage) -> Result<(), TungsteniteError> {
+    pub async fn send_message(&self, message: WebSocketMessage) -> Result<(), TungsteniteError> {
         self.sink.lock().await.send(message.into_message()).await
     }
 
