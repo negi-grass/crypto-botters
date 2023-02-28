@@ -19,11 +19,18 @@ autoexamples = false
 all-features = true
 
 [features]
+default = ["native-tls"]
+
 full = ["binance", "bitflyer", "bybit", "coincheck"]
 binance = ["dep:crypto-botters-binance"]
 bitflyer = ["dep:crypto-botters-bitflyer"]
 bybit = ["dep:crypto-botters-bybit"]
 coincheck = ["dep:crypto-botters-coincheck"]
+
+native-tls = ["generic-api-client/native-tls"]
+native-tls-vendored = ["generic-api-client/native-tls-vendored"]
+rustls-tls-native-roots = ["generic-api-client/rustls-tls-native-roots"]
+rustls-tls-webpki-roots = ["generic-api-client/rustls-tls-webpki-roots"]
 
 [dependencies]
 generic-api-client = { version = "0.1", path = "generic-api-client" }
