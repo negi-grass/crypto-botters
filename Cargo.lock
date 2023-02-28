@@ -196,7 +196,7 @@ dependencies = [
 
 [[package]]
 name = "crypto-botters"
-version = "0.4.2"
+version = "0.4.3"
 dependencies = [
  "crypto-botters",
  "crypto-botters-api",
@@ -436,7 +436,7 @@ dependencies = [
 
 [[package]]
 name = "generic-api-client"
-version = "0.1.4"
+version = "0.2.0"
 dependencies = [
  "bytes",
  "futures-util",

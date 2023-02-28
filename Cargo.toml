@@ -2,7 +2,7 @@
 
 [package]
 name = "crypto-botters"
-version = "0.4.2"
+version = "0.4.3"
 authors = ["negi_grass"]
 edition = "2021"
 description = "A crate for interacting with various cryptocurrency exchanges."
@@ -33,7 +33,7 @@ rustls-tls-native-roots = ["generic-api-client/rustls-tls-native-roots"]
 rustls-tls-webpki-roots = ["generic-api-client/rustls-tls-webpki-roots"]
 
 [dependencies]
-generic-api-client = { version = "0.1", path = "generic-api-client" }
+generic-api-client = { version = "0.2", path = "generic-api-client" }
 crypto-botters-api = { version = "0.1", path = "crypto-botters-api" }
 crypto-botters-binance = { version = "0.3", path = "crypto-botters-binance", optional = true }
 crypto-botters-bitflyer = { version = "0.3", path = "crypto-botters-bitflyer", optional = true }

@@ -13,7 +13,7 @@ keywords = ["cryptocurrency", "Bybit", "trading", "client", "websocket"]
 categories = ["api-bindings", "asynchronous", "cryptography::cryptocurrencies", "authentication"]
 
 [dependencies]
-generic-api-client = { version = "0.1", path = "../generic-api-client" }
+generic-api-client = { version = "0.2", path = "../generic-api-client" }
 crypto-botters-api = { version = "0.1", path = "../crypto-botters-api" }
 serde = { version = "1.0.152", features = ["derive"] }
 serde_json = "1.0.93"
