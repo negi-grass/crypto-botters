@@ -17,7 +17,7 @@ generic-api-client = { version = "0.2", path = "../generic-api-client" }
 crypto-botters-api = { version = "0.1", path = "../crypto-botters-api" }
 serde = { version = "1.0.151", features = ["derive"] }
 serde_urlencoded = "0.7.1"
-serde_json = "1.0.93"
+serde_json = "1.0.94"
 hmac = "0.12.1"
 sha2 = "0.10.6"
 hex = "0.4.3"
