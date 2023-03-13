@@ -1,4 +1,5 @@
 [workspace]
+members = ["crypto-botters-api", "crypto-botters-binance", "crypto-botters-bitflyer", "crypto-botters-bybit", "crypto-botters-coincheck"]
 
 [package]
 name = "crypto-botters"

@@ -1,6 +1,6 @@
 [package]
 name = "crypto-botters-coincheck"
-version = "0.1.2"
+version = "0.1.3"
 authors = ["negi_grass"]
 edition = "2021"
 description = "A crate for interacting with the coincheck API."
@@ -8,7 +8,7 @@ license = "MIT"
 readme = "README.md"
 homepage = "https://github.com/negi-grass/crypto-botters"
 documentation = "https://docs.rs/crypto-botters-coincheck"
-repository = "https://github.com/negi-grass/crypto-botters"
+repository = "https://github.com/negi-grass/crypto-botters/tree/v0.4.3/crypto-botters-coincheck"
 keywords = ["cryptocurrency", "coincheck", "trading", "client", "websocket"]
 categories = ["api-bindings", "asynchronous", "cryptography::cryptocurrencies", "authentication"]
 
