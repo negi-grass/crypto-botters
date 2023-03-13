@@ -22,10 +22,10 @@ all-features = true
 default = ["native-tls"]
 
 full = ["binance", "bitflyer", "bybit", "coincheck"]
-binance = ["serde_urlencoded"]
-bitflyer = ["rand"]
-bybit = ["serde_urlencoded", "rand"]
-coincheck = ["serde_urlencoded"]
+binance = ["dep:serde_urlencoded"]
+bitflyer = ["dep:rand"]
+bybit = ["dep:serde_urlencoded", "dep:rand"]
+coincheck = ["dep:serde_urlencoded"]
 
 native-tls = ["generic-api-client/native-tls"]
 native-tls-vendored = ["generic-api-client/native-tls-vendored"]
