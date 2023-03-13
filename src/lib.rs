@@ -3,9 +3,10 @@ use serde::Serialize;
 use traits::*;
 
 pub use generic_api_client;
+pub use exchanges::*;
 
+mod exchanges;
 pub mod traits;
-pub mod exchanges;
 
 // very long type, make it a macro
 macro_rules! request_return_type {
@@ -24,13 +25,13 @@ macro_rules! request_return_type {
 pub struct Client {
     client: http::Client,
     #[cfg(feature = "binance")]
-    binance: exchanges::binance::BinanceOptions,
+    binance: binance::BinanceOptions,
     #[cfg(feature = "bitflyer")]
-    bitflyer: exchanges::bitflyer::BitFlyerOptions,
+    bitflyer: bitflyer::BitFlyerOptions,
     #[cfg(feature = "bybit")]
-    bybit: exchanges::bybit::BybitOptions,
+    bybit: bybit::BybitOptions,
     #[cfg(feature = "coincheck")]
-    coincheck: exchanges::coincheck::CoincheckOptions,
+    coincheck: coincheck::CoincheckOptions,
 }
 
 impl Client {
@@ -186,53 +187,53 @@ pub trait GetOptions<O: HandlerOptions> {
 }
 
 #[cfg(feature = "binance")]
-impl GetOptions<exchanges::binance::BinanceOptions> for Client {
+impl GetOptions<binance::BinanceOptions> for Client {
     #[inline(always)]
-    fn default_options(&self) -> &exchanges::binance::BinanceOptions {
+    fn default_options(&self) -> &binance::BinanceOptions {
         &self.binance
     }
 
     #[inline(always)]
-    fn default_options_mut(&mut self) -> &mut exchanges::binance::BinanceOptions {
+    fn default_options_mut(&mut self) -> &mut binance::BinanceOptions {
         &mut self.binance
     }
 }
 
 #[cfg(feature = "bitflyer")]
-impl GetOptions<exchanges::bitflyer::BitFlyerOptions> for Client {
+impl GetOptions<bitflyer::BitFlyerOptions> for Client {
     #[inline(always)]
-    fn default_options(&self) -> &exchanges::bitflyer::BitFlyerOptions {
+    fn default_options(&self) -> &bitflyer::BitFlyerOptions {
         &self.bitflyer
     }
 
     #[inline(always)]
-    fn default_options_mut(&mut self) -> &mut exchanges::bitflyer::BitFlyerOptions {
+    fn default_options_mut(&mut self) -> &mut bitflyer::BitFlyerOptions {
         &mut self.bitflyer
     }
 }
 
 #[cfg(feature = "bybit")]
-impl GetOptions<exchanges::bybit::BybitOptions> for Client {
+impl GetOptions<bybit::BybitOptions> for Client {
     #[inline(always)]
-    fn default_options(&self) -> &exchanges::bybit::BybitOptions {
+    fn default_options(&self) -> &bybit::BybitOptions {
         &self.bybit
     }
 
     #[inline(always)]
-    fn default_options_mut(&mut self) -> &mut exchanges::bybit::BybitOptions {
+    fn default_options_mut(&mut self) -> &mut bybit::BybitOptions {
         &mut self.bybit
     }
 }
 
 #[cfg(feature = "coincheck")]
-impl GetOptions<exchanges::coincheck::CoincheckOptions> for Client {
+impl GetOptions<coincheck::CoincheckOptions> for Client {
     #[inline(always)]
-    fn default_options(&self) -> &exchanges::coincheck::CoincheckOptions {
+    fn default_options(&self) -> &coincheck::CoincheckOptions {
         &self.coincheck
     }
 
     #[inline(always)]
-    fn default_options_mut(&mut self) -> &mut exchanges::coincheck::CoincheckOptions {
+    fn default_options_mut(&mut self) -> &mut coincheck::CoincheckOptions {
         &mut self.coincheck
     }
 }
