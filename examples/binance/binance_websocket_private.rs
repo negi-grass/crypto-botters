@@ -5,9 +5,8 @@ use std::{
 use log::LevelFilter;
 use crypto_botters::{
     Client,
-    binance::{BinanceOption, BinanceWebSocketUrl},
+    binance::{BinanceOption, BinanceWebSocketUrl, BinanceHttpUrl, BinanceAuth},
 };
-use crypto_botters_binance::{BinanceHttpUrl, BinanceAuth};
 
 #[tokio::main]
 async fn main() {

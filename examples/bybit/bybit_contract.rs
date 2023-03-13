@@ -1,8 +1,7 @@
 use std::env;
 use log::LevelFilter;
 use serde_json::json;
-use crypto_botters::{Client, bybit::{BybitOption}};
-use crypto_botters_bybit::BybitHttpAuth;
+use crypto_botters::{Client, bybit::{BybitOption, BybitHttpAuth}};
 
 #[tokio::main]
 async fn main() {
