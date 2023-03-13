@@ -1,6 +1,3 @@
-//! This crate is meant to be used by the `crypto-botters` crate.
-//! This crate only exists to prevent cyclic dependencies.
-
 use std::fmt::Debug;
 
 /// A `trait` that represents an option which can be set when creating handlers

@@ -1,4 +1,4 @@
-//! A crate for communicating with the [bitFlyer API](https://lightning.bitflyer.com/docs).
+//! A module for communicating with the [bitFlyer API](https://lightning.bitflyer.com/docs).
 //! For example usages, see files in the examples/ directory.
 
 use std::{
@@ -10,8 +10,8 @@ use sha2::Sha256;
 use rand::{Rng, distributions::Alphanumeric};
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use serde_json::json;
-use crypto_botters_api::{HandlerOption, HandlerOptions, HttpOption, WebSocketOption};
 use generic_api_client::{http::{*, header::HeaderValue}, websocket::*};
+use crate::traits::*;
 
 /// The type returned by [Client::request()].
 pub type BitFlyerRequestResult<T> = Result<T, BitFlyerRequestError>;

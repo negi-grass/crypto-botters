@@ -1,5 +1,4 @@
 [workspace]
-members = ["crypto-botters-api", "crypto-botters-binance", "crypto-botters-bitflyer", "crypto-botters-bybit", "crypto-botters-coincheck"]
 
 [package]
 name = "crypto-botters"
@@ -23,10 +22,10 @@ all-features = true
 default = ["native-tls"]
 
 full = ["binance", "bitflyer", "bybit", "coincheck"]
-binance = ["dep:crypto-botters-binance"]
-bitflyer = ["dep:crypto-botters-bitflyer"]
-bybit = ["dep:crypto-botters-bybit"]
-coincheck = ["dep:crypto-botters-coincheck"]
+binance = ["serde_urlencoded"]
+bitflyer = ["rand"]
+bybit = ["serde_urlencoded", "rand"]
+coincheck = ["serde_urlencoded"]
 
 native-tls = ["generic-api-client/native-tls"]
 native-tls-vendored = ["generic-api-client/native-tls-vendored"]
@@ -35,20 +34,20 @@ rustls-tls-webpki-roots = ["generic-api-client/rustls-tls-webpki-roots"]
 
 [dependencies]
 generic-api-client = { version = "0.2", path = "generic-api-client" }
-crypto-botters-api = { version = "0.1", path = "crypto-botters-api" }
-crypto-botters-binance = { version = "0.3", path = "crypto-botters-binance", optional = true }
-crypto-botters-bitflyer = { version = "0.3", path = "crypto-botters-bitflyer", optional = true }
-crypto-botters-bybit = { version = "0.2", path = "crypto-botters-bybit", optional = true }
-crypto-botters-coincheck = { version = "0.1", path = "crypto-botters-coincheck", optional = true }
+serde = { version = "1.0.151", features = ["derive"] }
+serde_json = "1.0.94"
+hmac = "0.12.1"
+sha2 = "0.10.6"
+hex = "0.4.3"
+log = "0.4.17"
+serde_urlencoded = { version = "0.7.1", optional = true }
+rand = { version = "0.8.5", optional = true }
 
 [dev-dependencies]
 crypto-botters = { path = ".", features = ["full"] }
 tokio = { version = "1.26.0", features = ["rt-multi-thread", "macros"] }
-serde = { version = "1.0.152", features = ["derive"] }
-serde_json = "1.0.94"
 rust_decimal = { version = "1.28.1", features = ["serde-with-str", "serde-with-float"] }
 env_logger = "0.10.0"
-log = "0.4.17"
 
 [[example]]
 name = "binance_http_private"

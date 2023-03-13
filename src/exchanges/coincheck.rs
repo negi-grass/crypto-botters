@@ -1,4 +1,4 @@
-//! A crate for communicating with the [coincheck API](https://coincheck.com/ja/documents/exchange/api).
+//! A module for communicating with the [coincheck API](https://coincheck.com/ja/documents/exchange/api).
 //! For example usages, see files in the examples/ directory.
 
 use std::{
@@ -9,8 +9,8 @@ use hmac::{Hmac, Mac};
 use sha2::Sha256;
 use serde::{de::DeserializeOwned, Serialize};
 use serde_json::json;
-use crypto_botters_api::{HandlerOption, HandlerOptions, HttpOption, WebSocketOption};
 use generic_api_client::{http::{*, header::HeaderValue}, websocket::*};
+use crate::traits::*;
 
 /// The type returned by [Client::request()].
 pub type CoincheckRequestResult<T> = Result<T, CoincheckRequestError>;

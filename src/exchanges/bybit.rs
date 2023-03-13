@@ -1,4 +1,4 @@
-//! A crate for communicating with the [Bybit API](https://bybit-exchange.github.io/docs/spot/v3/#t-introduction).
+//! A module for communicating with the [Bybit API](https://bybit-exchange.github.io/docs/spot/v3/#t-introduction).
 //! For example usages, see files in the examples/ directory.
 
 use std::{time::SystemTime, borrow::Cow, marker::PhantomData, vec};
@@ -6,8 +6,8 @@ use hmac::{Hmac, Mac};
 use sha2::Sha256;
 use serde::{Serialize, de::DeserializeOwned};
 use serde_json::json;
-use crypto_botters_api::{HandlerOption, HandlerOptions, HttpOption, WebSocketOption};
 use generic_api_client::{http::{*, header::HeaderValue}, websocket::*};
+use crate::traits::*;
 
 /// The type returned by [Client::request()].
 pub type BybitRequestResult<T> = Result<T, BybitRequestError>;
@@ -208,7 +208,7 @@ where
 
 impl<'a, R> BybitRequestHandler<'a, R> where R: DeserializeOwned {
     fn type1_auth<B>(builder: RequestBuilder, request_body: &Option<B>, key: &str, timestamp: u128, mut hmac: Hmac<Sha256>, spot: bool, window: Option<i32>)
-        -> Result<Request, <BybitRequestHandler<'a, R> as RequestHandler<B>>::BuildError>
+                     -> Result<Request, <BybitRequestHandler<'a, R> as RequestHandler<B>>::BuildError>
     where
         B: Serialize,
     {
@@ -313,7 +313,7 @@ impl<'a, R> BybitRequestHandler<'a, R> where R: DeserializeOwned {
     }
 
     fn type2_auth<B>(mut builder: RequestBuilder, request_body: &Option<B>, key: &str, timestamp: u128, mut hmac: Hmac<Sha256>, window: Option<i32>)
-        -> Result<Request, <BybitRequestHandler<'a, R> as RequestHandler<B>>::BuildError>
+                     -> Result<Request, <BybitRequestHandler<'a, R> as RequestHandler<B>>::BuildError>
     where
         B: Serialize,
     {

@@ -1,5 +1,4 @@
-//! A crate for communicating with the [Binance API](https://binance-docs.github.io/apidocs/spot/en/).
-//! For example usages, see files in the examples/ directory.
+// A module for communicating with the [Binance API](https://binance-docs.github.io/apidocs/spot/en/).
 
 use std::{
     str::FromStr,
@@ -9,8 +8,8 @@ use std::{
 use hmac::{Hmac, Mac};
 use sha2::Sha256;
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
-use crypto_botters_api::*;
 use generic_api_client::{http::*, websocket::*};
+use crate::traits::*;
 
 /// The type returned by [Client::request()].
 pub type BinanceRequestResult<T> = Result<T, BinanceRequestError>;
