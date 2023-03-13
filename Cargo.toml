@@ -43,7 +43,7 @@ crypto-botters-coincheck = { version = "0.1", path = "crypto-botters-coincheck",
 [dev-dependencies]
 crypto-botters = { path = ".", features = ["full"] }
 tokio = { version = "1.26.0", features = ["rt-multi-thread", "macros"] }
-serde = { version = "1.0.152", features = ["derive"] }
+serde = { version = "1.0.155", features = ["derive"] }
 serde_json = "1.0.94"
 rust_decimal = { version = "1.28.1", features = ["serde-with-str", "serde-with-float"] }
 env_logger = "0.10.0"
