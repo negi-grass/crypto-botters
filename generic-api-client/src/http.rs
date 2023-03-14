@@ -3,7 +3,6 @@ use serde::Serialize;
 use thiserror::Error;
 pub use reqwest::{Request, RequestBuilder, StatusCode, Method, header::{self, HeaderMap}};
 pub use bytes::Bytes;
-pub use serde;
 
 /// The User Agent string
 pub static USER_AGENT: &str = concat!("generic-api-client/", env!("CARGO_PKG_VERSION"));
