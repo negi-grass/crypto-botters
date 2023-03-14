@@ -86,68 +86,68 @@ name = "bitflyer_websocket_public"
 path = "examples/bitflyer/bitflyer_websocket_public.rs"
 
 [[example]]
-name = "bybit_unified_margin"
-path = "examples/bybit/bybit_unified_margin.rs"
+name = "bybit_unified_margin_v3"
+path = "examples/bybit/v3/bybit_unified_margin_v3.rs"
 
 [[example]]
-name = "bybit_contract"
-path = "examples/bybit/bybit_contract.rs"
+name = "bybit_contract_v3"
+path = "examples/bybit/v3/bybit_contract_v3.rs"
 
 [[example]]
-name = "bybit_inverse_perpetual"
-path = "examples/bybit/bybit_inverse_perpetual.rs"
+name = "bybit_inverse_perpetual_v2"
+path = "examples/bybit/previous_version/bybit_inverse_perpetual_v2.rs"
 
 [[example]]
-name = "bybit_usdt_perpetual"
-path = "examples/bybit/bybit_usdt_perpetual.rs"
+name = "bybit_usdt_perpetual_v2"
+path = "examples/bybit/previous_version/bybit_usdt_perpetual.rs"
 
 [[example]]
-name = "bybit_inverse_futures"
-path = "examples/bybit/bybit_inverse_futures.rs"
+name = "bybit_inverse_futures_v2"
+path = "examples/bybit/previous_version/bybit_inverse_futures_v2.rs"
 
 [[example]]
 name = "bybit_spot_v3"
-path = "examples/bybit/bybit_spot_v3.rs"
+path = "examples/bybit/v3/bybit_spot_v3.rs"
 
 [[example]]
 name = "bybit_spot_v1"
-path = "examples/bybit/bybit_spot_v1.rs"
+path = "examples/bybit/previous_version/bybit_spot_v1.rs"
 
 [[example]]
 name = "bybit_account_asset_v3"
-path = "examples/bybit/bybit_account_asset_v3.rs"
+path = "examples/bybit/v3/bybit_account_asset_v3.rs"
 
 [[example]]
 name = "bybit_account_asset_v1"
-path = "examples/bybit/bybit_account_asset_v1.rs"
+path = "examples/bybit/previous_version/bybit_account_asset_v1.rs"
 
 [[example]]
-name = "bybit_copy_trading"
-path = "examples/bybit/bybit_copy_trading.rs"
+name = "bybit_copy_trading_v3"
+path = "examples/bybit/v3/bybit_copy_trading_v3.rs"
 
 [[example]]
-name = "bybit_usdc_option"
-path = "examples/bybit/bybit_usdc_option.rs"
+name = "bybit_usdc_option_v1"
+path = "examples/bybit/previous_version/bybit_usdc_option_v1.rs"
 
 [[example]]
-name = "bybit_usdc_perpetual"
-path = "examples/bybit/bybit_usdc_perpetual.rs"
+name = "bybit_usdc_perpetual_v1"
+path = "examples/bybit/previous_version/bybit_usdc_perpetual_v1.rs"
 
 [[example]]
 name = "bybit_usdt_contract_websocket_public"
-path = "examples/bybit/bybit_usdt_contract_websocket_public.rs"
+path = "examples/bybit/previous_version/bybit_usdt_contract_websocket_public.rs"
 
 [[example]]
 name = "bybit_usdc_contract_websocket_public"
-path = "examples/bybit/bybit_usdc_contract_websocket_public.rs"
+path = "examples/bybit/previous_version/bybit_usdc_contract_websocket_public.rs"
 
 [[example]]
 name = "bybit_spot_v3_websocket_public"
-path = "examples/bybit/bybit_spot_v3_websocket_public.rs"
+path = "examples/bybit/v3/bybit_spot_v3_websocket_public.rs"
 
 [[example]]
 name = "bybit_spot_v3_websocket_private"
-path = "examples/bybit/bybit_spot_v3_websocket_private.rs"
+path = "examples/bybit/v3/bybit_spot_v3_websocket_private.rs"
 
 [[example]]
 name = "bybit_v5"
