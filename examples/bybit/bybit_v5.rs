@@ -1,6 +1,5 @@
 use std::env;
 use log::LevelFilter;
-use serde_json::json;
 use crypto_botters::{Client, bybit::{BybitOption, BybitHttpAuth}};
 
 #[tokio::main]
@@ -15,25 +14,25 @@ async fn main() {
     client.update_default_option(BybitOption::Secret(secret));
 
     // private POST
-    let batch_cancel: serde_json::Value = client.post(
-        "/spot/v3/private/cancel-orders",
-        Some(json!({"symbol": "BTCUSDT"})),
+    let upgrade: serde_json::Value = client.post_no_body(
+        "/v5/account/upgrade-to-uta",
         [BybitOption::HttpAuth(BybitHttpAuth::V3AndAbove)],
-    ).await.expect("failed to cancel orders");
-    println!("Batch cancel result:\n{}", batch_cancel);
+    ).await.expect("failed to upgrade account");
+    println!("Upgrade result:\n{upgrade}");
 
     // private GET
-    let open_orders: serde_json::Value = client.get_no_query(
-        "/spot/v3/private/open-orders",
+    let coins: serde_json::Value = client.get(
+        "/v5/asset/transfer/query-account-coins-balance",
+        Some(&[("accountType", "UNIFIED")]),
         [BybitOption::HttpAuth(BybitHttpAuth::V3AndAbove)],
-    ).await.expect("failed to get orders");
-    println!("Open orders:\n{}", open_orders);
+    ).await.expect("failed to get coins");
+    println!("Coins:\n{coins}");
 
     // public GET
-    let last_price: serde_json::Value = client.get(
-        "/spot/v3/public/quote/ticker/price",
+    let ticker: serde_json::Value = client.get(
+        "/v5/market/tickers",
         Some(&[("symbol", "BTCUSDT")]),
         [BybitOption::Default],
-    ).await.expect("failed to get price");
-    println!("Last price:\n{}", last_price);
+    ).await.expect("failed to get ticker");
+    println!("Ticker:\n{ticker}");
 }

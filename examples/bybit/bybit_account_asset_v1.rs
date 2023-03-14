@@ -16,7 +16,7 @@ async fn main() {
     // public GET
     let internal_transfers: serde_json::Value = client.get_no_query(
         "/asset/v1/private/transfer/list",
-        [BybitOption::HttpAuth(BybitHttpAuth::Type1)],
+        [BybitOption::HttpAuth(BybitHttpAuth::BelowV3)],
     ).await.expect("failed to get internal transfer list");
     println!("Internal transfers:\n{}", internal_transfers);
 }

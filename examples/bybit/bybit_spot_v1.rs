@@ -17,14 +17,14 @@ async fn main() {
     let batch_cancel: serde_json::Value = client.delete(
         "/spot/order/batch-cancel",
         Some(&[("symbol", "BTCUSDT")]),
-        [BybitOption::HttpAuth(BybitHttpAuth::SpotType1)],
+        [BybitOption::HttpAuth(BybitHttpAuth::SpotV1)],
     ).await.expect("failed to cancel orders");
     println!("Batch cancel result:\n{}", batch_cancel);
 
     // private GET
     let open_orders: serde_json::Value = client.get_no_query(
         "/spot/v1/open-orders",
-        [BybitOption::HttpAuth(BybitHttpAuth::SpotType1)],
+        [BybitOption::HttpAuth(BybitHttpAuth::SpotV1)],
     ).await.expect("failed to get orders");
     println!("Open orders:\n{}", open_orders);
 

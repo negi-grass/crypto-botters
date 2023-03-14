@@ -94,27 +94,14 @@ pub enum BybitWebSocketUrl {
 }
 
 /// Represents the auth type.
-///
-/// |API|type|
-/// |---|----|
-/// |Derivatives v3 Unified Margin|Type2|
-/// |Derivatives v3 Contract|Type2|
-/// |Futures v2 Inverse Perpetual|Type1|
-/// |Futures v2 USDT Perpetual|Type1|
-/// |Futures v2 Inverse Futures|Type1|
-/// |Spot v3|Type2|
-/// |Spot v1|SpotType1|
-/// |Account Asset v3|Type2|
-/// |Account Asset v1|Type1|
-/// |Copy Trading|Type2|
-/// |USDC Contract Option|Type2|
-/// |USDC Contract Perpetual|Type2|
-/// |Tax|Type2|
 #[derive(Debug, Eq, PartialEq, Copy, Clone)]
 pub enum BybitHttpAuth {
-    Type1,
-    SpotType1,
-    Type2,
+    /// "Previous Version" APIs except for [Spot V1](https://bybit-exchange.github.io/docs-legacy/spot/v1/#t-introduction)
+    BelowV3,
+    /// [Spot V1](https://bybit-exchange.github.io/docs-legacy/spot/v1/#t-introduction)
+    SpotV1,
+    /// [V3](https://bybit-exchange.github.io/docs/v3/intro) and [V5](https://bybit-exchange.github.io/docs/v5/intro)
+    V3AndAbove,
     None,
 }
 
@@ -173,9 +160,9 @@ where
         let hmac = Hmac::<Sha256>::new_from_slice(secret.as_bytes()).unwrap(); // hmac accepts key of any length
 
         match self.options.http_auth {
-            BybitHttpAuth::Type1 => Self::type1_auth(builder, request_body, key, timestamp, hmac, false, self.options.recv_window),
-            BybitHttpAuth::SpotType1 => Self::type1_auth(builder, request_body, key, timestamp, hmac, true, self.options.recv_window),
-            BybitHttpAuth::Type2 => Self::type2_auth(builder, request_body, key, timestamp, hmac, self.options.recv_window),
+            BybitHttpAuth::BelowV3 => Self::v1_auth(builder, request_body, key, timestamp, hmac, false, self.options.recv_window),
+            BybitHttpAuth::SpotV1 => Self::v1_auth(builder, request_body, key, timestamp, hmac, true, self.options.recv_window),
+            BybitHttpAuth::V3AndAbove => Self::v3_auth(builder, request_body, key, timestamp, hmac, self.options.recv_window),
             BybitHttpAuth::None => unreachable!(), // we've already handled this case
         }
     }
@@ -207,8 +194,8 @@ where
 }
 
 impl<'a, R> BybitRequestHandler<'a, R> where R: DeserializeOwned {
-    fn type1_auth<B>(builder: RequestBuilder, request_body: &Option<B>, key: &str, timestamp: u128, mut hmac: Hmac<Sha256>, spot: bool, window: Option<i32>)
-                     -> Result<Request, <BybitRequestHandler<'a, R> as RequestHandler<B>>::BuildError>
+    fn v1_auth<B>(builder: RequestBuilder, request_body: &Option<B>, key: &str, timestamp: u128, mut hmac: Hmac<Sha256>, spot: bool, window: Option<i32>)
+                  -> Result<Request, <BybitRequestHandler<'a, R> as RequestHandler<B>>::BuildError>
     where
         B: Serialize,
     {
@@ -312,8 +299,8 @@ impl<'a, R> BybitRequestHandler<'a, R> where R: DeserializeOwned {
         Ok(request)
     }
 
-    fn type2_auth<B>(mut builder: RequestBuilder, request_body: &Option<B>, key: &str, timestamp: u128, mut hmac: Hmac<Sha256>, window: Option<i32>)
-                     -> Result<Request, <BybitRequestHandler<'a, R> as RequestHandler<B>>::BuildError>
+    fn v3_auth<B>(mut builder: RequestBuilder, request_body: &Option<B>, key: &str, timestamp: u128, mut hmac: Hmac<Sha256>, window: Option<i32>)
+                  -> Result<Request, <BybitRequestHandler<'a, R> as RequestHandler<B>>::BuildError>
     where
         B: Serialize,
     {
@@ -351,7 +338,6 @@ impl<'a, R> BybitRequestHandler<'a, R> where R: DeserializeOwned {
         let signature = hex::encode(hmac.finalize().into_bytes());
 
         let headers = request.headers_mut();
-        headers.insert("X-BAPI-SIGN-TYPE", HeaderValue::from(2));
         headers.insert("X-BAPI-SIGN", HeaderValue::from_str(&signature).unwrap()); // hex digits are valid
         headers.insert("X-BAPI-API-KEY", HeaderValue::from_str(key).or(Err("invalid character in API key"))?);
         headers.insert("X-BAPI-TIMESTAMP", HeaderValue::from(timestamp as u64));

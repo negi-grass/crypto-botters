@@ -17,16 +17,16 @@ async fn main() {
     // private POST
     let cancel_all: serde_json::Value = client.post(
         "/perpetual/usdc/openapi/private/v1/cancel-all",
-            Some(json!({"symbol": "BTCPERP", "orderFilter": "Order"})),
-        [BybitOption::HttpAuth(BybitHttpAuth::Type2)],
+        Some(json!({"symbol": "BTCPERP", "orderFilter": "Order"})),
+        [BybitOption::HttpAuth(BybitHttpAuth::V3AndAbove)],
     ).await.expect("failed to cancel orders");
     println!("Cancel all result:\n{}", cancel_all);
 
     // private POST
     let open_orders: serde_json::Value = client.post(
         "/option/usdc/openapi/private/v1/query-active-orders",
-            Some(json!({"category": "PERPETUAL"})),
-        [BybitOption::HttpAuth(BybitHttpAuth::Type2)],
+        Some(json!({"category": "PERPETUAL"})),
+        [BybitOption::HttpAuth(BybitHttpAuth::V3AndAbove)],
     ).await.expect("failed to get orders");
     println!("Open orders:\n{}", open_orders);
 
