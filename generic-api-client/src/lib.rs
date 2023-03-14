@@ -17,7 +17,7 @@
 //!
 //! This crate  provides
 //! - [Client][http::Client] A HTTP/HTTPS client
-//! - [WebSocketConnection][websocket::WebSocketConnection] A `struct` to manager WebSocket connections
+//! - [WebSocketConnection][websocket::WebSocketConnection] A `struct` to manage WebSocket connections
 //! - [RequestHandler][http::RequestHandler] A `trait` for implementing features like authentication on your requests
 //! - [WebSocketHandler][websocket::WebSocketHandler] A `trait` that is used to handle messages etc.. for a WebSocket Connection.
 //!
