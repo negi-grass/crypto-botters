@@ -13,7 +13,7 @@ async fn main() {
     client.update_default_option(BybitOption::Key(key));
     client.update_default_option(BybitOption::Secret(secret));
 
-    // public GET
+    // private GET
     let internal_transfers: serde_json::Value = client.get_no_query(
         "/asset/v1/private/transfer/list",
         [BybitOption::HttpAuth(BybitHttpAuth::BelowV3)],
