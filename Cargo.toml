@@ -150,6 +150,10 @@ name = "bybit_spot_v3_websocket_private"
 path = "examples/bybit/bybit_spot_v3_websocket_private.rs"
 
 [[example]]
+name = "bybit_v5"
+path = "examples/bybit/bybit_v5.rs"
+
+[[example]]
 name = "coincheck_http_public"
 path = "examples/coincheck/coincheck_http_public.rs"
 

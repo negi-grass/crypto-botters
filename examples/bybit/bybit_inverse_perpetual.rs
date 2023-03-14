@@ -24,7 +24,7 @@ async fn main() {
     let positions: serde_json::Value = client.get(
         "/v2/private/position/list",
         Some(&[("symbol", "BTCUSDT")]),
-        [BybitOption::HttpAuth(BybitHttpAuth::Type1)],
+        [BybitOption::HttpAuth(BybitHttpAuth::BelowV3)],
     ).await.expect("failed to get positions");
     println!("Positions:\n{}", positions);
 }

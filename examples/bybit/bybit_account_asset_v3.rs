@@ -16,7 +16,7 @@ async fn main() {
     // private GET
     let asset_info: serde_json::Value = client.get_no_query(
         "/asset/v3/private/transfer/asset-info/query",
-        [BybitOption::HttpAuth(BybitHttpAuth::Type2)],
+        [BybitOption::HttpAuth(BybitHttpAuth::V3AndAbove)],
     ).await.expect("failed to get aseet info");
     println!("Asset info:\n{}", asset_info);
 }

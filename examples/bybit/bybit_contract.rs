@@ -18,7 +18,7 @@ async fn main() {
     let cancel_all: serde_json::Value = client.post(
         "/contract/v3/private/order/cancel-all",
         Some(json!({"symbol": "BTCUSDT"})),
-        [BybitOption::HttpAuth(BybitHttpAuth::Type2)],
+        [BybitOption::HttpAuth(BybitHttpAuth::V3AndAbove)],
     ).await.expect("failed to cancel orders");
     println!("Cancel all result:\n{}", cancel_all);
 }

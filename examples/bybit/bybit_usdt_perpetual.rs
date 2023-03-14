@@ -25,7 +25,7 @@ async fn main() {
     let risk_limit: serde_json::Value = client.get(
         "/public/linear/risk-limit",
         Some(&[("symbol", "BTCUSDT")]),
-        [BybitOption::HttpAuth(BybitHttpAuth::Type1)],
+        [BybitOption::HttpAuth(BybitHttpAuth::BelowV3)],
     ).await.expect("failed to get risk limit");
     println!("Risk limit:\n{}", risk_limit);
 }
