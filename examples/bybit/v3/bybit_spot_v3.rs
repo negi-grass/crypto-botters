@@ -18,14 +18,14 @@ async fn main() {
     let batch_cancel: serde_json::Value = client.post(
         "/spot/v3/private/cancel-orders",
         Some(json!({"symbol": "BTCUSDT"})),
-        [BybitOption::HttpAuth(BybitHttpAuth::Type2)],
+        [BybitOption::HttpAuth(BybitHttpAuth::V3AndAbove)],
     ).await.expect("failed to cancel orders");
     println!("Batch cancel result:\n{}", batch_cancel);
 
     // private GET
     let open_orders: serde_json::Value = client.get_no_query(
         "/spot/v3/private/open-orders",
-        [BybitOption::HttpAuth(BybitHttpAuth::Type2)],
+        [BybitOption::HttpAuth(BybitHttpAuth::V3AndAbove)],
     ).await.expect("failed to get orders");
     println!("Open orders:\n{}", open_orders);
 

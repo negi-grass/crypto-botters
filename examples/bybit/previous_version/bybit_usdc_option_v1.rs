@@ -13,26 +13,25 @@ async fn main() {
     client.update_default_option(BybitOption::Key(key));
     client.update_default_option(BybitOption::Secret(secret));
 
-    // private DELETE
-    let batch_cancel: serde_json::Value = client.delete(
-        "/spot/order/batch-cancel",
-        Some(&[("symbol", "BTCUSDT")]),
-        [BybitOption::HttpAuth(BybitHttpAuth::SpotType1)],
+    // private POST
+    let cancel_all: serde_json::Value = client.post_no_body(
+        "/option/usdc/openapi/private/v1/cancel-all",
+        [BybitOption::HttpAuth(BybitHttpAuth::UsdcContractV1)],
     ).await.expect("failed to cancel orders");
-    println!("Batch cancel result:\n{}", batch_cancel);
+    println!("Cancel all result:\n{}", cancel_all);
 
     // private GET
     let open_orders: serde_json::Value = client.get_no_query(
-        "/spot/v1/open-orders",
-        [BybitOption::HttpAuth(BybitHttpAuth::SpotType1)],
+        "/option/usdc/openapi/private/v1/trade/query-active-orders",
+        [BybitOption::HttpAuth(BybitHttpAuth::UsdcContractV1)],
     ).await.expect("failed to get orders");
     println!("Open orders:\n{}", open_orders);
 
     // public GET
-    let last_price: serde_json::Value = client.get(
-        "/spot/quote/v1/ticker/price",
-        Some(&[("symbol", "BTCUSDT")]),
+    let symbol_info: serde_json::Value = client.get(
+        "/option/usdc/openapi/public/v1/tick",
+        Some(&[("symbol", "BTC-5JAN23-18500-C")]),
         [BybitOption::Default],
-    ).await.expect("failed to get price");
-    println!("Last price:\n{}", last_price);
+    ).await.expect("failed to get symbol info");
+    println!("Symbol info:\n{}", symbol_info);
 }

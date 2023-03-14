@@ -9,7 +9,6 @@ async fn main() {
         .init();
     let client = Client::new();
 
-    // https://bybit-exchange.github.io/docs/derivativesV3/contract/#t-websockettrade
     let connection = client.websocket(
         "/contract/usdt/public/v3",
         |message| println!("{}", message),

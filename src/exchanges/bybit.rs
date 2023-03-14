@@ -94,27 +94,20 @@ pub enum BybitWebSocketUrl {
 }
 
 /// Represents the auth type.
-///
-/// |API|type|
-/// |---|----|
-/// |Derivatives v3 Unified Margin|Type2|
-/// |Derivatives v3 Contract|Type2|
-/// |Futures v2 Inverse Perpetual|Type1|
-/// |Futures v2 USDT Perpetual|Type1|
-/// |Futures v2 Inverse Futures|Type1|
-/// |Spot v3|Type2|
-/// |Spot v1|SpotType1|
-/// |Account Asset v3|Type2|
-/// |Account Asset v1|Type1|
-/// |Copy Trading|Type2|
-/// |USDC Contract Option|Type2|
-/// |USDC Contract Perpetual|Type2|
-/// |Tax|Type2|
 #[derive(Debug, Eq, PartialEq, Copy, Clone)]
 pub enum BybitHttpAuth {
-    Type1,
-    SpotType1,
-    Type2,
+    /// [Spot V1](https://bybit-exchange.github.io/docs-legacy/spot/v1/#t-introduction)
+    SpotV1,
+    /// "Previous Version" APIs except for [Spot V1](https://bybit-exchange.github.io/docs-legacy/spot/v1/#t-introduction),
+    /// [USDC Option](https://bybit-exchange.github.io/docs-legacy/usdc/option/#t-introduction), and
+    /// [USDC Perpetual](https://bybit-exchange.github.io/docs-legacy/usdc/perpetual/#t-introduction)
+    BelowV3,
+    /// [USDC Option](https://bybit-exchange.github.io/docs-legacy/usdc/option/#t-introduction) and
+    /// [USDC Perpetual](https://bybit-exchange.github.io/docs-legacy/usdc/perpetual/#t-introduction)
+    UsdcContractV1,
+    /// [V3](https://bybit-exchange.github.io/docs/v3/intro) and [V5](https://bybit-exchange.github.io/docs/v5/intro)
+    V3AndAbove,
+    /// No authentication (for public APIs)
     None,
 }
 
@@ -173,9 +166,10 @@ where
         let hmac = Hmac::<Sha256>::new_from_slice(secret.as_bytes()).unwrap(); // hmac accepts key of any length
 
         match self.options.http_auth {
-            BybitHttpAuth::Type1 => Self::type1_auth(builder, request_body, key, timestamp, hmac, false, self.options.recv_window),
-            BybitHttpAuth::SpotType1 => Self::type1_auth(builder, request_body, key, timestamp, hmac, true, self.options.recv_window),
-            BybitHttpAuth::Type2 => Self::type2_auth(builder, request_body, key, timestamp, hmac, self.options.recv_window),
+            BybitHttpAuth::SpotV1 => Self::v1_auth(builder, request_body, key, timestamp, hmac, true, self.options.recv_window),
+            BybitHttpAuth::BelowV3 => Self::v1_auth(builder, request_body, key, timestamp, hmac, false, self.options.recv_window),
+            BybitHttpAuth::UsdcContractV1 => Self::v3_auth(builder, request_body, key, timestamp, hmac, true, self.options.recv_window),
+            BybitHttpAuth::V3AndAbove => Self::v3_auth(builder, request_body, key, timestamp, hmac, false, self.options.recv_window),
             BybitHttpAuth::None => unreachable!(), // we've already handled this case
         }
     }
@@ -207,8 +201,8 @@ where
 }
 
 impl<'a, R> BybitRequestHandler<'a, R> where R: DeserializeOwned {
-    fn type1_auth<B>(builder: RequestBuilder, request_body: &Option<B>, key: &str, timestamp: u128, mut hmac: Hmac<Sha256>, spot: bool, window: Option<i32>)
-                     -> Result<Request, <BybitRequestHandler<'a, R> as RequestHandler<B>>::BuildError>
+    fn v1_auth<B>(builder: RequestBuilder, request_body: &Option<B>, key: &str, timestamp: u128, mut hmac: Hmac<Sha256>, spot: bool, window: Option<i32>)
+        -> Result<Request, <BybitRequestHandler<'a, R> as RequestHandler<B>>::BuildError>
     where
         B: Serialize,
     {
@@ -281,39 +275,27 @@ impl<'a, R> BybitRequestHandler<'a, R> where R: DeserializeOwned {
                 .map(|pair| pair.split_once('=').unwrap_or((pair, "")))
                 .map(|(k, v)| (Cow::Borrowed(k), Cow::Borrowed(v)))
                 .collect();
-            let mut body_query_string = sort_and_add(pairs, key, timestamp);
+            let mut sorted_query_string = sort_and_add(pairs, key, timestamp);
 
-            hmac.update(body_query_string.as_bytes());
+            hmac.update(sorted_query_string.as_bytes());
             let signature = hex::encode(hmac.finalize().into_bytes());
 
-            if spot {
-                body_query_string.push_str(&format!("sign={signature}"));
+            sorted_query_string.push_str(&format!("&sign={signature}"));
 
-                *request.body_mut() = Some(body_query_string.into());
+            if spot {
+                *request.body_mut() = Some(sorted_query_string.into());
                 request.headers_mut().insert(header::CONTENT_TYPE, HeaderValue::from_static("application/x-www-form-urlencoded"));
             } else {
-                let mut json = serde_json::to_value(request_body).or(Err("could not serialize body as application/json"))?;
-                let Some(map) = json.as_object_mut() else {
-                    return Err("body must to be serializable as a JSON object");
-                };
-                map.insert("sign".to_owned(), serde_json::Value::String(signature));
-                if let Some(window) = window {
-                    if spot {
-                        map.insert("recvWindow".to_owned(), serde_json::Value::Number(window.into()));
-                    } else {
-                        map.insert("recv_window".to_owned(), serde_json::Value::Number(window.into()));
-                    }
-                }
-
-                *request.body_mut() = Some(json.to_string().into());
+                let body: serde_json::Value = serde_urlencoded::from_str(&sorted_query_string).unwrap(); // sorted_query_string is always in urlencoded format
+                *request.body_mut() = Some(body.to_string().into());
                 request.headers_mut().insert(header::CONTENT_TYPE, HeaderValue::from_static("application/json"));
             }
         }
         Ok(request)
     }
 
-    fn type2_auth<B>(mut builder: RequestBuilder, request_body: &Option<B>, key: &str, timestamp: u128, mut hmac: Hmac<Sha256>, window: Option<i32>)
-                     -> Result<Request, <BybitRequestHandler<'a, R> as RequestHandler<B>>::BuildError>
+    fn v3_auth<B>(mut builder: RequestBuilder, request_body: &Option<B>, key: &str, timestamp: u128, mut hmac: Hmac<Sha256>, version_header: bool, window: Option<i32>)
+        -> Result<Request, <BybitRequestHandler<'a, R> as RequestHandler<B>>::BuildError>
     where
         B: Serialize,
     {
@@ -351,7 +333,9 @@ impl<'a, R> BybitRequestHandler<'a, R> where R: DeserializeOwned {
         let signature = hex::encode(hmac.finalize().into_bytes());
 
         let headers = request.headers_mut();
-        headers.insert("X-BAPI-SIGN-TYPE", HeaderValue::from(2));
+        if version_header {
+            headers.insert("X-BAPI-SIGN-TYPE", HeaderValue::from(2));
+        }
         headers.insert("X-BAPI-SIGN", HeaderValue::from_str(&signature).unwrap()); // hex digits are valid
         headers.insert("X-BAPI-API-KEY", HeaderValue::from_str(key).or(Err("invalid character in API key"))?);
         headers.insert("X-BAPI-TIMESTAMP", HeaderValue::from(timestamp as u64));

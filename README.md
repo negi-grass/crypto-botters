@@ -19,7 +19,7 @@ The following Exchanges are currently supported.
 |------------------------------------|-----------------------------------------------------------------|---------------------------------------------------------------------------------------|
 | [Binance](https://www.binance.com) | [API document](https://binance-docs.github.io/apidocs/spot/en/) | [Examples](https://github.com/negi-grass/crypto-botters/tree/main/examples/binance)   |
 | [bitFlyer](https://bitflyer.com)   | [API document](https://lightning.bitflyer.com/docs)             | [Examples](https://github.com/negi-grass/crypto-botters/tree/main/examples/bitflyer)  |
-| [Bybit](https://www.bybit.com)     | [API document](https://bybit-exchange.github.io/docs/spot/v3/)  | [Examples](https://github.com/negi-grass/crypto-botters/tree/main/examples/bybit)     |
+| [Bybit](https://www.bybit.com)     | [API document](https://bybit-exchange.github.io/docs/)          | [Examples](https://github.com/negi-grass/crypto-botters/tree/main/examples/bybit)     |
 | [Coincheck](https://coincheck.com) | [API document](https://coincheck.com/documents/exchange/api)    | [Examples](https://github.com/negi-grass/crypto-botters/tree/main/examples/coincheck) |
 
 ## Usage
@@ -120,7 +120,7 @@ request a reconnection, or close the connection.
 |------------------------------------|--------------------------------------------------------------|----------------------------------------------------------------------------------|
 | [Binance](https://www.binance.com) | [APIドキュメント](https://binance-docs.github.io/apidocs/spot/en/) | [使用例](https://github.com/negi-grass/crypto-botters/tree/main/examples/binance)   |
 | [bitFlyer](https://bitflyer.com)   | [APIドキュメント](https://lightning.bitflyer.com/docs)             | [使用例](https://github.com/negi-grass/crypto-botters/tree/main/examples/bitflyer)  |
-| [Bybit](https://www.bybit.com)     | [APIドキュメント](https://bybit-exchange.github.io/docs/spot/v3/)  | [使用例](https://github.com/negi-grass/crypto-botters/tree/main/examples/bybit)     |
+| [Bybit](https://www.bybit.com)     | [APIドキュメント](https://bybit-exchange.github.io/docs/)          | [使用例](https://github.com/negi-grass/crypto-botters/tree/main/examples/bybit)     |
 | [Coincheck](https://coincheck.com) | [APIドキュメント](https://coincheck.com/ja/documents/exchange/api) | [使用例](https://github.com/negi-grass/crypto-botters/tree/main/examples/coincheck) |
 
 ## 使い方

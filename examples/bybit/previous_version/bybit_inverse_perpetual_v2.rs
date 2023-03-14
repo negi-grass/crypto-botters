@@ -16,15 +16,15 @@ async fn main() {
 
     let open_interest: serde_json::Value = client.get(
         "/v2/public/open-interest",
-        Some(&[("symbol", "BTCUSDT"), ("period", "1d"), ("limit", "3")]),
+        Some(&[("symbol", "BTCUSD"), ("period", "1d"), ("limit", "3")]),
         [BybitOption::HttpAuth(BybitHttpAuth::None)],
     ).await.expect("failed to cancel orders");
     println!("Open interest:\n{}", open_interest);
 
     let positions: serde_json::Value = client.get(
         "/v2/private/position/list",
-        Some(&[("symbol", "BTCUSDT")]),
-        [BybitOption::HttpAuth(BybitHttpAuth::Type1)],
+        Some(&[("symbol", "BTCUSD")]),
+        [BybitOption::HttpAuth(BybitHttpAuth::BelowV3)],
     ).await.expect("failed to get positions");
     println!("Positions:\n{}", positions);
 }
