@@ -134,12 +134,12 @@ name = "bybit_usdc_perpetual_v1"
 path = "examples/bybit/previous_version/bybit_usdc_perpetual_v1.rs"
 
 [[example]]
-name = "bybit_usdt_contract_websocket_public"
-path = "examples/bybit/previous_version/bybit_usdt_contract_websocket_public.rs"
+name = "bybit_usdt_contract_v3_websocket_public"
+path = "examples/bybit/v3/bybit_usdt_contract_v3_websocket_public.rs"
 
 [[example]]
-name = "bybit_usdc_contract_websocket_public"
-path = "examples/bybit/previous_version/bybit_usdc_contract_websocket_public.rs"
+name = "bybit_usdc_contract_v3_websocket_public"
+path = "examples/bybit/v3/bybit_usdc_contract_v3_websocket_public.rs"
 
 [[example]]
 name = "bybit_spot_v3_websocket_public"
@@ -151,7 +151,15 @@ path = "examples/bybit/v3/bybit_spot_v3_websocket_private.rs"
 
 [[example]]
 name = "bybit_v5"
-path = "examples/bybit/bybit_v5.rs"
+path = "examples/bybit/v5/bybit_v5.rs"
+
+[[example]]
+name = "bybit_v5_websocket_public"
+path = "examples/bybit/v5/bybit_v5_websocket_public.rs"
+
+[[example]]
+name = "bybit_v5_websocket_private"
+path = "examples/bybit/v5/bybit_v5_websocket_private.rs"
 
 [[example]]
 name = "coincheck_http_public"
