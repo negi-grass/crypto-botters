@@ -5,11 +5,14 @@ pub use reqwest::{Request, RequestBuilder, StatusCode, Method, header::{self, He
 pub use bytes::Bytes;
 pub use serde;
 
+/// The User Agent string
+pub static USER_AGENT: &str = concat!("generic-api-client/", env!("CARGO_PKG_VERSION"));
+
 /// Client for communicating with APIs through HTTP/HTTPS.
 ///
 /// When making a HTTP request or starting a websocket connection with this client,
 /// a handler that implements [RequestHandler] is required.
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone)]
 pub struct Client {
     client: reqwest::Client,
 }
@@ -18,9 +21,7 @@ impl Client {
     /// Constructs a new `Client`.
     #[inline(always)]
     pub fn new() -> Self {
-        Self {
-            client: reqwest::Client::new(),
-        }
+        Self::default()
     }
 
     /// Makes an HTTP request with the given [RequestHandler] and returns the response.
@@ -187,6 +188,18 @@ impl Client {
         H: RequestHandler<()>,
     {
         self.request::<&[(&str, &str)], (), H>(Method::DELETE, url, None, None, handler).await
+    }
+}
+
+impl Default for Client {
+    fn default() -> Self {
+        let client = reqwest::ClientBuilder::new()
+            .user_agent(USER_AGENT)
+            .build()
+            .unwrap(); // user agent should be valid
+        Self {
+            client,
+        }
     }
 }
 
