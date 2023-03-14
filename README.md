@@ -2,6 +2,7 @@
 [![](https://img.shields.io/crates/v/crypto-botters)](https://crates.io/crates/crypto-botters)
 [![](https://docs.rs/crypto-botters/badge.svg)](https://docs.rs/crypto-botters)
 [![](https://github.com/negi-grass/crypto-botters/actions/workflows/clippy.yml/badge.svg)](https://github.com/negi-grass/crypto-botters/actions/workflows/clippy.yml)
+[![](https://img.shields.io/github/license/negi-grass/crypto-botters)](https://github.com/negi-grass/crypto-botters/blob/main/LICENSE)
 
 [日本語は下にあります](#%E6%97%A5%E6%9C%AC%E8%AA%9E)
 
