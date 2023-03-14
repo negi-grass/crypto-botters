@@ -275,31 +275,19 @@ impl<'a, R> BybitRequestHandler<'a, R> where R: DeserializeOwned {
                 .map(|pair| pair.split_once('=').unwrap_or((pair, "")))
                 .map(|(k, v)| (Cow::Borrowed(k), Cow::Borrowed(v)))
                 .collect();
-            let mut body_query_string = sort_and_add(pairs, key, timestamp);
+            let mut sorted_query_string = sort_and_add(pairs, key, timestamp);
 
-            hmac.update(body_query_string.as_bytes());
+            hmac.update(sorted_query_string.as_bytes());
             let signature = hex::encode(hmac.finalize().into_bytes());
 
-            if spot {
-                body_query_string.push_str(&format!("sign={signature}"));
+            sorted_query_string.push_str(&format!("&sign={signature}"));
 
-                *request.body_mut() = Some(body_query_string.into());
+            if spot {
+                *request.body_mut() = Some(sorted_query_string.into());
                 request.headers_mut().insert(header::CONTENT_TYPE, HeaderValue::from_static("application/x-www-form-urlencoded"));
             } else {
-                let mut json = serde_json::to_value(request_body).or(Err("could not serialize body as application/json"))?;
-                let Some(map) = json.as_object_mut() else {
-                    return Err("body must to be serializable as a JSON object");
-                };
-                map.insert("sign".to_owned(), serde_json::Value::String(signature));
-                if let Some(window) = window {
-                    if spot {
-                        map.insert("recvWindow".to_owned(), serde_json::Value::Number(window.into()));
-                    } else {
-                        map.insert("recv_window".to_owned(), serde_json::Value::Number(window.into()));
-                    }
-                }
-
-                *request.body_mut() = Some(json.to_string().into());
+                let body: serde_json::Value = serde_urlencoded::from_str(&sorted_query_string).unwrap(); // sorted_query_string is always in urlencoded format
+                *request.body_mut() = Some(body.to_string().into());
                 request.headers_mut().insert(header::CONTENT_TYPE, HeaderValue::from_static("application/json"));
             }
         }
