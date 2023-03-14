@@ -99,7 +99,7 @@ path = "examples/bybit/previous_version/bybit_inverse_perpetual_v2.rs"
 
 [[example]]
 name = "bybit_usdt_perpetual_v2"
-path = "examples/bybit/previous_version/bybit_usdt_perpetual.rs"
+path = "examples/bybit/previous_version/bybit_usdt_perpetual_v2.rs"
 
 [[example]]
 name = "bybit_inverse_futures_v2"
