@@ -8,7 +8,6 @@ env:
 
 jobs:
   check:
-
     runs-on: ubuntu-latest
 
     steps:
