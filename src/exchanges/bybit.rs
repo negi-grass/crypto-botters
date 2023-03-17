@@ -124,8 +124,8 @@ pub struct BybitRequestHandler<'a, R: DeserializeOwned> {
     _phantom: PhantomData<&'a R>,
 }
 
-pub struct BybitWebSocketHandler<H: FnMut(serde_json::Value) + Send + 'static> {
-    message_handler: H,
+pub struct BybitWebSocketHandler {
+    message_handler: Box<dyn FnMut(serde_json::Value) + Send>,
     options: BybitOptions,
 }
 
@@ -346,7 +346,7 @@ impl<'a, R> BybitRequestHandler<'a, R> where R: DeserializeOwned {
     }
 }
 
-impl<H> WebSocketHandler for BybitWebSocketHandler<H> where H: FnMut(serde_json::Value) + Send + 'static {
+impl WebSocketHandler for BybitWebSocketHandler {
     fn websocket_config(&self) -> WebSocketConfig {
         let mut config = self.options.websocket_config.clone();
         if self.options.websocket_url != BybitWebSocketUrl::None {
@@ -419,7 +419,7 @@ impl<H> WebSocketHandler for BybitWebSocketHandler<H> where H: FnMut(serde_json:
     }
 }
 
-impl<H> BybitWebSocketHandler<H> where H: FnMut(serde_json::Value) + Send + 'static, {
+impl BybitWebSocketHandler {
     #[inline(always)]
     fn message_subscribe(&self) -> Vec<WebSocketMessage> {
         vec![WebSocketMessage::Text(
@@ -506,12 +506,12 @@ impl<'a, R: DeserializeOwned + 'a, B> HttpOption<'a, R, B> for BybitOption where
 }
 
 impl <H: FnMut(serde_json::Value) + Send + 'static> WebSocketOption<H> for BybitOption {
-    type WebSocketHandler = BybitWebSocketHandler<H>;
+    type WebSocketHandler = BybitWebSocketHandler;
 
     #[inline(always)]
     fn websocket_handler(handler: H, options: Self::Options) -> Self::WebSocketHandler {
         BybitWebSocketHandler {
-            message_handler: handler,
+            message_handler: Box::new(handler),
             options,
         }
     }

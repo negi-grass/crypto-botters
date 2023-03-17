@@ -146,8 +146,8 @@ pub struct BinanceRequestHandler<'a, R: DeserializeOwned> {
 }
 
 /// A `struct` that implements [WebSocketHandler]
-pub struct BinanceWebSocketHandler<H: FnMut(serde_json::Value) + Send + 'static> {
-    message_handler: H,
+pub struct BinanceWebSocketHandler {
+    message_handler: Box<dyn FnMut(serde_json::Value) + Send>,
     options: BinanceOptions,
 }
 
@@ -247,7 +247,7 @@ where
     }
 }
 
-impl<H> WebSocketHandler for BinanceWebSocketHandler<H> where H: FnMut(serde_json::Value) + Send + 'static, {
+impl WebSocketHandler for BinanceWebSocketHandler {
     fn websocket_config(&self) -> WebSocketConfig {
         let mut config = self.options.websocket_config.clone();
         if self.options.websocket_url != BinanceWebSocketUrl::None {
@@ -362,12 +362,12 @@ impl<'a, R: DeserializeOwned + 'a, B> HttpOption<'a, R, B> for BinanceOption whe
 }
 
 impl<H: FnMut(serde_json::Value) + Send + 'static> WebSocketOption<H> for BinanceOption {
-    type WebSocketHandler = BinanceWebSocketHandler<H>;
+    type WebSocketHandler = BinanceWebSocketHandler;
 
     #[inline(always)]
     fn websocket_handler(handler: H, options: Self::Options) -> Self::WebSocketHandler {
         BinanceWebSocketHandler {
-            message_handler: handler,
+            message_handler: Box::new(handler),
             options,
         }
     }
