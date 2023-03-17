@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.1 (2023-03-17)
+- [crates.io](https://crates.io/crates/generic-api-client/0.2.1)
+- [docs.rs](https://docs.rs/generic-api-client/0.2.1)
+
+### Added
+- Added static `http::USER_AGENT`. This is the User-Agent string used for all HTTP requests.
+
+### Changed
+- All HTTP requests made using this library will include the User-Agent header.
+
 ## 0.2.0 (2023-02-28)
 - [crates.io](https://crates.io/crates/generic-api-client/0.2.0)
 - [docs.rs](https://docs.rs/generic-api-client/0.2.0)
