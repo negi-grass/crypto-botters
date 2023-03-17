@@ -358,7 +358,7 @@ impl WebSocketMessage {
 /// The `struct` implementing this `trait` is required to be [Send] and `'static` because
 /// it will be sent between threads.
 pub trait WebSocketHandler: Send + 'static {
-    /// Returns a prefix that will be appended to the URL of all the websocket connections being started using this handler.
+    /// Returns a [WebSocketConfig] that will be applied for all WebSocket connections handled by this handler.
     fn websocket_config(&self) -> WebSocketConfig {
         WebSocketConfig::default()
     }
