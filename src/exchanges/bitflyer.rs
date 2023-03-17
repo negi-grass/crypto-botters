@@ -105,8 +105,8 @@ pub struct BitFlyerRequestHandler<'a, R: DeserializeOwned> {
 }
 
 /// A `struct` that implements [WebSocketHandler]
-pub struct BitFlyerWebSocketHandler<H: FnMut(BitFlyerChannelMessage) + Send + 'static> {
-    message_handler: H,
+pub struct BitFlyerWebSocketHandler {
+    message_handler: Box<dyn FnMut(BitFlyerChannelMessage) + Send>,
     auth_id: Option<String>,
     options: BitFlyerOptions,
 }
@@ -193,7 +193,7 @@ where
     }
 }
 
-impl<H> WebSocketHandler for BitFlyerWebSocketHandler<H> where H: FnMut(BitFlyerChannelMessage) + Send + 'static, {
+impl WebSocketHandler for BitFlyerWebSocketHandler {
     fn websocket_config(&self) -> WebSocketConfig {
         let mut config = self.options.websocket_config.clone();
         if self.options.websocket_url != BitFlyerWebSocketUrl::None {
@@ -285,7 +285,7 @@ impl<H> WebSocketHandler for BitFlyerWebSocketHandler<H> where H: FnMut(BitFlyer
     }
 }
 
-impl<H> BitFlyerWebSocketHandler<H> where H: FnMut(BitFlyerChannelMessage) + Send + 'static, {
+impl BitFlyerWebSocketHandler {
     #[inline]
     fn message_subscribe(&self) -> Vec<WebSocketMessage> {
         self.options.websocket_channels.clone().into_iter().map(|channel| {
@@ -366,12 +366,12 @@ impl<'a, R: DeserializeOwned + 'a, B> HttpOption<'a, R, B> for BitFlyerOption wh
 }
 
 impl<H: FnMut(BitFlyerChannelMessage) + Send + 'static> WebSocketOption<H> for BitFlyerOption {
-    type WebSocketHandler = BitFlyerWebSocketHandler<H>;
+    type WebSocketHandler = BitFlyerWebSocketHandler;
 
     #[inline(always)]
     fn websocket_handler(handler: H, options: Self::Options) -> Self::WebSocketHandler {
         BitFlyerWebSocketHandler {
-            message_handler: handler,
+            message_handler: Box::new(handler),
             auth_id: None,
             options,
         }

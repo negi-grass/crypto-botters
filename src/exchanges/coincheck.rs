@@ -95,8 +95,8 @@ pub struct CoincheckRequestHandler<'a, R: DeserializeOwned> {
 }
 
 /// A `struct` that implements [WebSocketHandler]
-pub struct CoincheckWebSocketHandler<H: FnMut(serde_json::Value) + Send + 'static> {
-    message_handler: H,
+pub struct CoincheckWebSocketHandler {
+    message_handler: Box<dyn FnMut(serde_json::Value) + Send>,
     options: CoincheckOptions,
 }
 
@@ -182,7 +182,7 @@ where
     }
 }
 
-impl<H> WebSocketHandler for CoincheckWebSocketHandler<H> where H: FnMut(serde_json::Value) + Send + 'static, {
+impl WebSocketHandler for CoincheckWebSocketHandler {
     fn websocket_config(&self) -> WebSocketConfig {
         let mut config = self.options.websocket_config.clone();
         if self.options.websocket_url != CoincheckWebSocketUrl::None {
@@ -282,12 +282,12 @@ impl<'a, R: DeserializeOwned + 'a, B> HttpOption<'a, R, B> for CoincheckOption w
 }
 
 impl<H: FnMut(serde_json::Value) + Send + 'static> WebSocketOption<H> for CoincheckOption {
-    type WebSocketHandler = CoincheckWebSocketHandler<H>;
+    type WebSocketHandler = CoincheckWebSocketHandler;
 
     #[inline(always)]
     fn websocket_handler(handler: H, options: Self::Options) -> Self::WebSocketHandler {
         CoincheckWebSocketHandler {
-            message_handler: handler,
+            message_handler: Box::new(handler),
             options,
         }
     }
