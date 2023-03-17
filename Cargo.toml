@@ -2,10 +2,10 @@
 
 [package]
 name = "crypto-botters"
-version = "0.4.3"
+version = "0.5.0"
 authors = ["negi_grass"]
 edition = "2021"
-description = "A crate for interacting with various cryptocurrency exchanges."
+description = "A library for cryptocurrency exchange APIs."
 license = "MIT"
 readme = "README.md"
 homepage = "https://github.com/negi-grass/crypto-botters"

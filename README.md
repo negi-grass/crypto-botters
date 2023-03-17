@@ -29,7 +29,7 @@ More than 20 examples can be found in the [examples directory](https://github.co
 Cargo.toml:
 ```
 [dependencies]
-crypto-botters = { version = "0.4", features = ["binance", "bitflyer", "bybit", "coincheck"] }
+crypto-botters = { version = "0.5", features = ["binance", "bitflyer", "bybit", "coincheck"] }
 ```
 Enable the features for the exchanges that you use.
 
@@ -130,7 +130,7 @@ request a reconnection, or close the connection.
 Cargo.toml:
 ```
 [dependencies]
-crypto-botters = { version = "0.4", features = ["binance", "bitflyer", "bybit", "coincheck"] }
+crypto-botters = { version = "0.5", features = ["binance", "bitflyer", "bybit", "coincheck"] }
 ```
 使いたい取引所のfeatureを有効化してください。
 

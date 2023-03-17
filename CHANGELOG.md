@@ -1,7 +1,14 @@
 # Changelog
 
 ## Unreleased
-- [full diff on GitHub](https://github.com/negi-grass/crypto-botters/compare/v0.4.3...main)
+- [full diff on GitHub](https://github.com/negi-grass/crypto-botters/compare/v0.5.0...main)
+
+## 0.5.0 (2023-03-17)
+- [crates.io](https://crates.io/crates/crypto-botters/0.5.0)
+- [docs.rs](https://docs.rs/crypto-botters/0.5.0)
+- [GitHub release](https://github.com/negi-grass/crypto-botters/releases/tag/v0.5.0)
+- [snapshot on GitHub](https://github.com/negi-grass/crypto-botters/tree/v0.5.0)
+- [full diff on GitHub](https://github.com/negi-grass/crypto-botters/compare/v0.4.3...v0.5.0)
 
 ### Added
 - Module `crypto-botters::exchanges` was added. ([#34](https://github.com/negi-grass/crypto-botters/pull/34))
