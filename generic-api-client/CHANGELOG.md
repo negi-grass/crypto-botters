@@ -3,6 +3,9 @@
 ## 0.2.1 (2023-03-17)
 - [crates.io](https://crates.io/crates/generic-api-client/0.2.1)
 - [docs.rs](https://docs.rs/generic-api-client/0.2.1)
+- [snapshot on GitHub](https://github.com/negi-grass/crypto-botters/tree/9a2e1ac25587c3981e4348538ba99f3ed93b9817/generic-api-client)
+- [full diff on GitHub](https://github.com/negi-grass/crypto-botters/compare/c8019150ed2c0971a50b6c5f0f5fdf2aca254550...9a2e1ac25587c3981e4348538ba99f3ed93b9817)
+
 
 ### Added
 - Added static `http::USER_AGENT`. This is the User-Agent string used for all HTTP requests.
