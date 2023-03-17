@@ -1,7 +1,7 @@
 # Changelog
 
 ## Unreleased
-- [full diff on GitHub](https://github.com/negi-grass/crypto-botters/compare/c8019150ed2c0971a50b6c5f0f5fdf2aca254550...main)
+- [full diff on GitHub](https://github.com/negi-grass/crypto-botters/compare/v0.4.3...main)
 
 ### Added
 - Module `crypto-botters::exchanges` was added. ([#34](https://github.com/negi-grass/crypto-botters/pull/34))
@@ -23,8 +23,8 @@ removed and their functionality are now available in `crypto-botters::exchanges`
 - [crates.io](https://crates.io/crates/crypto-botters/0.4.3)
 - [docs.rs](https://docs.rs/crypto-botters/0.4.3)
 - [GitHub release](https://github.com/negi-grass/crypto-botters/releases/tag/v0.4.3)
-- [snapshot on GitHub](https://github.com/negi-grass/crypto-botters/tree/c8019150ed2c0971a50b6c5f0f5fdf2aca254550)
-- [full diff on GitHub](https://github.com/negi-grass/crypto-botters/compare/880c0acba659e1354e97de3e45992cd2a03d6ba9...c8019150ed2c0971a50b6c5f0f5fdf2aca254550)
+- [snapshot on GitHub](https://github.com/negi-grass/crypto-botters/tree/v0.4.3)
+- [full diff on GitHub](https://github.com/negi-grass/crypto-botters/compare/v0.4.2...v0.4.3)
 
 ### Added
 - Added cargo features to allow users to choose which library to use for TLS connection.
@@ -35,8 +35,8 @@ The features are `native-tls`, `native-tls-vendored`, `rustls-tls-native-roots`,
 - [crates.io](https://crates.io/crates/crypto-botters/0.4.2)
 - [docs.rs](https://docs.rs/crypto-botters/0.4.2)
 - [GitHub release](https://github.com/negi-grass/crypto-botters/releases/tag/v0.4.2)
-- [snapshot on GitHub](https://github.com/negi-grass/crypto-botters/tree/880c0acba659e1354e97de3e45992cd2a03d6ba9)
-- [full diff on GitHub](https://github.com/negi-grass/crypto-botters/compare/e0aa18f1397bb1988d9a9df056d47a06dc0ba997...880c0acba659e1354e97de3e45992cd2a03d6ba9)
+- [snapshot on GitHub](https://github.com/negi-grass/crypto-botters/tree/v0.4.2)
+- [full diff on GitHub](https://github.com/negi-grass/crypto-botters/compare/v0.4.1...v0.4.2)
 
 ### Added
 - Added `crypto-botters-binance::BinanceRequestError`
@@ -50,8 +50,8 @@ The features are `native-tls`, `native-tls-vendored`, `rustls-tls-native-roots`,
 - [crates.io](https://crates.io/crates/crypto-botters/0.4.1)
 - [docs.rs](https://docs.rs/crypto-botters/0.4.1)
 - [GitHub release](https://github.com/negi-grass/crypto-botters/releases/tag/v0.4.1)
-- [snapshot on GitHub](https://github.com/negi-grass/crypto-botters/tree/e0aa18f1397bb1988d9a9df056d47a06dc0ba997)
-- [full diff on GitHub](https://github.com/negi-grass/crypto-botters/compare/86757b297da3912eea165222c271653b08fd3947...e0aa18f1397bb1988d9a9df056d47a06dc0ba997)
+- [snapshot on GitHub](https://github.com/negi-grass/crypto-botters/tree/v0.4.1)
+- [full diff on GitHub](https://github.com/negi-grass/crypto-botters/compare/v0.4.0...v0.4.1)
 
 This release fixes a mistake in README.md
 
@@ -59,8 +59,8 @@ This release fixes a mistake in README.md
 - [crates.io](https://crates.io/crates/crypto-botters/0.4.0)
 - [docs.rs](https://docs.rs/crypto-botters/0.4.0)
 - [GitHub release](https://github.com/negi-grass/crypto-botters/releases/tag/v0.4.0)
-- [snapshot on GitHub](https://github.com/negi-grass/crypto-botters/tree/86757b297da3912eea165222c271653b08fd3947)
-- [full diff on GitHub](https://github.com/negi-grass/crypto-botters/compare/e00e34cdf04d01ba5fada14345fa43f2d4d989d4...86757b297da3912eea165222c271653b08fd3947)
+- [snapshot on GitHub](https://github.com/negi-grass/crypto-botters/tree/v0.4.0)
+- [full diff on GitHub](https://github.com/negi-grass/crypto-botters/compare/v0.3.0...v0.4.0)
 
 ### Added
 - Support for Bybit WebSocket API was added. ([#10](https://github.com/negi-grass/crypto-botters/pull/10))
@@ -70,8 +70,8 @@ This release fixes a mistake in README.md
 - [crates.io](https://crates.io/crates/crypto-botters/0.3.0)
 - [docs.rs](https://docs.rs/crypto-botters/0.3.0)
 - [GitHub release](https://github.com/negi-grass/crypto-botters/releases/tag/v0.3.0)
-- [snapshot on GitHub](https://github.com/negi-grass/crypto-botters/tree/e00e34cdf04d01ba5fada14345fa43f2d4d989d4)
-- [full diff on GitHub](https://github.com/negi-grass/crypto-botters/compare/030f7757dce979a8f19cb0a5c8744ea06e124e83...e00e34cdf04d01ba5fada14345fa43f2d4d989d4)
+- [snapshot on GitHub](https://github.com/negi-grass/crypto-botters/tree/v0.3.0)
+- [full diff on GitHub](https://github.com/negi-grass/crypto-botters/compare/v0.2.0...v0.3.0)
 
 This release drastically changes how users use this library. ([#6](https://github.com/negi-grass/crypto-botters/pull/6))
 
@@ -92,8 +92,8 @@ I will not list all changes as there are too many of them.
 - [crates.io](https://crates.io/crates/crypto-botters/0.2.0)
 - [docs.rs](https://docs.rs/crypto-botters/0.2.0)
 - [GitHub release](https://github.com/negi-grass/crypto-botters/releases/tag/v0.2.0)
-- [snapshot on GitHub](https://github.com/negi-grass/crypto-botters/tree/030f7757dce979a8f19cb0a5c8744ea06e124e83)
-- [full diff on GitHub](https://github.com/negi-grass/crypto-botters/compare/5f627177743aa7a48e41aca67989a816710f7856...030f7757dce979a8f19cb0a5c8744ea06e124e83)
+- [snapshot on GitHub](https://github.com/negi-grass/crypto-botters/tree/v0.2.0)
+- [full diff on GitHub](https://github.com/negi-grass/crypto-botters/compare/5f627177743aa7a48e41aca67989a816710f7856...v0.2.0)
 
 ### Added
 - Added `crypto-botters-binance::BinanceHttpUrl::EuropeanOptions` to support endpoint `https://eapi.binance.com` ([#2](https://github.com/negi-grass/crypto-botters/issues/2))
@@ -110,7 +110,7 @@ I will not list all changes as there are too many of them.
 - [crates.io](https://crates.io/crates/crypto-botters/0.1.1)
 - [docs.rs](https://docs.rs/crypto-botters/0.1.1)
 - [snapshot on GitHub](https://github.com/negi-grass/crypto-botters/tree/5f627177743aa7a48e41aca67989a816710f7856)
-- [full diff on GitHub](https://github.com/negi-grass/crypto-botters/compare/163d10ce850586140c9b29585a04c962617a49a4...5f627177743aa7a48e41aca67989a816710f7856)
+- [full diff on GitHub](https://github.com/negi-grass/crypto-botters/compare/v0.1.0...5f627177743aa7a48e41aca67989a816710f7856)
 
 ### Added
 - Added `crypto-botters-binance::Binance.request_max_try`, `crypto-botters-bitflyer::BitFlyer.request_max_try`
@@ -119,6 +119,6 @@ I will not list all changes as there are too many of them.
 - [crates.io](https://crates.io/crates/crypto-botters/0.1.0)
 - [docs.rs](https://docs.rs/crypto-botters/0.1.0)
 - [GitHub release](https://github.com/negi-grass/crypto-botters/releases/tag/v0.1.0)
-- [snapshot on GitHub](https://github.com/negi-grass/crypto-botters/tree/163d10ce850586140c9b29585a04c962617a49a4)
+- [snapshot on GitHub](https://github.com/negi-grass/crypto-botters/tree/v0.1.0)
 
 First release.
