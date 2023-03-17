@@ -28,7 +28,7 @@ pub enum BybitOption {
     /// receive window parameter used for requests
     RecvWindow(i32),
     /// [RequestConfig] used when sending requests.
-    /// `url_prefix` will be overridden by [HttpUrl](Self::HttpUrl) unless `HttpUrl` is [BinanceHttpUrl::None].
+    /// `url_prefix` will be overridden by [HttpUrl](Self::HttpUrl) unless `HttpUrl` is [BybitHttpUrl::None].
     RequestConfig(RequestConfig),
     /// Base url for WebSocket connections
     WebSocketUrl(BybitWebSocketUrl),

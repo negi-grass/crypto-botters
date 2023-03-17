@@ -61,7 +61,7 @@ pub struct BitFlyerOptions {
     pub websocket_url: BitFlyerWebSocketUrl,
     /// see [BitFlyerOption::WebSocketAuth]
     pub websocket_auth: bool,
-    /// see [BitFlyerOptions::WebSocketChannels]
+    /// see [BitFlyerOption::WebSocketChannels]
     pub websocket_channels: Vec<String>,
     /// see [BitFlyerOption::WebSocketConfig]
     pub websocket_config: WebSocketConfig,
@@ -70,7 +70,7 @@ pub struct BitFlyerOptions {
 /// A `enum` that represents the base url of the BitFlyer HTTP API.
 #[derive(Debug, Eq, PartialEq, Copy, Clone)]
 pub enum BitFlyerHttpUrl {
-    /// https://api.bitflyer.com
+    /// `https://api.bitflyer.com`
     Default,
     /// The url will not be modified by [BitFlyerRequestHandler]
     None,

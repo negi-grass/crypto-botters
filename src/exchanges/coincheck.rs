@@ -56,7 +56,7 @@ pub struct CoincheckOptions {
     pub request_config: RequestConfig,
     /// see [CoincheckOption::WebSocketUrl]
     pub websocket_url: CoincheckWebSocketUrl,
-    /// see [CoincheckOptions::WebSocketChannels]
+    /// see [CoincheckOption::WebSocketChannels]
     pub websocket_channels: Vec<String>,
     /// see [CoincheckOption::WebSocketConfig]
     pub websocket_config: WebSocketConfig,
