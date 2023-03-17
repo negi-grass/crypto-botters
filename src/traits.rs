@@ -1,4 +1,5 @@
 use std::fmt::Debug;
+use generic_api_client::{http, websocket};
 
 /// A `trait` that represents an option which can be set when creating handlers
 pub trait HandlerOption: Default {
@@ -13,16 +14,16 @@ pub trait HandlerOptions: Default + Clone + Debug {
     fn update(&mut self, option: Self::OptionItem);
 }
 
-/// A `trait` that shows the implementing type is able to create [generic_api_client::http::RequestHandler]s
-pub trait HttpOption<'a, R>: HandlerOption {
-    type RequestHandler;
+/// A `trait` that shows the implementing type is able to create [http::RequestHandler]s
+pub trait HttpOption<'a, R, B>: HandlerOption {
+    type RequestHandler: http::RequestHandler<B>;
 
     fn request_handler(options: Self::Options) -> Self::RequestHandler;
 }
 
-/// A `trait` that shows the implementing type is able to create [generic_api_client::websocket::WebSocketHandler]s
+/// A `trait` that shows the implementing type is able to create [websocket::WebSocketHandler]s
 pub trait WebSocketOption<H>: HandlerOption {
-    type WebSocketHandler;
+    type WebSocketHandler: websocket::WebSocketHandler;
 
     fn websocket_handler(handler: H, options: Self::Options) -> Self::WebSocketHandler;
 }

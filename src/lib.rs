@@ -12,10 +12,10 @@ pub mod traits;
 macro_rules! request_return_type {
     ($lt:lifetime, $Response:ty, $Options:ty,  $Body:ty) => {
         Result<
-            <<$Options as HttpOption<$lt, $Response>>::RequestHandler as RequestHandler<$Body>>::Successful,
+            <<$Options as HttpOption<$lt, $Response, $Body>>::RequestHandler as RequestHandler<$Body>>::Successful,
             RequestError<
-                <<$Options as HttpOption<$lt, $Response>>::RequestHandler as RequestHandler<$Body>>::BuildError,
-                <<$Options as HttpOption<$lt, $Response>>::RequestHandler as RequestHandler<$Body>>::Unsuccessful,
+                <<$Options as HttpOption<$lt, $Response, $Body>>::RequestHandler as RequestHandler<$Body>>::BuildError,
+                <<$Options as HttpOption<$lt, $Response, $Body>>::RequestHandler as RequestHandler<$Body>>::Unsuccessful,
             >,
         >
     };
@@ -68,7 +68,7 @@ impl Client {
     pub async fn request<'a, R, O, Q, B>(&self, method: Method, url: &str, query: Option<&Q>, body: Option<B>, options: impl IntoIterator<Item=O>)
         -> request_return_type!('a, R, O, B)
     where
-        O: HttpOption<'a, R>,
+        O: HttpOption<'a, R, B>,
         O::RequestHandler: RequestHandler<B>,
         Self: GetOptions<O::Options>,
         Q: Serialize + ?Sized,
@@ -80,7 +80,7 @@ impl Client {
     #[inline(always)]
     pub async fn get<'a, R, O, Q>(&self, url: &str, query: Option<&Q>, options: impl IntoIterator<Item=O>) -> request_return_type!('a, R, O, ())
     where
-        O: HttpOption<'a, R>,
+        O: HttpOption<'a, R, ()>,
         O::RequestHandler: RequestHandler<()>,
         Self: GetOptions<O::Options>,
         Q: Serialize + ?Sized,
@@ -92,7 +92,7 @@ impl Client {
     #[inline(always)]
     pub async fn get_no_query<'a, R, O>(&self, url: &str, options: impl IntoIterator<Item=O>) -> request_return_type!('a, R, O, ())
     where
-        O: HttpOption<'a, R>,
+        O: HttpOption<'a, R, ()>,
         O::RequestHandler: RequestHandler<()>,
         Self: GetOptions<O::Options>,
     {
@@ -104,7 +104,7 @@ impl Client {
     pub async fn post<'a, R, O, B>(&self, url: &str, body: Option<B>, options: impl IntoIterator<Item=O>)
         -> request_return_type!('a, R, O, B)
     where
-        O: HttpOption<'a, R>,
+        O: HttpOption<'a, R, B>,
         O::RequestHandler: RequestHandler<B>,
         Self: GetOptions<O::Options>,
     {
@@ -116,7 +116,7 @@ impl Client {
     pub async fn post_no_body<'a, R, O>(&self, url: &str, options: impl IntoIterator<Item=O>)
         -> request_return_type!('a, R, O, ())
     where
-        O: HttpOption<'a, R>,
+        O: HttpOption<'a, R, ()>,
         O::RequestHandler: RequestHandler<()>,
         Self: GetOptions<O::Options>,
     {
@@ -128,7 +128,7 @@ impl Client {
     pub async fn put<'a, R, O, B>(&self, url: &str, body: Option<B>, options: impl IntoIterator<Item=O>)
         -> request_return_type!('a, R, O, B)
     where
-        O: HttpOption<'a, R>,
+        O: HttpOption<'a, R, B>,
         O::RequestHandler: RequestHandler<B>,
         Self: GetOptions<O::Options>,
     {
@@ -140,7 +140,7 @@ impl Client {
     pub async fn put_no_body<'a, R, O>(&self, url: &str, options: impl IntoIterator<Item=O>)
         -> request_return_type!('a, R, O, ())
     where
-        O: HttpOption<'a, R>,
+        O: HttpOption<'a, R, ()>,
         O::RequestHandler: RequestHandler<()>,
         Self: GetOptions<O::Options>,
     {
@@ -151,7 +151,7 @@ impl Client {
     #[inline(always)]
     pub async fn delete<'a, R, O, Q>(&self, url: &str, query: Option<&Q>, options: impl IntoIterator<Item=O>) -> request_return_type!('a, R, O, ())
     where
-        O: HttpOption<'a, R>,
+        O: HttpOption<'a, R, ()>,
         O::RequestHandler: RequestHandler<()>,
         Self: GetOptions<O::Options>,
         Q: Serialize + ?Sized,
@@ -163,7 +163,7 @@ impl Client {
     #[inline(always)]
     pub async fn delete_no_query<'a, R, O>(&self, url: &str, options: impl IntoIterator<Item=O>) -> request_return_type!('a, R, O, ())
     where
-        O: HttpOption<'a, R>,
+        O: HttpOption<'a, R, ()>,
         O::RequestHandler: RequestHandler<()>,
         Self: GetOptions<O::Options>,
     {
