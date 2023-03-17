@@ -269,7 +269,7 @@ impl Default for CoincheckOptions {
     }
 }
 
-impl<'a, R: DeserializeOwned + 'a> HttpOption<'a, R> for CoincheckOption {
+impl<'a, R: DeserializeOwned + 'a, B> HttpOption<'a, R, B> for CoincheckOption where B: Serialize {
     type RequestHandler = CoincheckRequestHandler<'a, R>;
 
     #[inline(always)]
