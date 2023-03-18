@@ -24,6 +24,6 @@ jobs:
           CHANGED=`git status --porcelain | wc -l`
           if [ $CHANGED -gt 0 ]; then
             git add Cargo.lock
-            git commit -m "Update Cargo.lock"
+            git commit -m "chore: Update Cargo.lock"
             git push
           fi
