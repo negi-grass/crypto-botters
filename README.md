@@ -109,6 +109,9 @@ request a reconnection, or close the connection.
 ## 日本語
 これは仮想通貨取引所のAPIと通信するためのRustライブラリです。
 
+- [crates.io](https://crates.io/crates/crypto-botters)
+- [docs.rs](https://docs.rs/crypto-botters)
+
 特徴:
 - 非同期
 - WebSocketに対応
