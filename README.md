@@ -177,8 +177,8 @@ async fn main() {
 そのようなオプションは**デフォルトオプション**として`Client`に設定できます。デフォルトオプションは、その`Client`を
 使って送られるすべてのリクエストに適用されます。それぞれのリクエストで渡すオプションで上書きすることもできます。
 
-この例では、`client.update_default_option(BinanceOption::Key(key));`でAPIキーのオプションをデフォルトオプションとして設定
-しています。このため、`post_no_body()`にAPIキーのオプションを指定する必要がなくなっています。
+この例では、`client.update_default_option(BinanceOption::Key(key));`でAPIキーのオプションをデフォルトオプションとして設定しています。
+このため、`post_no_body()`にAPIキーのオプションを指定する必要がなくなっています。
 
 ### レスポンスの型
 レスポンスは指定した型に自動的に変換されます。この例では、`dusts`の型を`serde_json::Value`と指定しているため、
