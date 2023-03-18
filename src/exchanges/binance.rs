@@ -349,7 +349,11 @@ impl Default for BinanceOptions {
     }
 }
 
-impl<'a, R: DeserializeOwned + 'a, B> HttpOption<'a, R, B> for BinanceOption where B: Serialize {
+impl<'a, R, B> HttpOption<'a, R, B> for BinanceOption
+where
+    R: DeserializeOwned + 'a,
+    B: Serialize,
+{
     type RequestHandler = BinanceRequestHandler<'a, R>;
 
     #[inline(always)]

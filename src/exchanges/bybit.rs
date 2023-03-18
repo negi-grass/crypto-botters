@@ -493,7 +493,11 @@ impl Default for BybitOptions {
     }
 }
 
-impl<'a, R: DeserializeOwned + 'a, B> HttpOption<'a, R, B> for BybitOption where B: Serialize {
+impl<'a, R, B> HttpOption<'a, R, B> for BybitOption
+where
+    R: DeserializeOwned + 'a,
+    B: Serialize,
+{
     type RequestHandler = BybitRequestHandler<'a, R>;
 
     #[inline(always)]

@@ -353,7 +353,11 @@ impl Default for BitFlyerOptions {
     }
 }
 
-impl<'a, R: DeserializeOwned + 'a, B> HttpOption<'a, R, B> for BitFlyerOption where B: Serialize {
+impl<'a, R, B> HttpOption<'a, R, B> for BitFlyerOption
+where
+    R: DeserializeOwned + 'a,
+    B: Serialize,
+{
     type RequestHandler = BitFlyerRequestHandler<'a, R>;
 
     #[inline(always)]
