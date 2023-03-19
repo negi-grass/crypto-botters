@@ -1,3 +1,5 @@
+#![cfg_attr(docsrs, feature(doc_cfg))]
+
 use generic_api_client::{http::{self, *}, websocket::*};
 use serde::Serialize;
 use traits::*;
@@ -187,6 +189,7 @@ pub trait GetOptions<O: HandlerOptions> {
 }
 
 #[cfg(feature = "binance")]
+#[cfg_attr(docsrs, doc(cfg(feature = "binance")))]
 impl GetOptions<binance::BinanceOptions> for Client {
     #[inline(always)]
     fn default_options(&self) -> &binance::BinanceOptions {
@@ -200,6 +203,7 @@ impl GetOptions<binance::BinanceOptions> for Client {
 }
 
 #[cfg(feature = "bitflyer")]
+#[cfg_attr(docsrs, doc(cfg(feature = "bitflyer")))]
 impl GetOptions<bitflyer::BitFlyerOptions> for Client {
     #[inline(always)]
     fn default_options(&self) -> &bitflyer::BitFlyerOptions {
@@ -213,6 +217,7 @@ impl GetOptions<bitflyer::BitFlyerOptions> for Client {
 }
 
 #[cfg(feature = "bybit")]
+#[cfg_attr(docsrs, doc(cfg(feature = "bybit")))]
 impl GetOptions<bybit::BybitOptions> for Client {
     #[inline(always)]
     fn default_options(&self) -> &bybit::BybitOptions {
@@ -226,6 +231,7 @@ impl GetOptions<bybit::BybitOptions> for Client {
 }
 
 #[cfg(feature = "coincheck")]
+#[cfg_attr(docsrs, doc(cfg(feature = "coincheck")))]
 impl GetOptions<coincheck::CoincheckOptions> for Client {
     #[inline(always)]
     fn default_options(&self) -> &coincheck::CoincheckOptions {
