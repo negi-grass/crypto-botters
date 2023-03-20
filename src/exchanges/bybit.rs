@@ -177,7 +177,7 @@ where
     fn handle_response(&self, status: StatusCode, _: HeaderMap, response_body: Bytes) -> Result<Self::Successful, Self::Unsuccessful> {
         if status.is_success() {
             serde_json::from_slice(&response_body).map_err(|error| {
-                log::error!("Failed to parse response due to an error: {}", error);
+                log::debug!("Failed to parse response due to an error: {}", error);
                 BybitHandlerError::ParseError
             })
         } else {
@@ -191,7 +191,7 @@ where
                     }
                 }
                 Err(error) => {
-                    log::error!("Failed to parse error response due to an error: {}", error);
+                    log::debug!("Failed to parse error response due to an error: {}", error);
                     BybitHandlerError::ParseError
                 },
             };
@@ -374,10 +374,10 @@ impl WebSocketHandler for BybitWebSocketHandler {
                         }).to_string()),
                     ];
                 } else {
-                    log::error!("API secret not set.");
+                    log::debug!("API secret not set.");
                 };
             } else {
-                log::error!("API key not set.");
+                log::debug!("API key not set.");
             };
         }
         self.message_subscribe()
@@ -389,7 +389,7 @@ impl WebSocketHandler for BybitWebSocketHandler {
                 let message: serde_json::Value = match serde_json::from_str(&message) {
                     Ok(message) => message,
                     Err(_) => {
-                        log::warn!("Invalid JSON received");
+                        log::debug!("Invalid JSON received");
                         return vec![];
                     },
                 };
@@ -398,7 +398,7 @@ impl WebSocketHandler for BybitWebSocketHandler {
                         if message["success"].as_bool() == Some(true) {
                             log::debug!("WebSocket authentication successful");
                         } else {
-                            log::error!("WebSocket authentication unsuccessful; message: {}", message["ret_msg"]);
+                            log::debug!("WebSocket authentication unsuccessful; message: {}", message["ret_msg"]);
                         }
                         return self.message_subscribe();
                     },
@@ -406,13 +406,13 @@ impl WebSocketHandler for BybitWebSocketHandler {
                         if message["success"].as_bool() == Some(true) {
                             log::debug!("WebSocket topics subscription successful");
                         } else {
-                            log::error!("WebSocket topics subscription unsuccessful; message: {}", message["ret_msg"]);
+                            log::debug!("WebSocket topics subscription unsuccessful; message: {}", message["ret_msg"]);
                         }
                     },
                     _ => (self.message_handler)(message),
                 }
             },
-            WebSocketMessage::Binary(_) => log::warn!("Unexpected binary message received"),
+            WebSocketMessage::Binary(_) => log::debug!("Unexpected binary message received"),
             WebSocketMessage::Ping(_) | WebSocketMessage::Pong(_) => (),
         }
         vec![]

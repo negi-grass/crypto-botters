@@ -3,6 +3,9 @@
 ## Unreleased
 - [full diff on GitHub](https://github.com/negi-grass/crypto-botters/compare/v0.5.0...main)
 
+### Changed
+- Changed error and warning logs to debug logs
+
 ## 0.5.0 (2023-03-17)
 - [crates.io](https://crates.io/crates/crypto-botters/0.5.0)
 - [docs.rs](https://docs.rs/crypto-botters/0.5.0)

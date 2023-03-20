@@ -160,7 +160,7 @@ where
     fn handle_response(&self, status: StatusCode, _: HeaderMap, response_body: Bytes) -> Result<Self::Successful, Self::Unsuccessful> {
         if status.is_success() {
             serde_json::from_slice(&response_body).map_err(|error| {
-                log::error!("Failed to parse response due to an error: {}", error);
+                log::debug!("Failed to parse response due to an error: {}", error);
                 CoincheckHandlerError::ParseError
             })
         } else {
@@ -173,7 +173,7 @@ where
                     }
                 },
                 Err(error) => {
-                    log::error!("Failed to parse error response due to an error: {}", error);
+                    log::debug!("Failed to parse error response due to an error: {}", error);
                     CoincheckHandlerError::ParseError
                 }
             };
@@ -202,10 +202,10 @@ impl WebSocketHandler for CoincheckWebSocketHandler {
             WebSocketMessage::Text(message) => {
                 match serde_json::from_str(&message) {
                     Ok(message) => (self.message_handler)(message),
-                    Err(_) => log::warn!("Invalid JSON message received"),
+                    Err(_) => log::debug!("Invalid JSON message received"),
                 };
             },
-            WebSocketMessage::Binary(_) => log::warn!("Unexpected binary message received"),
+            WebSocketMessage::Binary(_) => log::debug!("Unexpected binary message received"),
             WebSocketMessage::Ping(_) | WebSocketMessage::Pong(_) => (),
         }
         vec![]

@@ -211,7 +211,7 @@ where
     fn handle_response(&self, status: StatusCode, headers: HeaderMap, response_body: Bytes) -> Result<Self::Successful, Self::Unsuccessful> {
         if status.is_success() {
             serde_json::from_slice(&response_body).map_err(|error| {
-                log::error!("Failed to parse response due to an error: {}", error);
+                log::debug!("Failed to parse response due to an error: {}", error);
                 BinanceHandlerError::ParseError
             })
         } else {
@@ -222,11 +222,11 @@ where
                         if let Ok(retry_after) = u32::from_str(string) {
                             Some(retry_after)
                         } else {
-                            log::warn!("Invalid number in Retry-After header");
+                            log::debug!("Invalid number in Retry-After header");
                             None
                         }
                     } else {
-                        log::warn!("Non-ASCII character in Retry-After header");
+                        log::debug!("Non-ASCII character in Retry-After header");
                         None
                     }
                 } else {
@@ -238,7 +238,7 @@ where
             let error = match serde_json::from_slice(&response_body) {
                 Ok(parsed_error) => BinanceHandlerError::ApiError(parsed_error),
                 Err(error) => {
-                    log::error!("Failed to parse error response due to an error: {}", error);
+                    log::debug!("Failed to parse error response due to an error: {}", error);
                     BinanceHandlerError::ParseError
                 }
             };
@@ -262,10 +262,10 @@ impl WebSocketHandler for BinanceWebSocketHandler {
                 if let Ok(message) = serde_json::from_str(&message) {
                     (self.message_handler)(message);
                 } else {
-                    log::error!("Invalid JSON message received");
+                    log::debug!("Invalid JSON message received");
                 }
             },
-            WebSocketMessage::Binary(_) => log::warn!("Unexpected binary message received"),
+            WebSocketMessage::Binary(_) => log::debug!("Unexpected binary message received"),
             WebSocketMessage::Ping(_) | WebSocketMessage::Pong(_) => (),
         }
         vec![]
