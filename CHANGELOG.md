@@ -1,7 +1,14 @@
 # Changelog
 
 ## Unreleased
-- [full diff on GitHub](https://github.com/negi-grass/crypto-botters/compare/v0.5.0...main)
+- [full diff on GitHub](https://github.com/negi-grass/crypto-botters/compare/v0.5.1...main)
+
+## 0.5.1 (2023-03-20)
+- [crates.io](https://crates.io/crates/crypto-botters/0.5.1)
+- [docs.rs](https://docs.rs/crypto-botters/0.5.1)
+- [GitHub release](https://github.com/negi-grass/crypto-botters/releases/tag/v0.5.1)
+- [snapshot on GitHub](https://github.com/negi-grass/crypto-botters/tree/v0.5.1)
+- [full diff on GitHub](https://github.com/negi-grass/crypto-botters/compare/v0.5.0...v0.5.1)
 
 ### Changed
 - Changed error and warning logs to debug logs
