@@ -3,6 +3,9 @@
 ## Unreleased
 - [full diff on GitHub](https://github.com/negi-grass/crypto-botters/compare/v0.5.1...main)
 
+### Added
+- Added support for [bitbank public http api](https://github.com/bitbankinc/bitbank-api-docs/blob/master/public-api.md)
+
 ## 0.5.1 (2023-03-20)
 - [crates.io](https://crates.io/crates/crypto-botters/0.5.1)
 - [docs.rs](https://docs.rs/crypto-botters/0.5.1)

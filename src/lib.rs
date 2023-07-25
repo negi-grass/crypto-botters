@@ -28,6 +28,8 @@ pub struct Client {
     client: http::Client,
     #[cfg(feature = "binance")]
     binance: binance::BinanceOptions,
+    #[cfg(feature = "bitbank")]
+    bitbank: bitbank::BitbankOptions,
     #[cfg(feature = "bitflyer")]
     bitflyer: bitflyer::BitFlyerOptions,
     #[cfg(feature = "bybit")]
@@ -199,6 +201,20 @@ impl GetOptions<binance::BinanceOptions> for Client {
     #[inline(always)]
     fn default_options_mut(&mut self) -> &mut binance::BinanceOptions {
         &mut self.binance
+    }
+}
+
+#[cfg(feature = "bitbank")]
+#[cfg_attr(docsrs, doc(cfg(feature = "bitbank")))]
+impl GetOptions<bitbank::BitbankOptions> for Client {
+    #[inline(always)]
+    fn default_options(&self) -> &bitbank::BitbankOptions {
+        &self.bitbank
+    }
+
+    #[inline(always)]
+    fn default_options_mut(&mut self) -> &mut bitbank::BitbankOptions {
+        &mut self.bitbank
     }
 }
 
