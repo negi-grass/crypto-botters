@@ -20,7 +20,7 @@ futures-util = "0.3.26"
 serde = "1.0.183"
 parking_lot = "0.12.1"
 bytes = "1.4.0"
-log = "0.4.17"
+log = "0.4.20"
 thiserror = "1.0.44"
 
 [features]
