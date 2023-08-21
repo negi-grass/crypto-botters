@@ -47,7 +47,7 @@ rand = { version = "0.8.5", optional = true }
 
 [dev-dependencies]
 crypto-botters = { path = ".", features = ["full"] }
-tokio = { version = "1.26.0", features = ["rt-multi-thread", "macros"] }
+tokio = { version = "1.32.0", features = ["rt-multi-thread", "macros"] }
 rust_decimal = { version = "1.31.0", features = ["serde-with-str", "serde-with-float"] }
 env_logger = "0.10.0"
 
