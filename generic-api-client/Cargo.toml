@@ -21,7 +21,7 @@ serde = "1.0.183"
 parking_lot = "0.12.1"
 bytes = "1.4.0"
 log = "0.4.17"
-thiserror = "1.0.44"
+thiserror = "1.0.50"
 
 [features]
 native-tls = ["reqwest/native-tls", "tokio-tungstenite/native-tls"]
