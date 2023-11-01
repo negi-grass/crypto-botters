@@ -36,7 +36,7 @@ rustls-tls-webpki-roots = ["generic-api-client/rustls-tls-webpki-roots"]
 
 [dependencies]
 generic-api-client = { version = "0.2", path = "generic-api-client" }
-serde = { version = "1.0.183", features = ["derive"] }
+serde = { version = "1.0.190", features = ["derive"] }
 serde_json = "1.0.105"
 hmac = "0.12.1"
 sha2 = "0.10.6"
