@@ -1,7 +1,17 @@
 # Changelog
 
 ## Unreleased
-- [full diff on GitHub](https://github.com/negi-grass/crypto-botters/compare/v0.5.1...main)
+- [full diff on GitHub](https://github.com/negi-grass/crypto-botters/compare/v0.6.0...main)
+
+## 0.6.0 (2023-12-07)
+- [crates.io](https://crates.io/crates/crypto-botters/0.6.0)
+- [docs.rs](https://docs.rs/crypto-botters/0.6.0)
+- [GitHub release](https://github.com/negi-grass/crypto-botters/releases/tag/v0.6.0)
+- [snapshot on GitHub](https://github.com/negi-grass/crypto-botters/tree/v0.6.0)
+- [full diff on GitHub](https://github.com/negi-grass/crypto-botters/compare/v0.5.1...v0.6.0)
+
+### Changed
+- Update `generic-api-client` to `v0.3.0`
 
 ## 0.5.1 (2023-03-20)
 - [crates.io](https://crates.io/crates/crypto-botters/0.5.1)

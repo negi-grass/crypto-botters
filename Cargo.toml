@@ -2,7 +2,7 @@
 
 [package]
 name = "crypto-botters"
-version = "0.5.1"
+version = "0.6.0"
 authors = ["negi_grass"]
 edition = "2021"
 description = "A library for cryptocurrency exchange APIs."
