@@ -47,21 +47,14 @@ impl Client {
             if let Some(query) = query {
                 request_builder = request_builder.query(query);
             }
-            let request = handler.build_request(request_builder, &body, count)
-                .map_err(|error| {
-                    RequestError::BuildRequestError(error)
-                })?;
+            let request = handler.build_request(request_builder, &body, count).map_err(RequestError::BuildRequestError)?;
             // send the request
             match self.client.execute(request).await {
                 Ok(mut response) => {
                     let status = response.status();
                     let headers = std::mem::take(response.headers_mut());
-                    let body = response.bytes().await.map_err(|error| {
-                        RequestError::ReceiveResponse(error)
-                    })?;
-                    return handler.handle_response(status, headers, body).map_err(|error| {
-                        RequestError::ResponseHandleError(error)
-                    });
+                    let body = response.bytes().await.map_err(RequestError::ReceiveResponse)?;
+                    return handler.handle_response(status, headers, body).map_err(RequestError::ResponseHandleError);
                 },
                 Err(error) => {
                     if count >= config.max_try {
