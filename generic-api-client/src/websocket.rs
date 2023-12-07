@@ -151,6 +151,9 @@ impl<H: WebSocketHandler> WebSocketConnection<H> {
                                     log::error!("Failed to send message because of an error: {}", error);
                                 };
                             }
+                            if let Err(error) = sink_lock.flush().await {
+                                log::error!("An error occurred while flushing WebSocket sink: {error:?}");
+                            }
                         }
                     },
                     // failed to receive message
@@ -302,6 +305,7 @@ impl<H: WebSocketHandler> WebSocketConnection<H> {
         for message in messages {
             sink.send(message.into_message()).await?;
         }
+        sink.flush().await?;
 
         // fetch_not is unstable so we use fetch_xor
         let id = connection.next_connection_id.fetch_xor(true, Ordering::SeqCst);
@@ -326,7 +330,9 @@ impl<H: WebSocketHandler> WebSocketConnection<H> {
 
     /// Sends a message to the connection.
     pub async fn send_message(&self, message: WebSocketMessage) -> Result<(), TungsteniteError> {
-        self.sink.lock().await.send(message.into_message()).await
+        let mut sink_lock = self.sink.lock().await;
+        sink_lock.send(message.into_message()).await?;
+        sink_lock.flush().await
     }
 
     /// Returns a [ReconnectState] for this connection.
