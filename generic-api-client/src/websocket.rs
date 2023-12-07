@@ -8,7 +8,7 @@ use tokio::{
     sync::{mpsc as tokio_mpsc, Mutex as AsyncMutex, Notify},
     task::JoinHandle,
     net::TcpStream,
-    time::MissedTickBehavior,
+    time::{MissedTickBehavior, timeout},
 };
 use tokio_tungstenite::{
     tungstenite,
@@ -23,7 +23,6 @@ use parking_lot::Mutex as SyncMutex;
 
 type WebSocketStream = tokio_tungstenite::WebSocketStream<MaybeTlsStream<TcpStream>>;
 type WebSocketSplitSink = SplitSink<WebSocketStream, tungstenite::Message>;
-type FeederMessage = Option<(bool, tungstenite::Result<tungstenite::Message>)>;
 
 /// A `struct` that holds a websocket connection.
 ///
@@ -47,12 +46,33 @@ pub struct WebSocketConnection<H: WebSocketHandler> {
     reconnect_state: ReconnectState,
 }
 
+// Two ways connections end:
+// - User drops WebSocketConnection
+//     1. feed_handler receives a message and closes the connection, then terminates
+//     2. start_connection notices that the connection is closed, and attempts to notify feed_handler, then terminates
+// - Reconnection
+//     This happens when:
+//     - the user requests so
+//     - message timeout
+//     - the server closes the connection
+//     - some kind of error occurs while receiving the message
+//
+//     1. task_reconnect starts a new connection
+//     2. task_reconnect closes the old connection
+//     3. start_connection (old) notices that the connection is closed, and notifies feed_handler, then terminates
+//     4. feed_handler receives the message, but ignores it because it is from the old connection
 #[derive(Debug)]
 struct ConnectionInner<H: WebSocketHandler> {
     url: String,
     handler: Arc<SyncMutex<H>>,
-    message_tx: tokio_mpsc::UnboundedSender<FeederMessage>,
-    connection_id: AtomicBool,
+    message_tx: tokio_mpsc::UnboundedSender<(bool, FeederMessage)>,
+    next_connection_id: AtomicBool,
+}
+
+enum FeederMessage {
+    Message(tungstenite::Result<tungstenite::Message>),
+    ConnectionClosed,
+    DropConnectionRequest,
 }
 
 impl<H: WebSocketHandler> WebSocketConnection<H> {
@@ -60,7 +80,7 @@ impl<H: WebSocketHandler> WebSocketConnection<H> {
     pub async fn new(url: &str, handler: H) -> Result<Self, TungsteniteError> {
         let config = handler.websocket_config();
         let handler = Arc::new(SyncMutex::new(handler));
-        let url = config.url_prefix + url;
+        let url = config.url_prefix.clone() + url;
 
         let (message_tx, message_rx) = tokio_mpsc::unbounded_channel();
         let reconnect_manager = ReconnectState::new();
@@ -69,20 +89,29 @@ impl<H: WebSocketHandler> WebSocketConnection<H> {
             url,
             handler: Arc::clone(&handler),
             message_tx,
-            connection_id: AtomicBool::new(false),
+            next_connection_id: AtomicBool::new(false),
         });
 
         async fn feed_handler(
             connection: Arc<ConnectionInner<impl WebSocketHandler>>,
-            mut message_rx: tokio_mpsc::UnboundedReceiver<FeederMessage>,
+            mut message_rx: tokio_mpsc::UnboundedReceiver<(bool, FeederMessage)>,
             reconnect_manager: ReconnectState,
-            no_duplicate: bool,
+            config: WebSocketConfig,
             sink: Arc<AsyncMutex<WebSocketSplitSink>>,
         ) {
             let mut messages: HashMap<WebSocketMessage, isize> = HashMap::new();
-            while let Some(Some((id, message))) = message_rx.recv().await {
-                match message {
-                    Ok(message) => {
+
+            let timeout_duration = if config.message_timeout.is_zero() {
+                Duration::MAX
+            } else {
+                config.message_timeout
+            };
+
+            loop {
+                match timeout(timeout_duration, message_rx.recv()).await {
+                    // message successfully received
+                    Ok(Some((id, FeederMessage::Message(Ok(message))))) => {
+                        // message successfully received
                         if let Some(message) = WebSocketMessage::from_message(message) {
                             if reconnect_manager.is_reconnecting() {
                                 // reconnecting
@@ -94,7 +123,7 @@ impl<H: WebSocketHandler> WebSocketConnection<H> {
                                 let entry = messages.entry(message.clone());
                                 match entry {
                                     Entry::Occupied(mut occupied) => {
-                                        if no_duplicate {
+                                        if config.ignore_duplicate_during_reconnection {
                                             log::debug!("Skipping duplicate message.");
                                             continue;
                                         }
@@ -116,18 +145,49 @@ impl<H: WebSocketHandler> WebSocketConnection<H> {
                                 messages.clear();
                             }
                             let messages = connection.handler.lock().handle_message(message);
+                            let mut sink_lock = sink.lock().await;
                             for message in messages {
-                                if let Err(error) = sink.lock().await.send(message.into_message()).await {
-                                    log::error!("Failed to send message due to an error: {}", error);
+                                if let Err(error) = sink_lock.send(message.into_message()).await {
+                                    log::error!("Failed to send message because of an error: {}", error);
                                 };
                             }
                         }
                     },
-                    Err(error) => {
+                    // failed to receive message
+                    Ok(Some((_, FeederMessage::Message(Err(error))))) => {
+                        log::error!("Failed to receive message because of an error: {error:?}");
                         if reconnect_manager.request_reconnect() {
-                            log::error!("Failed to receive message due to an error: {}, reconnecting", error);
+                            log::info!("Reconnecting WebSocket because there was an error while receiving a message");
                         }
                     },
+                    // timeout
+                    Err(_) => {
+                        log::debug!("WebSocket message timeout");
+                        if reconnect_manager.request_reconnect() {
+                            log::info!("Reconnecting WebSocket because of timeout");
+                        }
+                    },
+                    // connection was closed
+                    Ok(Some((id, FeederMessage::ConnectionClosed))) => {
+                        let current_id = !connection.next_connection_id.load(Ordering::SeqCst);
+                        if id != current_id {
+                            // old connection, ignore
+                            continue;
+                        }
+                        log::debug!("WebSocket connection closed by server");
+                        if reconnect_manager.request_reconnect() {
+                            log::info!("Reconnecting WebSocket because it was disconnected by the server");
+                        }
+                    },
+                    // the connection is no longer needed because WebSocketConnection was dropped
+                    Ok(Some((_, FeederMessage::DropConnectionRequest))) => {
+                        if let Err(error) = sink.lock().await.close().await {
+                            log::debug!("Failed to close WebSocket connection: {error:?}");
+                        }
+                        break;
+                    }
+                    // message_tx has been dropped, which should never happen because it's always accessible by connection.message_tx.
+                    Ok(None) => unreachable!("message_rx should never be closed"),
                 }
             }
             connection.handler.lock().handle_close(false);
@@ -155,6 +215,7 @@ impl<H: WebSocketHandler> WebSocketConnection<H> {
                     _ = reconnect_manager.inner.reconnect_notify.notified() => {},
                     _ = timer => {},
                 }
+                log::debug!("Reconnection requested");
                 cooldown.tick().await;
                 reconnect_manager.inner.reconnecting.store(true, Ordering::SeqCst);
 
@@ -164,6 +225,7 @@ impl<H: WebSocketHandler> WebSocketConnection<H> {
                 // this completes immediately because we just added a permit
                 reconnect_manager.inner.reconnect_notify.notified().await;
 
+                log::debug!("Starting reconnection process ...");
                 if no_duplicate {
                     tokio::time::sleep(wait).await;
                 }
@@ -173,19 +235,21 @@ impl<H: WebSocketHandler> WebSocketConnection<H> {
                     Ok(new_sink) => {
                         // replace the sink with the new one
                         let mut old_sink = mem::replace(&mut *sink.lock().await, new_sink);
+                        log::debug!("New connection established");
 
                         if no_duplicate {
                             tokio::time::sleep(wait).await;
                         }
 
                         if let Err(error) = old_sink.close().await {
-                            log::warn!("An error occurred while closing old connection during auto-refresh: {}", error);
+                            log::debug!("An error occurred while closing old connection: {}", error);
                         }
                         connection.handler.lock().handle_close(true);
+                        log::debug!("Old connection closed");
                     },
                     Err(error) => {
                         // try reconnecting again
-                        log::error!("Failed to reconnect due to an error: {}, reconnecting", error);
+                        log::error!("Failed to reconnect because of an error: {}, trying again ...", error);
                         reconnect_manager.inner.reconnect_notify.notify_one();
                     },
                 }
@@ -195,18 +259,19 @@ impl<H: WebSocketHandler> WebSocketConnection<H> {
                 }
 
                 reconnect_manager.inner.reconnecting.store(false, Ordering::SeqCst);
+                log::debug!("Reconnection process complete");
             }
         }
 
-        let sink = Self::start_connection(Arc::clone(&connection)).await?;
-        let sink = Arc::new(AsyncMutex::new(sink));
+        let sink_inner = Self::start_connection(Arc::clone(&connection)).await?;
+        let sink = Arc::new(AsyncMutex::new(sink_inner));
 
         tokio::spawn(
             feed_handler(
                 Arc::clone(&connection),
                 message_rx,
                 reconnect_manager.clone(),
-                config.ignore_duplicate_during_reconnection,
+                config.clone(),
                 Arc::clone(&sink),
             )
         );
@@ -238,17 +303,23 @@ impl<H: WebSocketHandler> WebSocketConnection<H> {
             sink.send(message.into_message()).await?;
         }
 
-        // fetch_not is unstable, so we xor it with true which gives the same result
-        let id = connection.connection_id.fetch_xor(true, Ordering::SeqCst);
+        // fetch_not is unstable so we use fetch_xor
+        let id = connection.next_connection_id.fetch_xor(true, Ordering::SeqCst);
 
         // pass messages to task_feed_handler
         tokio::spawn(async move {
             while let Some(message) = stream.next().await {
-                if connection.message_tx.send(Some((id, message))).is_err() {
-                    // task_feed_handler is dropped, which means there is no one to consume messages
-                    break;
+                // send the received message to the task running feed_handler
+                if connection.message_tx.send((id, FeederMessage::Message(message))).is_err() {
+                    // the channel is closed. we can't disconnect because we don't have the sink
+                    log::debug!("WebSocket message receiver is closed; abandon connection");
+                    return;
                 }
             }
+            // the underlying WebSocket connection was closed
+
+            drop(connection.message_tx.send((id, FeederMessage::ConnectionClosed))); // this may be Err
+            log::debug!("WebSocket stream closed");
         });
         Ok(sink)
     }
@@ -270,7 +341,8 @@ impl<H: WebSocketHandler> Drop for WebSocketConnection<H> {
     fn drop(&mut self) {
         self.task_reconnect.abort();
         // sending None tells the feeder to close
-        self.inner.message_tx.send(None).ok();
+        let current_id = !self.inner.next_connection_id.load(Ordering::SeqCst);
+        self.inner.message_tx.send((current_id, FeederMessage::DropConnectionRequest)).ok();
     }
 }
 
@@ -414,6 +486,9 @@ pub struct WebSocketConfig {
     /// When `ignore_duplicate_during_reconnection` is set to `true`, [WebSocketConnection] will wait for a
     /// certain amount of time to make sure no message is lost. [Default]s to 300ms
     pub reconnection_wait: Duration,
+    /// A reconnection will be triggered if no messages are received within this amount of time.
+    /// [Default]s to [Duration::ZERO], which means no timeout will be applied.
+    pub message_timeout: Duration,
 }
 
 impl WebSocketConfig {
@@ -431,6 +506,7 @@ impl Default for WebSocketConfig {
             url_prefix: String::new(),
             ignore_duplicate_during_reconnection: false,
             reconnection_wait: Duration::from_millis(300),
+            message_timeout: Duration::ZERO,
         }
     }
 }

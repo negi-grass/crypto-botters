@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+- [full diff on GitHub](https://github.com/negi-grass/crypto-botters/compare/9a2e1ac25587c3981e4348538ba99f3ed93b9817...main)
+
+### Added
+- A new field `message_timeout` was added to `WebSocketConfig`, which enables users to set timeouts on message reception.
+
+### Changed
+- Send a close frame when user drops WebSocketConnection
+- Automatically trigger a reconnection on server connection close
+- Added some log calls
+
 ## 0.2.1 (2023-03-17)
 - [crates.io](https://crates.io/crates/generic-api-client/0.2.1)
 - [docs.rs](https://docs.rs/generic-api-client/0.2.1)
