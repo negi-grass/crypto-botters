@@ -408,7 +408,7 @@ dependencies = [
 
 [[package]]
 name = "generic-api-client"
-version = "0.2.1"
+version = "0.3.0"
 dependencies = [
  "bytes",
  "futures-util",

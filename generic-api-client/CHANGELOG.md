@@ -1,7 +1,13 @@
 # Changelog
 
 ## Unreleased
-- [full diff on GitHub](https://github.com/negi-grass/crypto-botters/compare/9a2e1ac25587c3981e4348538ba99f3ed93b9817...main)
+- [full diff on GitHub](https://github.com/negi-grass/crypto-botters/compare/61048cea6360d8ec047d29dccacc49a8f2e1771d...main)
+
+## 0.3.0 (2023-12-07)
+- [crates.io](https://crates.io/crates/generic-api-client/0.3.0)
+- [docs.rs](https://docs.rs/generic-api-client/0.3.0)
+- [snapshot on GitHub](https://github.com/negi-grass/crypto-botters/tree/61048cea6360d8ec047d29dccacc49a8f2e1771d/generic-api-client)
+- [full diff on GitHub](https://github.com/negi-grass/crypto-botters/compare/9a2e1ac25587c3981e4348538ba99f3ed93b9817...61048cea6360d8ec047d29dccacc49a8f2e1771d)
 
 ### Added
 - A new field `message_timeout` was added to `WebSocketConfig`, which enables users to set timeouts on message reception.
