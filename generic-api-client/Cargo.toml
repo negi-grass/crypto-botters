@@ -15,7 +15,7 @@ categories = ["api-bindings", "asynchronous"]
 [dependencies]
 tokio = { version = "1.34.0", features = ["time", "sync", "net", "macros"] }
 tokio-tungstenite = "0.21.0"
-reqwest = "0.11.22"
+reqwest = "0.11.24"
 futures-util = "0.3.29"
 serde = "1.0.193"
 parking_lot = "0.12.1"
